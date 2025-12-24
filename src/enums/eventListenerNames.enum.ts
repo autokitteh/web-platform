@@ -1,4 +1,9 @@
 export enum EventListenerName {
+	sessionsAutoRefreshTick = "sessionsAutoRefreshTick",
+	sessionsNewItemsAvailable = "sessionsNewItemsAvailable",
+	sessionsScrollToTop = "sessionsScrollToTop",
+	logsNewItemsAvailable = "logsNewItemsAvailable",
+	logsScrollToBottom = "logsScrollToBottom",
 	sessionLogViewerScrollToTop = "sessionLogViewerScrollToTop",
 	sessionReload = "sessionReload",
 	showToursProgress = "showToursProgress",

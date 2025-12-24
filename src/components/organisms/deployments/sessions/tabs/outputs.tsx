@@ -1,11 +1,24 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
-import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
+import {
+	AutoSizer,
+	CellMeasurer,
+	CellMeasurerCache,
+	InfiniteLoader,
+	List,
+	ListRowProps,
+	ScrollParams,
+} from "react-virtualized";
 
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
 import { EventListenerName, SessionLogType } from "@src/enums";
 import { useEventListener } from "@src/hooks";
 import { SessionOutputLog } from "@src/interfaces/models";
+import { useAutoRefreshStore } from "@src/store";
+
+import { NewItemsIndicator } from "@components/molecules";
+
+const BOTTOM_THRESHOLD = 96;
 
 const OutputRow = memo(({ log, measure }: { log: SessionOutputLog; measure: () => void }) => {
 	const rowRef = useRef<HTMLDivElement>(null);
@@ -40,7 +53,14 @@ export const SessionOutputs = () => {
 		t,
 		loading,
 	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
+
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [isAtBottom, setIsAtBottom] = useState(true);
+	const [newLogsCount, setNewLogsCount] = useState(0);
+	const prevOutputsLengthRef = useRef(0);
+
+	const { setLogsAtBottom } = useAutoRefreshStore();
+
 	const cacheRef = useRef(
 		new CellMeasurerCache({
 			fixedWidth: true,
@@ -58,8 +78,42 @@ export const SessionOutputs = () => {
 		if (isInitialLoad) {
 			setIsInitialLoad(false);
 		}
+
+		const newCount = outputs.length - prevOutputsLengthRef.current;
+		if (newCount > 0 && !isInitialLoad) {
+			if (isAtBottom) {
+				requestAnimationFrame(() => {
+					listRef.current?.scrollToRow(outputs.length - 1);
+				});
+			} else {
+				setNewLogsCount((prev) => prev + newCount);
+			}
+		}
+		prevOutputsLengthRef.current = outputs.length;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [outputs]);
+
+	const handleScroll = useCallback(
+		({ scrollHeight, scrollTop, clientHeight }: ScrollParams) => {
+			const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
+			const newIsAtBottom = distanceFromBottom <= BOTTOM_THRESHOLD;
+
+			setIsAtBottom(newIsAtBottom);
+			setLogsAtBottom(newIsAtBottom);
+
+			if (newIsAtBottom && newLogsCount > 0) {
+				setNewLogsCount(0);
+			}
+		},
+		[setLogsAtBottom, newLogsCount]
+	);
+
+	const scrollToBottom = useCallback(() => {
+		listRef.current?.scrollToRow(outputs.length - 1);
+		setNewLogsCount(0);
+		setIsAtBottom(true);
+		setLogsAtBottom(true);
+	}, [listRef, outputs.length, setLogsAtBottom]);
 
 	const customRowRenderer = useCallback(
 		({ index, key, parent, style }: ListRowProps) => {
@@ -91,10 +145,17 @@ export const SessionOutputs = () => {
 		},
 		[listRef]
 	);
+
 	useEventListener(EventListenerName.sessionLogViewerScrollToTop, () => listRef.current?.scrollToRow(0));
 
 	return (
-		<div className="scrollbar size-full">
+		<div className="scrollbar relative size-full">
+			<NewItemsIndicator
+				count={newLogsCount}
+				direction="bottom"
+				isVisible={Boolean(!isAtBottom && newLogsCount > 0)}
+				onJump={scrollToBottom}
+			/>
 			<AutoSizer>
 				{({ height, width }) => (
 					<InfiniteLoader
@@ -109,6 +170,7 @@ export const SessionOutputs = () => {
 								deferredMeasurementCache={cacheRef.current}
 								height={height}
 								onRowsRendered={onRowsRendered}
+								onScroll={handleScroll}
 								overscanRowCount={10}
 								ref={(ref) => {
 									setListRef(ref);

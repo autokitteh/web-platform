@@ -33,3 +33,5 @@ export { DiffNavigationToolbar } from "@components/molecules/diffNavigationToolb
 export { InfoPopover } from "@components/molecules/infoPopover";
 export { AddButton } from "@components/molecules/configListAddButton";
 export { ActiveDeploymentsTable, SessionStatusDonutChart, TotalCountersGrid } from "@components/molecules/charts";
+export { AutoRefreshIndicator } from "@components/molecules/autoRefreshIndicator";
+export { NewItemsIndicator } from "@components/molecules/newItemsIndicator";
