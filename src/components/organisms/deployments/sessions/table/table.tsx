@@ -5,15 +5,21 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { defaultSessionsTableSplit, namespaces, tourStepsHTMLIds } from "@constants";
+import { defaultSessionsTableSplit, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { EventListenerName, SessionStateType } from "@src/enums";
-import { useResize, triggerEvent } from "@src/hooks";
+import { SessionStateType } from "@src/enums";
+import { useAutoRefresh, useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import {
+	useAutoRefreshStore,
+	useCacheStore,
+	useModalStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+} from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
 import {
 	calculateDeploymentSessionsStats,
@@ -24,7 +30,7 @@ import {
 } from "@src/utilities";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
-import { RefreshButton } from "@components/molecules";
+import { AutoRefreshIndicator, NewItemsIndicator } from "@components/molecules";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -32,6 +38,8 @@ import { FilterSessionsByEntityPopoverItem } from "@components/organisms/deploym
 
 import { CatImage } from "@assets/image";
 import { FilterIcon } from "@assets/image/icons";
+
+const AUTO_REFRESH_INTERVAL_MS = 60000;
 
 export const SessionsTable = () => {
 	const resizeId = useId();
@@ -54,6 +62,10 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache, deployments } = useCacheStore();
+
+	const { isSessionsAtTop, setSessionsAtTop, sessionsBuffer, addToSessionsBuffer, clearSessionsBuffer } =
+		useAutoRefreshStore();
+	const listRef = useRef<{ scrollToTop: () => void } | null>(null);
 	const [deploymentItemsData, setDeploymentItemsData] = useState<
 		Array<{ id: string; totalSessions: number; translationKey: string }>
 	>([]);
@@ -285,6 +297,129 @@ export const SessionsTable = () => {
 	refreshDataRef.current = refreshData;
 	fetchSessionsRef.current = fetchSessions;
 
+	const mergeSessions = useCallback(
+		(existing: Session[], incoming: Session[]): { addedCount: number; merged: Session[] } => {
+			const existingIds = new Set(existing.map((s) => s.sessionId));
+			const newSessions = incoming.filter((s) => !existingIds.has(s.sessionId));
+
+			const updatedExisting = existing.map((existingSession) => {
+				const incomingSession = incoming.find((s) => s.sessionId === existingSession.sessionId);
+				return incomingSession ? { ...existingSession, ...incomingSession } : existingSession;
+			});
+
+			return {
+				merged: [...newSessions, ...updatedExisting],
+				addedCount: newSessions.length,
+			};
+		},
+		[]
+	);
+
+	const handleAutoRefresh = useCallback(async () => {
+		if (!projectId || isLoading) return;
+
+		const fetchMethod = deploymentId
+			? SessionsService.listByDeploymentId.bind(null, deploymentId)
+			: SessionsService.listByProjectId.bind(null, projectId);
+
+		const { data, error } = await fetchMethod(
+			{
+				stateType: reverseSessionStateConverter(urlSessionStateFilter as SessionStateKeyType),
+			},
+			undefined
+		);
+
+		if (error || !data?.sessions) {
+			return;
+		}
+
+		const { merged, addedCount } = mergeSessions(sessions, data.sessions);
+
+		if (addedCount === 0) {
+			setSessions((prev) => {
+				const updatedSessions = prev.map((existingSession) => {
+					const updated = data.sessions.find((s: Session) => s.sessionId === existingSession.sessionId);
+					return updated ? { ...existingSession, ...updated } : existingSession;
+				});
+				return updatedSessions;
+			});
+			return;
+		}
+
+		if (isSessionsAtTop) {
+			setSessions(merged);
+			clearSessionsBuffer();
+		} else {
+			const newSessions = data.sessions.filter(
+				(s: Session) => !sessions.some((existing) => existing.sessionId === s.sessionId)
+			);
+			if (newSessions.length > 0) {
+				addToSessionsBuffer(newSessions);
+			}
+			setSessions((prev) => {
+				return prev.map((existingSession) => {
+					const updated = data.sessions.find((s: Session) => s.sessionId === existingSession.sessionId);
+					return updated ? { ...existingSession, ...updated } : existingSession;
+				});
+			});
+		}
+
+		fetchDeployments(false);
+	}, [
+		projectId,
+		deploymentId,
+		urlSessionStateFilter,
+		isLoading,
+		sessions,
+		isSessionsAtTop,
+		mergeSessions,
+		addToSessionsBuffer,
+		clearSessionsBuffer,
+		fetchDeployments,
+	]);
+
+	const {
+		countdownMs,
+		isEnabled: isAutoRefreshEnabled,
+		isPaused: isAutoRefreshPaused,
+		isRefreshing: isAutoRefreshing,
+		pause: pauseAutoRefresh,
+		refreshNow,
+		resume: resumeAutoRefresh,
+	} = useAutoRefresh({
+		enabled: true,
+		intervalMs: AUTO_REFRESH_INTERVAL_MS,
+		onRefresh: handleAutoRefresh,
+		pauseWhenHidden: true,
+	});
+
+	const showBufferedSessions = useCallback(() => {
+		if (sessionsBuffer.count === 0) return;
+
+		const bufferedSessions = sessionsBuffer.sessions;
+		setSessions((prev) => {
+			const existingIds = new Set(prev.map((s) => s.sessionId));
+			const newSessions = bufferedSessions.filter((s) => !existingIds.has(s.sessionId));
+			return [...newSessions, ...prev];
+		});
+		clearSessionsBuffer();
+	}, [sessionsBuffer, clearSessionsBuffer]);
+
+	const scrollToTop = useCallback(() => {
+		listRef.current?.scrollToTop();
+		showBufferedSessions();
+	}, [showBufferedSessions]);
+
+	const handleScrollPositionChange = useCallback(
+		(atTop: boolean) => {
+			setSessionsAtTop(atTop);
+			if (atTop && sessionsBuffer.count > 0) {
+				showBufferedSessions();
+			}
+		},
+		[setSessionsAtTop, sessionsBuffer.count, showBufferedSessions]
+	);
+
 	useEffect(() => {
 		const deploymentsChanged = !isEqual(prevDeploymentsRef.current, deployments);
 		prevDeploymentsRef.current = deployments;
@@ -381,13 +516,6 @@ export const SessionsTable = () => {
 		}
 	};
 
-	const refreshViewer = async (): Promise<void> => {
-		refreshData();
-		if (!sessionIdFromParams) return;
-		triggerEvent(EventListenerName.sessionReload);
-		triggerEvent(EventListenerName.sessionReloadActivity);
-	};
-
 	return (
 		<div className="flex size-full flex-1 overflow-y-auto" id="sessions-table">
 			<div style={{ width: `${leftSideWidth}%` }}>
@@ -424,11 +552,15 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions(sessionIdFromParams || "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton
-								disabled={isLoading}
-								id={tourStepsHTMLIds.sessionsRefresh}
-								isLoading={isLoading}
-								onRefresh={refreshViewer}
+							<AutoRefreshIndicator
+								className="mr-2"
+								countdownMs={countdownMs}
+								isEnabled={isAutoRefreshEnabled}
+								isPaused={isAutoRefreshPaused}
+								isRefreshing={isAutoRefreshing}
+								onPause={pauseAutoRefresh}
+								onRefreshNow={refreshNow}
+								onResume={resumeAutoRefresh}
 							/>
 						</div>
 					</div>
@@ -439,34 +571,47 @@ export const SessionsTable = () => {
 								<Loader firstColor="light-gray" size="md" />
 							</div>
 						) : sessions.length ? (
-							<Table className="flex h-full overflow-y-visible">
-								<THead className="rounded-t-14">
-									<Tr className="flex">
-										<Th
-											className={hideSourceColumn ? "w-2/5 min-w-48 pl-4" : "w-1/5 min-w-44 pl-4"}
-										>
-											{t("table.columns.startTime")}
-										</Th>
-										<Th className="w-1/5 min-w-20 pl-2">{t("table.columns.status")}</Th>
-										{!hideSourceColumn ? (
-											<Th className="w-2/5 min-w-24 pl-2">{t("table.columns.source")}</Th>
-										) : null}
-										{!hideActionsColumn ? (
-											<Th className="w-1/5 min-w-20">{t("table.columns.actions")}</Th>
-										) : null}
-									</Tr>
-								</THead>
-
-								<SessionsTableList
-									hideActionsColumn={hideActionsColumn}
-									hideSourceColumn={hideSourceColumn}
-									onItemsRendered={handleItemsRendered}
-									onSelectedSessionId={setSelectedSessionId}
-									onSessionRemoved={fetchDeployments}
-									openSession={(sessionId) => navigateInSessions(sessionId)}
-									sessions={sessions}
+							<div className="relative flex h-full flex-col">
+								<NewItemsIndicator
+									count={sessionsBuffer.count}
+									direction="top"
+									isVisible={Boolean(!isSessionsAtTop && sessionsBuffer.count > 0)}
+									onJump={scrollToTop}
+									onShow={showBufferedSessions}
 								/>
-							</Table>
+								<Table className="flex h-full overflow-y-visible">
+									<THead className="rounded-t-14">
+										<Tr className="flex">
+											<Th
+												className={
+													hideSourceColumn ? "w-2/5 min-w-48 pl-4" : "w-1/5 min-w-44 pl-4"
+												}
+											>
+												{t("table.columns.startTime")}
+											</Th>
+											<Th className="w-1/5 min-w-20 pl-2">{t("table.columns.status")}</Th>
+											{!hideSourceColumn ? (
+												<Th className="w-2/5 min-w-24 pl-2">{t("table.columns.source")}</Th>
+											) : null}
+											{!hideActionsColumn ? (
+												<Th className="w-1/5 min-w-20">{t("table.columns.actions")}</Th>
+											) : null}
+										</Tr>
+									</THead>
+
+									<SessionsTableList
+										hideActionsColumn={hideActionsColumn}
+										hideSourceColumn={hideSourceColumn}
+										listRef={listRef}
+										onItemsRendered={handleItemsRendered}
+										onScrollPositionChange={handleScrollPositionChange}
+										onSelectedSessionId={setSelectedSessionId}
+										onSessionRemoved={fetchDeployments}
+										openSession={(sessionId) => navigateInSessions(sessionId)}
+										sessions={sessions}
+									/>
+								</Table>
+							</div>
 						) : (
 							<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
 						)}
