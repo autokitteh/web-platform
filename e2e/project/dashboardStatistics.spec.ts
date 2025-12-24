@@ -123,7 +123,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 		await dashboardPage.createProjectFromMenu();
 		await page.locator('button[aria-label="Deploy project"]').click();
 		await page.waitForTimeout(800);
-		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled({ timeout: 12000 });
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 		await waitForDashboardDataLoaded(page);

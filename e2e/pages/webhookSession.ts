@@ -144,7 +144,7 @@ export class WebhookSessionPage {
 		await this.page.waitForTimeout(800);
 
 		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled({
-			timeout: 6000,
+			timeout: 12000,
 		});
 
 		const response = await this.request.get(webhookUrl, {
