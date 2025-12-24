@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { Page } from "@playwright/test";
 
 export async function deleteProjectByName(page: Page, projectName: string, hasActiveDeployment = false): Promise<void> {
@@ -37,8 +38,15 @@ export async function deleteProjectByName(page: Page, projectName: string, hasAc
 			page.waitForURL("/welcome", { timeout: 10000 }),
 			page.waitForURL("/", { timeout: 10000 }),
 		]).catch(() => {});
-	} catch {
-		// Graceful cleanup - don't fail tests if cleanup encounters issues
+
+		await page.locator('button[aria-label="System Log"]').click();
+
+		const deletedProjectLogText = `Project deletion completed successfully, project name: ${projectName}`;
+
+		const deletedProjectLog = page.getByText(deletedProjectLogText);
+		await deletedProjectLog.waitFor({ state: "visible", timeout: 3000 }).catch(() => {});
+	} catch (error) {
+		console.warn("deleteProjectByName cleanup error:", error);
 	}
 }
 
@@ -61,7 +69,7 @@ export async function cleanupCurrentProject(page: Page): Promise<void> {
 		if (projectName) {
 			await deleteProjectByName(page, projectName, hasActiveDeployment);
 		}
-	} catch {
-		// Graceful cleanup - don't fail tests if cleanup encounters issues
+	} catch (error) {
+		console.warn("cleanupCurrentProject cleanup error:", error);
 	}
 }
