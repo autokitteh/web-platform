@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // inspired by: https://github.com/kelvinmaues/react-hubspot-tracking-code-hook
 
 import Cookies from "js-cookie";
@@ -16,16 +17,11 @@ export const useHubspot = (): UseTrackingCode => {
 	const setContentType = (contentType: string): void => {
 		try {
 			if (!contentType || contentType.trim() === "") {
-				DatadogUtils.captureWarning("HubSpot setContentType failed: empty contentType", {
-					component: "hubspot-tracking",
-				});
 				return;
 			}
 			_hsq.push(["setContentType", contentType]);
 		} catch (error) {
-			DatadogUtils.captureException(error, {
-				component: "hubspot-tracking",
-			});
+			//ignore
 		}
 	};
 
@@ -33,43 +29,34 @@ export const useHubspot = (): UseTrackingCode => {
 		try {
 			_hsq.push(["trackPageView"]);
 		} catch (error) {
-			DatadogUtils.captureException(error, {
-				component: "hubspot-tracking",
-			});
+			// ignore
 		}
 	};
 
 	const setPathPageView = (path: string): void => {
 		try {
 			if (!path || path.trim() === "") {
-				DatadogUtils.captureWarning("HubSpot setPathPageView failed: empty path", {
-					component: "hubspot-tracking",
-				});
 				return;
 			}
 			_hsq.push(["setPath", path]);
 			setTrackPageView();
 		} catch (error) {
-			DatadogUtils.captureException(error, {
-				component: "hubspot-tracking",
-			});
+			//ignore
 		}
 	};
 
 	const setIdentity = (email: string, customPropertities?: object) => {
 		try {
 			if (!email || email.trim() === "") {
-				DatadogUtils.captureWarning("HubSpot setIdentity failed: empty email", {
-					component: "hubspot-tracking",
-				});
 				return;
 			}
 
 			const emailTest = z.string().email();
 			if (!emailTest.safeParse(email).success) {
-				DatadogUtils.captureWarning("HubSpot setIdentity failed: invalid email format", {
-					component: "hubspot-tracking",
-				});
+				LoggerService.warn(
+					namespaces.ui.loginPage,
+					`HubSpot setIdentity failed: invalid email format. Email: ${email}`
+				);
 				return;
 			}
 
@@ -81,18 +68,17 @@ export const useHubspot = (): UseTrackingCode => {
 				},
 			]);
 		} catch (error) {
-			DatadogUtils.captureException(error, {
-				component: "hubspot-tracking",
-			});
+			LoggerService.error(
+				namespaces.ui.loginPage,
+				`HubSpot setIdentity error: ${error instanceof Error ? error.message : String(error)}`
+			);
 		}
 	};
 
 	const setTrackEvent = ({ eventId, value }: PropsUseSetTrackEvent) => {
 		try {
 			if (!eventId || eventId.trim() === "") {
-				DatadogUtils.captureWarning("HubSpot setTrackEvent failed: empty eventId", {
-					component: "hubspot-tracking",
-				});
+				LoggerService.warn(namespaces.ui.loginPage, "HubSpot setTrackEvent failed: empty eventId");
 				return;
 			}
 
@@ -104,9 +90,10 @@ export const useHubspot = (): UseTrackingCode => {
 				},
 			]);
 		} catch (error) {
-			DatadogUtils.captureException(error, {
-				component: "hubspot-tracking",
-			});
+			LoggerService.error(
+				namespaces.ui.loginPage,
+				`HubSpot setTrackEvent error: ${error instanceof Error ? error.message : String(error)}`
+			);
 		}
 	};
 
@@ -114,9 +101,10 @@ export const useHubspot = (): UseTrackingCode => {
 		try {
 			_hsq.push(["revokeCookieConsent"]);
 		} catch (error) {
-			DatadogUtils.captureException(error, {
-				component: "hubspot-tracking",
-			});
+			LoggerService.error(
+				namespaces.ui.loginPage,
+				`HubSpot revokeCookieConsent error: ${error instanceof Error ? error.message : String(error)}`
+			);
 		}
 	};
 
@@ -130,18 +118,12 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!user) {
 				const message = t("hubspot.missingUser");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureMessage(message, "error", {
-					error_type: "missing_user",
-				});
 				return;
 			}
 
 			if (!user?.email) {
 				const message = t("hubspot.missingUserEmail");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureMessage(message, "error", {
-					error_type: "missing_email",
-				});
 				return;
 			}
 
@@ -149,22 +131,17 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!emailTest.safeParse(user.email || "").success) {
 				const errorMessage = t("hubspot.invalidEmailFormatWithEmail", { email: user.email });
 				LoggerService.error(namespaces.ui.loginPage, errorMessage, true);
-				DatadogUtils.captureMessage(errorMessage, "error", {
-					error_type: "invalid_email",
-				});
 				return;
 			}
 
 			try {
 				setIdentity(user.email || "", user.name ? { firstname: user.name } : undefined);
-				DatadogUtils.trackEvent("hubspot-identity-set", {
-					email: user.email,
-					hasName: !!user.name,
-				});
+				LoggerService.info(namespaces.ui.loginPage, `User identity set in HubSpot: ${user.email}`);
 			} catch (error) {
-				DatadogUtils.captureException(error, {
-					operation: "setIdentity",
-				});
+				LoggerService.warn(
+					namespaces.ui.loginPage,
+					`HubSpot setIdentity failed (trackUserLogin): ${error instanceof Error ? error.message : String(error)}`
+				);
 			}
 
 			try {
@@ -172,22 +149,17 @@ export const useHubspot = (): UseTrackingCode => {
 					eventId: "user_login",
 					value: user.email,
 				});
-				DatadogUtils.trackEvent("hubspot-login-tracked", {
-					eventId: "user_login",
-					email: user.email,
-				});
+				LoggerService.info(namespaces.ui.loginPage, `Login event tracked for: ${user.email}`);
 			} catch (error) {
-				DatadogUtils.captureException(error, {
-					operation: "trackEvent",
-				});
+				LoggerService.warn(
+					namespaces.ui.loginPage,
+					`HubSpot setTrackEvent failed (trackUserLogin): ${error instanceof Error ? error.message : String(error)}`
+				);
 			}
 
 			if (!hubSpotPortalId || !hubSpotFormId) {
 				const message = t("hubspot.missingFormOrPortalId");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureMessage(message, "error", {
-					error_type: "missing_config",
-				});
 				return;
 			}
 
@@ -199,9 +171,6 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!hubspotUtk || hubspotUtk.trim() === "") {
 				const message = t("hubspot.missingRequiredHubspotUtkCookie");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureWarning(message, {
-					error_type: "missing_cookie",
-				});
 				return;
 			}
 
@@ -212,18 +181,11 @@ export const useHubspot = (): UseTrackingCode => {
 
 				const message = t("hubspot.missingRequiredValues", { values: missingValues.join(", ") });
 				LoggerService.warn(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureWarning(message, {
-					error_type: "missing_page_data",
-					missingValues,
-				});
 			}
 
 			if (!user.name || user.name.trim() === "") {
 				const message = t("hubspot.userNameEmpty");
 				LoggerService.warn(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureWarning(message, {
-					error_type: "missing_name",
-				});
 			}
 
 			const hsContext = {
@@ -243,10 +205,7 @@ export const useHubspot = (): UseTrackingCode => {
 				context: hsContext,
 			};
 
-			DatadogUtils.trackEvent("hubspot-form-submission-start", {
-				email: user.email,
-				hasName: !!user.name,
-			});
+			LoggerService.info(namespaces.ui.loginPage, `Starting HubSpot form submission for ${user.email}`);
 
 			try {
 				const res = await fetch(hsUrl, {
@@ -267,12 +226,6 @@ export const useHubspot = (): UseTrackingCode => {
 					})
 				);
 
-				DatadogUtils.trackEvent("hubspot-form-response", {
-					status: res.status,
-					statusText: res.statusText,
-					ok: res.ok,
-				});
-
 				if (!res.ok) {
 					const text = await res.text().catch(() => "");
 					const errorMessage = t("hubspot.submissionFailed", {
@@ -282,18 +235,11 @@ export const useHubspot = (): UseTrackingCode => {
 					});
 
 					LoggerService.error(namespaces.ui.loginPage, errorMessage, true);
-
-					DatadogUtils.captureException(new Error(errorMessage), {
-						error_type: "http_error",
-						http_status: res.status,
-						http_status_text: res.statusText,
-					});
 					return;
 				}
 
-				DatadogUtils.trackEvent("hubspot-form-submission-success", {
-					responseStatus: res.status,
-				});
+				const successMessage = t("hubspot.submissionSucceeded");
+				LoggerService.info(namespaces.ui.loginPage, successMessage);
 			} catch (error: any) {
 				let errorMessage: string;
 				let errorType = "UnknownError";
@@ -319,16 +265,9 @@ export const useHubspot = (): UseTrackingCode => {
 					}),
 					true
 				);
-
-				DatadogUtils.captureException(error, {
-					error_type: errorType,
-					error_name: error.name,
-				});
 			}
 		} catch (error: any) {
-			DatadogUtils.captureException(error, {
-				error_type: "unexpected_error",
-			});
+			LoggerService.error(namespaces.ui.loginPage, error, true);
 		}
 	};
 

@@ -1,3 +1,4 @@
+import { LoggerService } from "@services/logger.service";
 import { HubSpotConfig, HubSpotQueue, HubSpotConversations } from "@src/interfaces/external";
 import { PushParams } from "@src/types/hooks";
 
@@ -29,16 +30,24 @@ declare global {
  * **Error Handling:**
  * - Script loading failures trigger graceful degradation with noop _hsq queue
  * - Network timeouts (10s) are detected and reported
- * - All errors are logged to console
+ * - All errors are logged to console and reported to LoggerService with context
  *
  * **Monitoring:**
  * - Success/failure states logged to console
+ * - Comprehensive reporting with portal ID, error type, and context
  * - Timeout detection with configurable duration (10000ms default)
  */
 export const initHubSpot = (portalId: string): void => {
+	// Use a fallback namespace if namespaces.ui.loginPage is not suitable.
+	// However, usually we should use a specific namespace or create one.
+	// For now attempting to use 'HubSpot' as a custom namespace or rely on generic if LoggerService accepts strings.
+	// LoggerService expects a string.
+	const hubSpotNamespace = "HubSpot Init";
+
 	if (!portalId) {
 		// eslint-disable-next-line no-console
 		console.warn("HubSpot initialization skipped: missing portal ID");
+		LoggerService.warn(hubSpotNamespace, "HubSpot initialization skipped: missing portal ID");
 		return;
 	}
 
@@ -53,9 +62,25 @@ export const initHubSpot = (portalId: string): void => {
 		window._hsq = window._hsq || [];
 	};
 
+	const reportToLogger = (type: "error" | "timeout", message: string, extra: Record<string, any> = {}): void => {
+		const baseExtra = {
+			portalId: hubSpotConfig.PORTAL_ID,
+			component: hubSpotConfig.COMPONENT_TAG,
+			...extra,
+		};
+		const formattedMessage = `${message}. Context: ${JSON.stringify(baseExtra)}`;
+
+		if (type === "error") {
+			LoggerService.warn(hubSpotNamespace, formattedMessage);
+		} else {
+			LoggerService.warn(hubSpotNamespace, formattedMessage);
+		}
+	};
+
 	const handleScriptError = (script: HTMLScriptElement): void => {
 		// eslint-disable-next-line no-console
-		console.warn("HubSpot script failed to load", {
+		console.warn("HubSpot script failed to load");
+		reportToLogger("error", "HubSpot script loading failed", {
 			scriptSrc: script.src,
 			errorType: "script_load_error",
 		});
@@ -71,7 +96,8 @@ export const initHubSpot = (portalId: string): void => {
 		if (window.HubSpotConversations || (window._hsq as HubSpotQueue).loaded) return;
 
 		// eslint-disable-next-line no-console
-		console.warn(`HubSpot script loading timeout after ${hubSpotConfig.TIMEOUT_MS}ms`, {
+		console.warn(`HubSpot script loading timeout after ${hubSpotConfig.TIMEOUT_MS}ms`);
+		reportToLogger("timeout", "HubSpot script loading timeout", {
 			timeout: hubSpotConfig.TIMEOUT_MS,
 		});
 	};
@@ -79,9 +105,11 @@ export const initHubSpot = (portalId: string): void => {
 	const handleScriptLoad = (timeoutId: number): void => {
 		clearTimeout(timeoutId);
 		// eslint-disable-next-line no-console
-		console.debug("HubSpot script loaded successfully", {
-			portalId: hubSpotConfig.PORTAL_ID,
-		});
+		console.debug("HubSpot script loaded successfully");
+		LoggerService.info(
+			hubSpotNamespace,
+			`HubSpot script loaded successfully. PortalId: ${hubSpotConfig.PORTAL_ID}`
+		);
 	};
 
 	const createHubSpotScript = (): HTMLScriptElement => {
