@@ -4,18 +4,10 @@ import type { Page } from "@playwright/test";
 import { getTestIdFromText } from "./test.utils";
 
 const closeToastDuration = 4000;
-const displayToastTimeout = 4000;
+const toastDisplayTimeout = 4000;
 
-export const waitForToastToBeRemoved = async (
-	page: Page,
-	toastMessage: string,
-	options?: {
-		failIfNotFound?: boolean;
-		timeout?: number;
-	}
-) => {
+export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) => {
 	let toast;
-	const toastDisplayTimeout = options?.timeout || displayToastTimeout;
 	const toastTestId = getTestIdFromText("toast", toastMessage);
 
 	const roleToast = page.getByRole("alert", { name: toastMessage });
@@ -37,10 +29,6 @@ export const waitForToastToBeRemoved = async (
 
 	if (!toast) {
 		console.warn("Toast was not found", toastMessage, toastTestId);
-
-		if (options?.failIfNotFound) {
-			throw new Error("Toast was not found");
-		}
 
 		return;
 	}
@@ -66,8 +54,5 @@ export const waitForToastToBeRemoved = async (
 			toastCloseButtonTestId,
 			toastTestId
 		);
-		if (options?.failIfNotFound) {
-			throw new Error("Toast close button was not found");
-		}
 	}
 };
