@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
 import { ProjectPage } from "../../pages";
-import { cleanupCurrentProject } from "../../utils";
+import { cleanupCurrentProject, createCustomEntryFunction } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "triggerName";
@@ -31,15 +31,6 @@ const testModifyCases = [
 		expectedCron: "4 4 * * *",
 	},
 ];
-
-async function createCustomEntryFunction(page: Page, functionName: string) {
-	const input = page.getByRole("combobox", { name: "Function name" });
-	await input.fill(functionName);
-
-	// eslint-disable-next-line security/detect-non-literal-regexp
-	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
-	await createOption.click();
-}
 
 async function createTriggerScheduler(
 	page: Page,

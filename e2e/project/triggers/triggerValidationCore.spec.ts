@@ -1,29 +1,10 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { cleanupCurrentProject } from "../../utils";
+import { cleanupCurrentProject, createCustomEntryFunction, startTriggerCreation } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
-async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
-	await page.locator('button[aria-label="Add Triggers"]').hover();
-	await page.locator('button[aria-label="Add Triggers"]').click();
-
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
-	await nameInput.click();
-	await nameInput.fill(name);
-
-	await page.getByTestId("select-trigger-type-empty").click();
-	await page.getByRole("option", { name: triggerType }).click();
-}
-
-async function createCustomEntryFunction(page: Page, functionName: string) {
-	const input = page.getByRole("combobox", { name: "Function name" });
-	await input.fill(functionName);
-
-	// eslint-disable-next-line security/detect-non-literal-regexp
-	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
-	await createOption.click();
-}
+const triggerName = "testTrigger";
 
 async function expectValidationError(page: Page, errorText: string, shouldBeVisible: boolean = true) {
 	let errorMessage;
@@ -63,7 +44,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 	});
 
 	test("1. Webhook trigger without file/function - pass", async ({ page }) => {
-		await startTriggerCreation(page, "Webhook");
+		await startTriggerCreation(page, triggerName, "Webhook");
 		await saveAndExpectSuccess(page);
 	});
 
@@ -84,7 +65,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		const triggersHeader = page.getByText("Triggers").first();
 		await triggersHeader.click();
 
-		await startTriggerCreation(page, "Connection");
+		await startTriggerCreation(page, triggerName, "Connection");
 
 		await page.getByTestId("select-connection-empty").click();
 		await page.getByRole("option").first().click();
@@ -93,7 +74,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 	});
 
 	test("3. Scheduler trigger missing file/function - error", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 		await cronInput.click();
@@ -103,7 +84,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 	});
 
 	test("4. Function name is editable without file selected", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
 		await expect(entryFunctionSelect).toBeVisible();
@@ -118,7 +99,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 	});
 
 	test("5. Function name without file - cannot save", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 		await cronInput.click();
@@ -130,7 +111,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 	});
 
 	test("6. Scheduler trigger with file/function - pass", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 		await cronInput.click();

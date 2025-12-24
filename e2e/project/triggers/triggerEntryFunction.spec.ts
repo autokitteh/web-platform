@@ -1,48 +1,14 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToastToBeRemoved } from "../../utils";
+import { createCustomEntryFunction, selectFile, startTriggerCreation, waitForToastToBeRemoved } from "../../utils";
 
 const triggerName = "entryFunctionTest";
-
-async function startTriggerCreation(page: Page, name: string, triggerType: string, isDeployed?: boolean) {
-	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
-	await addTriggersButton.hover();
-	await addTriggersButton.click();
-
-	if (isDeployed) {
-		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-
-		const okButton = await page.getByRole("button", { name: "Ok", exact: true });
-		await okButton.click();
-	}
-
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
-	await nameInput.click();
-	await nameInput.fill(name);
-
-	await page.getByTestId("select-trigger-type-empty").click();
-	await page.getByRole("option", { name: triggerType }).click();
-}
-
-async function selectFile(page: Page, fileName: string) {
-	await page.getByTestId("select-file-empty").click();
-	await page.getByRole("option", { name: fileName }).click();
-}
 
 async function clearFileSelection(page: Page) {
 	const fileSelectContainer = page.locator('[data-testid^="select-file-"][data-testid$="-selected"]');
 	const clearButton = fileSelectContainer.locator(".react-select__clear-indicator");
 	await clearButton.click();
-}
-
-async function createCustomEntryFunction(page: Page, functionName: string) {
-	const input = page.getByRole("combobox", { name: "Function name" });
-	await input.fill(functionName);
-
-	// eslint-disable-next-line security/detect-non-literal-regexp
-	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
-	await createOption.click();
 }
 
 async function clearEntryFunctionSelection(page: Page) {
@@ -72,7 +38,7 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 	}) => {
 		await projectPage.deployProject();
 
-		await startTriggerCreation(page, triggerName, "Scheduler", true);
+		await startTriggerCreation(page, triggerName, "Scheduler", { isDeployed: true });
 
 		await selectFile(page, "program.py");
 

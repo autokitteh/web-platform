@@ -10,3 +10,4 @@ export { waitForDashboardDataLoaded, waitForRefreshButtonEnabled } from "./waitF
 export { getTestIdFromText } from "./test.utils";
 export { deleteProjectByName, cleanupCurrentProject } from "./projectCleanup";
 export { findTextInSystemLog } from "./findTextInSystemLog";
+export { startTriggerCreation, selectFile, createCustomEntryFunction } from "./triggerHelpers";

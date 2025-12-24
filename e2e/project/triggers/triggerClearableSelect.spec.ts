@@ -1,37 +1,10 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { cleanupCurrentProject } from "../../utils";
+import { cleanupCurrentProject, createCustomEntryFunction, selectFile, startTriggerCreation } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "clearableTest";
-
-async function startTriggerCreation(page: Page, name: string, triggerType: string) {
-	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
-	await addTriggersButton.hover();
-	await addTriggersButton.click();
-
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
-	await nameInput.click();
-	await nameInput.fill(name);
-
-	await page.getByTestId("select-trigger-type-empty").click();
-	await page.getByRole("option", { name: triggerType }).click();
-}
-
-async function selectFile(page: Page, fileName: string) {
-	await page.getByTestId("select-file-empty").click();
-	await page.getByRole("option", { name: fileName }).click();
-}
-
-async function createCustomEntryFunction(page: Page, functionName: string) {
-	const input = page.getByRole("combobox", { name: "Function name" });
-	await input.fill(functionName);
-
-	// eslint-disable-next-line security/detect-non-literal-regexp
-	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
-	await createOption.click();
-}
 
 async function clearFileSelection(page: Page) {
 	const fileSelectContainer = page.locator('[data-testid^="select-file-"][data-testid$="-selected"]');
