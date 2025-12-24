@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
-import { FieldValues, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { useConnectionStore } from "@src/store";
 import { auth0IntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
@@ -15,16 +16,31 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const Auth0IntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, control, errors, handleCustomOauth, handleSubmit, isLoading, register, setValue } =
-		useConnectionForm(auth0IntegrationSchema, "edit");
+	const {
+		connectionId,
+		control,
+		errors,
+		handleCustomOauth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValue,
+		updateConnectionName,
+	} = useConnectionForm(auth0IntegrationSchema, "edit");
+	const { editedConnectionName, originalConnectionName } = useConnectionStore();
 	const [lockState, setLockState] = useState(true);
 
 	const clientSecret = useWatch({ control, name: "client_secret" });
 	const clientId = useWatch({ control, name: "client_id" });
 	const auth0Domain = useWatch({ control, name: "auth0_domain" });
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const openOauthPopUp = (_data: FieldValues) => {
+	const openOauthPopUp = async () => {
+		if (editedConnectionName && editedConnectionName !== originalConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
 		handleCustomOauth(connectionId!, Integrations.auth0);
 	};
 

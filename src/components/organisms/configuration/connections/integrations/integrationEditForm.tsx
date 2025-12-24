@@ -119,7 +119,7 @@ export const IntegrationEditForm = ({
 		return selectOptions;
 	}, [connectionType, selectOptions, integrationType]);
 
-	const onSubmit = () => {
+	const onSubmit = async () => {
 		if (
 			connectionId &&
 			(connectionType === ConnectionAuthType.Oauth ||

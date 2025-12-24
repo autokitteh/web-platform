@@ -20,6 +20,8 @@ import {
 	TabFormHeader,
 } from "@components/molecules";
 
+const { resetConnectionNameState } = useConnectionStore.getState();
+
 export const EditConnection = (
 	{
 		connectionId: connectionIdProp,
@@ -41,10 +43,11 @@ export const EditConnection = (
 	const setEditingConnectionId = useConnectionStore((state) => state.setEditingConnectionId);
 	const {
 		connectionName,
+		editedConnectionName,
+		setEditedConnectionName,
 		errors,
 		fetchConnection,
 		integration: selectedIntegration,
-		register,
 	} = useConnectionForm(connectionSchema, "edit", undefined, onSuccess, isOrgConnection);
 
 	const hasActiveDeployments = useHasActiveDeployments();
@@ -60,13 +63,7 @@ export const EditConnection = (
 	useEffect(() => {
 		return () => {
 			setEditingConnectionId(undefined);
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		return () => {
-			setEditingConnectionId(undefined);
+			resetConnectionNameState();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -122,12 +119,12 @@ export const EditConnection = (
 				<div className="flex flex-col">
 					<div className="relative mb-6">
 						<Input
-							aria-label={t("github.placeholders.name")}
-							{...register("connectionName")}
+							aria-label={t("placeholders.name")}
 							isError={!!errors.connectionName}
 							isRequired
-							label={t("github.placeholders.name")}
-							value={connectionName}
+							label={t("placeholders.name")}
+							onChange={(e) => setEditedConnectionName(e.target.value)}
+							value={editedConnectionName || ""}
 						/>
 					</div>
 				</div>

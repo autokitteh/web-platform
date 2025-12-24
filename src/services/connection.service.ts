@@ -50,6 +50,28 @@ export class ConnectionService {
 		}
 	}
 
+	static async update(connectionId: string, name: string): Promise<ServiceResponse<void>> {
+		try {
+			await connectionsClient.update({
+				connection: {
+					connectionId,
+					name,
+				},
+			});
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const errorMessage = t("connectionUpdateFailedExtended", {
+				connectionId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.connectionService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async getByEventId(eventId: string): Promise<ServiceResponse<Connection>> {
 		try {
 			const { data: event, error: eventError } = await EventsService.getEnriched(eventId);

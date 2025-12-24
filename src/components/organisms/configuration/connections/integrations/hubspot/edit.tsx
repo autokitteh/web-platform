@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { useConnectionStore } from "@src/store";
 import { legacyOauthSchema } from "@validations";
 
 import { Button, Spinner } from "@components/atoms";
@@ -14,13 +15,24 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const HubspotIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, handleLegacyOAuth, handleSubmit, isLoading } = useConnectionForm(legacyOauthSchema, "edit");
+	const { connectionId, handleLegacyOAuth, handleSubmit, isLoading, updateConnectionName } = useConnectionForm(
+		legacyOauthSchema,
+		"edit"
+	);
+	const { editedConnectionName, originalConnectionName } = useConnectionStore();
+
+	const handleSubmitWithNameUpdate = async () => {
+		if (editedConnectionName && editedConnectionName !== originalConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+		await handleLegacyOAuth(connectionId!, Integrations.hubspot);
+	};
 
 	return (
-		<form
-			className="mt-6 flex flex-col gap-6"
-			onSubmit={handleSubmit(async () => await handleLegacyOAuth(connectionId!, Integrations.hubspot))}
-		>
+		<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
 			<Accordion title={t("information")}>
 				<Link
 					className="inline-flex items-center gap-2.5 text-green-800"
