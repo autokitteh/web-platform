@@ -7,7 +7,7 @@ import { Triggers } from "./triggers";
 import { Variables } from "./variables";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useCacheStore, useOrgConnectionsStore, useSharedBetweenProjectsStore } from "@src/store";
 import { getProjectSettingsSectionFromPath } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -16,7 +16,7 @@ import { Close } from "@assets/image/icons";
 
 export const ConfigurationView = () => {
 	const { loading } = useCacheStore();
-
+	const { orgConnections } = useOrgConnectionsStore();
 	const { projectId } = useParams();
 	const location = useLocation();
 	const { setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
@@ -33,11 +33,13 @@ export const ConfigurationView = () => {
 	useEffect(() => {
 		if (projectId && connections && triggers && connections.length < 4 && triggers.length < 4) {
 			setProjectSettingsAccordionState(projectId, "connections", true);
-			setProjectSettingsAccordionState(projectId, "orgConnections", true);
 			setProjectSettingsAccordionState(projectId, "triggers", true);
 			setProjectSettingsAccordionState(projectId, "variables", true);
+			if (orgConnections && orgConnections.length < 4) {
+				setProjectSettingsAccordionState(projectId, "orgConnections", true);
+			}
 		}
-	}, [projectId, connections, triggers, setProjectSettingsAccordionState]);
+	}, [projectId, connections, triggers, setProjectSettingsAccordionState, orgConnections]);
 
 	useEffect(() => {
 		if (!projectId) return;

@@ -6,19 +6,30 @@ import { getTestIdFromText } from "./test.utils";
 const closeToastDuration = 4000;
 const displayToastTimeout = 4000;
 
-export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) => {
+export const waitForToastToBeRemoved = async (
+	page: Page,
+	toastMessage: string,
+	options?: {
+		failIfNotFound?: boolean;
+		timeout?: number;
+	}
+) => {
 	let toast;
+	const toastDisplayTimeout = options?.timeout || displayToastTimeout;
 	const toastTestId = getTestIdFromText("toast", toastMessage);
 
 	const roleToast = page.getByRole("alert", { name: toastMessage });
-	const isToastByRoleVisible = await roleToast.isVisible({ timeout: displayToastTimeout }).catch(() => false);
+	const isToastByRoleVisible = await roleToast.isVisible({ timeout: toastDisplayTimeout }).catch(() => false);
 	if (isToastByRoleVisible) {
 		toast = roleToast;
 	}
 
 	if (!toast) {
-		const testIdToast = await page.getByTestId(toastTestId);
-		const isToastByIdVisible = await testIdToast.isVisible({ timeout: displayToastTimeout }).catch(() => false);
+		const testIdToast = page.getByTestId(toastTestId);
+		const isToastByIdVisible = await testIdToast.isVisible({ timeout: toastDisplayTimeout }).catch(() => {
+			console.warn("Toast was not found", toastMessage, toastTestId);
+			return false;
+		});
 		if (isToastByIdVisible) {
 			toast = testIdToast;
 		}
@@ -26,6 +37,10 @@ export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) 
 
 	if (!toast) {
 		console.warn("Toast was not found", toastMessage, toastTestId);
+
+		if (options?.failIfNotFound) {
+			throw new Error("Toast was not found");
+		}
 
 		return;
 	}
@@ -51,6 +66,8 @@ export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) 
 			toastCloseButtonTestId,
 			toastTestId
 		);
-		// ignore
+		if (options?.failIfNotFound) {
+			throw new Error("Toast close button was not found");
+		}
 	}
 };

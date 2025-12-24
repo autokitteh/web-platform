@@ -123,7 +123,11 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 		await page.locator('button[aria-label="Deploy project"]').click();
-		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
+		await page.waitForTimeout(800);
+		await waitForToastToBeRemoved(page, "Project deployment completed successfully", {
+			failIfNotFound: true,
+		});
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 		await waitForDashboardDataLoaded(page);

@@ -17,4 +17,5 @@ export interface DrawerProps {
 	divId?: string;
 	isScreenHeight?: boolean;
 	position?: "left" | "right";
+	"data-testid"?: string;
 }

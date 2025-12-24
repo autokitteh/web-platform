@@ -75,6 +75,7 @@ async function modifyTrigger(
 		await page.locator('button[aria-label="Close Project Settings"]').click();
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
+		await page.waitForTimeout(800);
 
 		await waitForToastToBeRemoved(page, "Project deployment completed successfully");
 

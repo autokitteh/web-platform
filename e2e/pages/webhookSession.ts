@@ -119,14 +119,17 @@ export class WebhookSessionPage {
 		}
 
 		await waitForLoadingOverlayGone(this.page);
-		const triggersButton = this.page.locator('button[aria-label="Open Triggers Section"]');
-		await expect(triggersButton).toBeVisible({ timeout: 10000 });
-		await expect(triggersButton).toBeEnabled({ timeout: 5000 });
-		await triggersButton.click({ timeout: 10000 });
-		const triggerInfoButton = this.page.locator(
+		const configSidebar = this.page.getByTestId("project-sidebar-config");
+		await expect(configSidebar).toBeVisible();
+
+		const triggersButton = configSidebar.locator('button[aria-label="Open Triggers Section"]');
+		await triggersButton.scrollIntoViewIfNeeded();
+		await expect(triggersButton).toBeVisible();
+		await triggersButton.click();
+		const triggerInfoButton = configSidebar.locator(
 			`button[aria-label='Trigger information for "receive_http_get_or_head"']`
 		);
-		await expect(triggerInfoButton).toBeVisible({ timeout: 10000 });
+		await expect(triggerInfoButton).toBeVisible();
 		await triggerInfoButton.hover();
 
 		const copyButton = await this.page.waitForSelector('[data-testid="copy-receive_http_get_or_head-webhook-url"]');
@@ -136,9 +139,17 @@ export class WebhookSessionPage {
 			throw new Error("Failed to get webhook URL from button value attribute");
 		}
 
+		await this.page.keyboard.press("Escape");
 		await this.page.locator('button[aria-label="Deploy project"]').click();
+		await this.page.waitForTimeout(800);
 
-		await waitForToastToBeRemoved(this.page, "Project deployment completed successfully");
+		await waitForToastToBeRemoved(this.page, "Project deployment completed successfully", {
+			failIfNotFound: true,
+		});
+
+		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled({
+			timeout: 6000,
+		});
 
 		const response = await this.request.get(webhookUrl, {
 			timeout: 1000,
