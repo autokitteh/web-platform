@@ -1,6 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
+import { cleanupCurrentProject } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
@@ -46,6 +47,10 @@ async function saveAndExpectFailure(page: Page, expectedError: string) {
 test.describe("Trigger Validation Core Requirements", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("1. Webhook trigger without file/function - pass", async ({ page }) => {

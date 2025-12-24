@@ -1,6 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
+import { cleanupCurrentProject } from "../../utils";
 
 const triggerName = "timezone_trigger";
 const defaultTimezoneValue = "Etc/GMT";
@@ -34,6 +35,10 @@ async function selectTimezone(page: Page, searchTerm: string, optionName: RegExp
 test.describe("Trigger Timezone Features", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Trigger shows default UTC timezone in info popover", async ({ page }) => {

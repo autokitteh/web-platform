@@ -8,3 +8,4 @@ export {
 } from "./scrollToFindInVirtualizedList";
 export { waitForDashboardDataLoaded, waitForRefreshButtonEnabled } from "./waitForDashboardDataLoaded";
 export { getTestIdFromText } from "./test.utils";
+export { deleteProjectByName, cleanupCurrentProject } from "./projectCleanup";

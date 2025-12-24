@@ -1,10 +1,14 @@
 import { expect, test } from "../../fixtures";
-import { waitForToastToBeRemoved } from "../../utils/waitForToast";
+import { cleanupCurrentProject, waitForToastToBeRemoved } from "../../utils";
 
 test.describe("File Manager Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 		await expect(page.getByRole("button", { name: "Open program.py" })).toBeVisible();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test.describe("File Operations", () => {

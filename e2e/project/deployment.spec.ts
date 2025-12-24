@@ -1,21 +1,22 @@
 import { expect, test } from "../fixtures";
-import { waitForToastToBeRemoved } from "../utils/waitForToast";
-
-test.beforeEach(async ({ dashboardPage, page }) => {
-	await dashboardPage.createProjectFromMenu();
-	await page.locator('button[aria-label="Deploy project"]').click();
-
-	await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning", {
-		timeout: 6000,
-		failIfNotFound: false,
-	});
-
-	await page.locator('button[aria-label="Deployments"]').click();
-	await expect(page.getByText("Deployment History")).toBeVisible();
-	await page.locator('button[aria-label="Close Project Settings"]').click();
-});
+import { cleanupCurrentProject, waitForToastToBeRemoved } from "../utils";
 
 test.describe("Project Deployment Suite", () => {
+	test.beforeEach(async ({ dashboardPage, page }) => {
+		await dashboardPage.createProjectFromMenu();
+		await page.locator('button[aria-label="Deploy project"]').click();
+
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
+
+		await page.locator('button[aria-label="Deployments"]').click();
+		await expect(page.getByText("Deployment History")).toBeVisible();
+		await page.locator('button[aria-label="Close Project Settings"]').click();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("New deployment has been created", async ({ page }) => {
 		await expect(page.getByText("Deployment History")).toBeVisible();
 		await expect(page.getByText("Active").first()).toBeVisible();

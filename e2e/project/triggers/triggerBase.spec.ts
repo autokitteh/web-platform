@@ -2,7 +2,8 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToastToBeRemoved } from "../../utils";
+import { cleanupCurrentProject } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "triggerName";
 const testModifyCases = [
@@ -116,6 +117,10 @@ async function modifyTrigger(
 test.describe("Project Triggers Suite", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Create trigger with cron expression", async ({ page }) => {

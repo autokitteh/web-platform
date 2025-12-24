@@ -1,6 +1,11 @@
 import { expect, test } from "../fixtures";
+import { cleanupCurrentProject } from "../utils";
 
 test.describe("Project Topbar Suite", () => {
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 
@@ -28,6 +33,10 @@ test.describe("Project Topbar Suite", () => {
 	});
 
 	test.describe("Responsive button behavior", () => {
+		test.afterEach(async ({ page }) => {
+			await cleanupCurrentProject(page);
+		});
+
 		test("Navigation buttons - icons always visible on all screen sizes", async ({ dashboardPage, page }) => {
 			await page.setViewportSize({ width: 1920, height: 1080 });
 			await dashboardPage.createProjectFromMenu();

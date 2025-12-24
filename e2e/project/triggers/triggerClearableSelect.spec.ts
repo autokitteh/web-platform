@@ -1,6 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
+import { cleanupCurrentProject } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "clearableTest";
@@ -38,6 +39,10 @@ async function clearFileSelection(page: Page) {
 test.describe("Trigger Clearable Select Suite", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Clear button appears on file select when value is selected", async ({ page }) => {

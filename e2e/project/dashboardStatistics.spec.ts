@@ -6,6 +6,7 @@ import {
 	getProjectRowLocator,
 	waitForDashboardDataLoaded,
 	waitForRefreshButtonEnabled,
+	cleanupCurrentProject,
 } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
@@ -15,6 +16,10 @@ test.describe("Dashboard Statistics Suite", () => {
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 		await waitForDashboardDataLoaded(page);
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test.describe("Dashboard Page Layout", () => {
@@ -118,13 +123,14 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 		await page.locator('button[aria-label="Deploy project"]').click();
-		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning", {
-			timeout: 6000,
-			failIfNotFound: false,
-		});
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 		await waitForDashboardDataLoaded(page);
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test.describe("Projects Table", () => {
@@ -214,6 +220,10 @@ test.describe("Dashboard with Project Data", () => {
 		await waitForLoadingOverlayGone(page);
 	});
 
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("Project appears in projects table after creation", async ({ page }) => {
 		const scrollContainer = getProjectsTableScrollContainer(page);
 		const projectRow = getProjectRowLocator(page, projectName);
@@ -240,6 +250,10 @@ test.describe("Dashboard Projects Table Sorting", () => {
 		await dashboardPage.createProjectFromMenu();
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Project name column header is visible", async ({ page }) => {
@@ -278,6 +292,10 @@ test.describe("Dashboard Templates Catalog", () => {
 		await page.setViewportSize({ width: 1920, height: 1080 });
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Templates catalog is visible on large screens", async ({ page }) => {
