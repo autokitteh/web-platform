@@ -32,10 +32,7 @@ const testModifyCases = [
 ];
 
 async function createCustomEntryFunction(page: Page, functionName: string) {
-	const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
-	await entryFunctionSelect.click();
-
-	const input = entryFunctionSelect.locator(".react-select__input input");
+	const input = page.getByRole("combobox", { name: "Function name" });
 	await input.fill(functionName);
 
 	// eslint-disable-next-line security/detect-non-literal-regexp
@@ -222,7 +219,7 @@ test.describe("Project Triggers Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		const functionNameErrorMessage = page.locator("text=/.*function.*required.*/i");
-		await expect(functionNameErrorMessage).toBeVisible();
+		const entryFunctionErrorMessage = page.getByText("Entry function is required");
+		await expect(entryFunctionErrorMessage).toBeVisible();
 	});
 });

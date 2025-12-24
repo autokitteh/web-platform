@@ -93,6 +93,33 @@ export const TriggerSpecificFields = ({
 		}
 	}, [watchedFilePath, setValue]);
 
+	useEffect(() => {
+		if (!watchedEntryFunction?.value) return;
+
+		const entryFunctionValue = watchedEntryFunction.value;
+		const entryFunctionLabel = watchedEntryFunction.label || entryFunctionValue;
+		const functionsFromBuild = watchedFilePath?.value && buildFiles ? buildFiles[watchedFilePath.value] || [] : [];
+
+		const isInBuildFiles = functionsFromBuild.includes(entryFunctionValue);
+
+		if (!isInBuildFiles) {
+			setCustomEntryFunctions((prev) => {
+				const alreadyExists = prev.some((opt) => opt.value === entryFunctionValue);
+				if (alreadyExists) return prev;
+
+				return [
+					...prev,
+					{
+						value: entryFunctionValue,
+						label: entryFunctionLabel,
+						icon: CiEdit,
+						iconClassName: "!size-5.5 rounded-none bg-transparent fill-white",
+					},
+				];
+			});
+		}
+	}, [watchedEntryFunction?.value, watchedEntryFunction?.label, watchedFilePath?.value, buildFiles]);
+
 	const entryFunctionOptions = useMemo(() => {
 		if (!watchedFilePath?.value || !buildFiles) {
 			return customEntryFunctions;

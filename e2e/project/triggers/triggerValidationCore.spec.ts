@@ -16,6 +16,18 @@ async function startTriggerCreation(page: Page, triggerType: string, name: strin
 	await page.getByRole("option", { name: triggerType }).click();
 }
 
+async function createCustomEntryFunction(page: Page, functionName: string) {
+	const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
+	await entryFunctionSelect.click();
+
+	const input = entryFunctionSelect.locator(".react-select__input input");
+	await input.fill(functionName);
+
+	// eslint-disable-next-line security/detect-non-literal-regexp
+	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
+	await createOption.click();
+}
+
 async function expectValidationError(page: Page, errorText: string, shouldBeVisible: boolean = true) {
 	let errorMessage;
 	if (errorText.includes("function") && errorText.includes("required")) {
@@ -96,12 +108,16 @@ test.describe("Trigger Validation Core Requirements", () => {
 	test("4. Function name is editable without file selected", async ({ page }) => {
 		await startTriggerCreation(page, "Scheduler");
 
-		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await expect(functionInput).toBeEnabled();
+		const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
+		await expect(entryFunctionSelect).toBeVisible();
 
-		await functionInput.click();
-		await functionInput.fill("my_test_function");
-		await expect(functionInput).toHaveValue("my_test_function");
+		await createCustomEntryFunction(page, "my_test_function");
+
+		const selectedValue = page.locator('[data-testid^="select-entry-function-"][data-testid$="-selected"]');
+		await expect(selectedValue).toBeVisible();
+
+		const valueText = selectedValue.locator(".react-select__single-value");
+		await expect(valueText).toContainText("my_test_function");
 	});
 
 	test("5. Function name without file - cannot save", async ({ page }) => {
@@ -111,9 +127,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await cronInput.click();
 		await cronInput.fill("0 9 * * *");
 
-		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await functionInput.click();
-		await functionInput.fill("my_test_function");
+		await createCustomEntryFunction(page, "my_test_function");
 
 		await saveAndExpectFailure(page, "File is required");
 	});
@@ -128,11 +142,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: "program.py" }).click();
 
-		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await expect(functionInput).toBeEnabled();
-
-		await functionInput.click();
-		await functionInput.fill("test_function");
+		await createCustomEntryFunction(page, "test_function");
 
 		await saveAndExpectSuccess(page);
 	});
