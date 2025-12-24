@@ -240,7 +240,7 @@ export const SessionsTable = () => {
 			setIsLoading(false);
 			setIsInitialLoad(false);
 
-			if (firstTimeLoadingRef.current && !nextPageToken && data.sessions.length > 0) {
+			if (firstTimeLoadingRef.current && !nextPageToken && data.sessions.length > 0 && !sessionIdFromParams) {
 				firstTimeLoadingRef.current = false;
 
 				const rememberedSessionId = lastSeenSession[projectId];
@@ -252,7 +252,16 @@ export const SessionsTable = () => {
 				navigateWithSettings(`${sessionToOpen}`, { replace: true });
 			}
 		},
-		[projectId, deploymentId, urlSessionStateFilter, addToast, tErrors, lastSeenSession, navigateWithSettings]
+		[
+			projectId,
+			deploymentId,
+			urlSessionStateFilter,
+			addToast,
+			tErrors,
+			lastSeenSession,
+			navigateWithSettings,
+			sessionIdFromParams,
+		]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
