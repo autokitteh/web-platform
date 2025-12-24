@@ -2,7 +2,7 @@
 	"name": "autokitteh",
 	"private": true,
 	"type": "module",
-	"version": "2.244.1",
+	"version": "2.245.0",
 	"scripts": {
 		"build": "node scripts/validateRuleConsistency.mjs && vite build",
 		"build-storybook": "storybook build",

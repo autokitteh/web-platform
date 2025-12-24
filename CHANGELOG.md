@@ -1,3 +1,7 @@
+## 2.245.0 (2025-12-24)
+
+* feat: add dashboard statistics components and hooks  (#1479) ([cef6fc3](https://github.com/autokitteh/web-platform/commit/cef6fc3)), closes [#1479](https://github.com/autokitteh/web-platform/issues/1479)
+
 ## <small>2.244.1 (2025-12-24)</small>
 
 * fix: prevent 404 on session page refresh (#1512) ([68798cd](https://github.com/autokitteh/web-platform/commit/68798cd)), closes [#1512](https://github.com/autokitteh/web-platform/issues/1512)
