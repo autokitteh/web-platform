@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { CiEdit } from "react-icons/ci";
 
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
@@ -42,6 +43,7 @@ export const TriggerSpecificFields = ({
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
 	const [entryFunctionKey, setEntryFunctionKey] = useState(0);
+	const [customEntryFunctions, setCustomEntryFunctions] = useState<SelectOption[]>([]);
 
 	const isScheduleTrigger = connectionType === TriggerTypes.schedule;
 
@@ -93,17 +95,21 @@ export const TriggerSpecificFields = ({
 
 	const entryFunctionOptions = useMemo(() => {
 		if (!watchedFilePath?.value || !buildFiles) {
-			return [];
+			return customEntryFunctions;
 		}
 		const functions = buildFiles[watchedFilePath.value] || [];
-		return functions.map((fn) => ({ label: fn, value: fn }));
-	}, [watchedFilePath?.value, buildFiles]);
+		const buildOptions = functions.map((fn) => ({ label: fn, value: fn }));
+		return [...buildOptions, ...customEntryFunctions];
+	}, [watchedFilePath?.value, buildFiles, customEntryFunctions]);
 
 	const handleCreateEntryFunction = (inputValue: string) => {
 		const newOption: SelectOption = {
 			value: inputValue,
 			label: inputValue,
+			icon: CiEdit,
+			iconClassName: "!size-5.5 rounded-none bg-transparent fill-white",
 		};
+		setCustomEntryFunctions((prev) => [...prev, newOption]);
 		setValue("entryFunction", newOption);
 	};
 
