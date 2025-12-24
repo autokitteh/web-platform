@@ -2,14 +2,9 @@ import { expect, test } from "../fixtures";
 import { cleanupCurrentProject } from "../utils";
 
 test.describe("Project Deployment Suite", () => {
-	test.beforeEach(async ({ dashboardPage, page }) => {
+	test.beforeEach(async ({ dashboardPage, projectPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
-		await page.locator('button[aria-label="Deploy project"]').click();
-		await page.mouse.move(0, 0);
-		await page.keyboard.press("Escape");
-		await page.waitForTimeout(800);
-
-		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+		await projectPage.deployProject();
 
 		await page.locator('button[aria-label="Deployments"]').click();
 		await expect(page.getByText("Deployment History")).toBeVisible();

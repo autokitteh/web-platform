@@ -6,19 +6,14 @@ test.describe("Project Topbar Suite", () => {
 		await cleanupCurrentProject(page);
 	});
 
-	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
+	test("Changed deployments topbar", async ({ dashboardPage, projectPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 
 		await expect(page.locator('button[aria-label="Explorer"]')).toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Sessions"]')).toBeDisabled();
 
-		const deployButton = page.locator('button[aria-label="Deploy project"]');
-		await deployButton.click();
-		await page.waitForTimeout(800);
-		await page.mouse.move(0, 0);
-		await page.keyboard.press("Escape");
-		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+		await projectPage.deployProject();
 
 		await page.locator('button[aria-label="Deployments"]').click();
 

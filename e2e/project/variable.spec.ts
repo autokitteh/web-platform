@@ -88,13 +88,8 @@ test.describe("Project Variables Suite", () => {
 		await expect(page.getByText("Updated description text")).toBeVisible();
 	});
 
-	test("Modify variable with active deployment", async ({ page }) => {
-		const deployButton = page.locator('button[aria-label="Deploy project"]');
-		await deployButton.click();
-		await page.waitForTimeout(800);
-		await page.mouse.move(0, 0);
-		await page.keyboard.press("Escape");
-		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+	test("Modify variable with active deployment", async ({ page, projectPage }) => {
+		await projectPage.deployProject();
 
 		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
 		await configureButton.click();

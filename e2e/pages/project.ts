@@ -68,4 +68,13 @@ export class ProjectPage {
 		const deploymentTableRow = this.page.getByRole("cell", { name: "inactive" });
 		await expect(deploymentTableRow).toHaveCount(1);
 	}
+
+	async deployProject() {
+		await this.page.getByRole("button", { name: "Deploy project" }).click();
+		await this.page.waitForTimeout(800);
+		await this.page.mouse.move(0, 0);
+		await this.page.keyboard.press("Escape");
+
+		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+	}
 }

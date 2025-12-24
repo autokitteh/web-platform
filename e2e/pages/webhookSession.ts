@@ -2,6 +2,7 @@ import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { DashboardPage } from "./dashboard";
+import { ProjectPage } from "./project";
 import { createNetworkListeners, logNetworkDiagnostics, type NetworkCapture } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
@@ -9,12 +10,14 @@ export class WebhookSessionPage {
 	private readonly page: Page;
 	private readonly request: APIRequestContext;
 	private readonly dashboardPage: DashboardPage;
+	private readonly projectPage: ProjectPage;
 	public projectName: string;
 
 	constructor(page: Page, request: APIRequestContext) {
 		this.page = page;
 		this.request = request;
 		this.dashboardPage = new DashboardPage(page);
+		this.projectPage = new ProjectPage(page);
 		this.projectName = `test_${randomatic("Aa", 4)}`;
 	}
 
@@ -140,12 +143,7 @@ export class WebhookSessionPage {
 		}
 
 		await this.page.keyboard.press("Escape");
-		await this.page.locator('button[aria-label="Deploy project"]').click();
-		await this.page.waitForTimeout(800);
-		await this.page.mouse.move(0, 0);
-		await this.page.keyboard.press("Escape");
-
-		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+		await this.projectPage.deployProject();
 
 		const response = await this.request.get(webhookUrl, {
 			timeout: 1000,

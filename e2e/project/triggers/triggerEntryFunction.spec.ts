@@ -66,13 +66,11 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 		await expect(placeholder).toBeVisible();
 	});
 
-	test("Entry function select shows available functions after file selection and deployment", async ({ page }) => {
-		await page.getByRole("button", { name: "Deploy project" }).click();
-		await page.waitForTimeout(800);
-		await page.mouse.move(0, 0);
-		await page.keyboard.press("Escape");
-
-		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+	test("Entry function select shows available functions after file selection and deployment", async ({
+		page,
+		projectPage,
+	}) => {
+		await projectPage.deployProject();
 
 		await startTriggerCreation(page, triggerName, "Scheduler", true);
 

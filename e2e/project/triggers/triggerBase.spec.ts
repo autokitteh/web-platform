@@ -2,6 +2,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
+import { ProjectPage } from "../../pages";
 import { cleanupCurrentProject } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
@@ -86,13 +87,8 @@ async function modifyTrigger(
 ) {
 	if (withActiveDeployment) {
 		await page.locator('button[aria-label="Close Project Settings"]').click();
-		const deployButton = page.locator('button[aria-label="Deploy project"]');
-		await deployButton.click();
-		await page.waitForTimeout(800);
-		await page.mouse.move(0, 0);
-		await page.keyboard.press("Escape");
-
-		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+		const projectPage = new ProjectPage(page);
+		await projectPage.deployProject();
 
 		await page.locator('button[aria-label="Config"]').click();
 
