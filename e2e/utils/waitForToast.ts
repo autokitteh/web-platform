@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import type { Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 import { getTestIdFromText } from "./test.utils";
 
@@ -7,6 +7,26 @@ const closeToastDuration = 4000;
 const toastDisplayTimeout = 4000;
 
 export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) => {
+	const closeToast = async (toast: Locator, toastMessage: string) => {
+		const toastCloseButtonTestId = getTestIdFromText("toast-close-btn", toastMessage);
+
+		const toastCloseButton = await toast.getByTestId(toastCloseButtonTestId);
+
+		const isToastCloseButtonVisible = await toastCloseButton
+			.isVisible({ timeout: closeToastDuration })
+			.catch(() => false);
+
+		if (isToastCloseButtonVisible) {
+			await toastCloseButton.click();
+		}
+
+		await page.waitForTimeout(800);
+		await page.mouse.move(0, 0);
+		await page.keyboard.press("Escape");
+
+		await expect(toast).not.toBeVisible();
+	};
+
 	let toast;
 	const toastTestId = getTestIdFromText("toast", toastMessage);
 
@@ -32,27 +52,10 @@ export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) 
 
 		return;
 	}
-	const toastCloseButtonTestId = getTestIdFromText("toast-close-btn", toastMessage);
 
 	try {
-		const toastCloseButton = await toast.getByTestId(toastCloseButtonTestId);
-
-		const isToastCloseButtonVisible = await toastCloseButton
-			.isVisible({ timeout: closeToastDuration })
-			.catch(() => false);
-
-		if (isToastCloseButtonVisible) {
-			await toastCloseButton.click();
-		}
-
-		await toast.waitFor({ state: "hidden", timeout: closeToastDuration });
+		closeToast(toast, toastMessage);
 	} catch (error) {
-		console.warn(
-			"The close button for toast was not found",
-			toastMessage,
-			error,
-			toastCloseButtonTestId,
-			toastTestId
-		);
+		console.warn("The close button for toast was not found", toastMessage, error, toastTestId);
 	}
 };
