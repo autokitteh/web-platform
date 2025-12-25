@@ -14,7 +14,7 @@ async function createTrigger(page: Page, name: string, cronExpression: string, f
 	await page.getByRole("textbox", { name: "Cron expression" }).fill(cronExpression);
 	await page.getByTestId("select-file-empty").click();
 	await page.getByRole("option", { name: fileName }).click();
-	await page.getByRole("textbox", { name: "Function name" }).fill(functionName);
+	await page.getByRole("combobox", { name: "Function name" }).fill(functionName);
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 }
 
