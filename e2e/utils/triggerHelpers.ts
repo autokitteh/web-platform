@@ -38,3 +38,11 @@ export async function createCustomEntryFunction(page: Page, functionName: string
 	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
 	await createOption.click();
 }
+
+export async function returnToTriggersList(page: Page) {
+	try {
+		await page.getByRole("button", { name: "Return back" }).click();
+	} catch {
+		await page.getByRole("button", { name: "Close Modify trigger" }).click();
+	}
+}

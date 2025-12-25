@@ -1,7 +1,13 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { createCustomEntryFunction, selectFile, startTriggerCreation, waitForToastToBeRemoved } from "../../utils";
+import {
+	createCustomEntryFunction,
+	returnToTriggersList,
+	selectFile,
+	startTriggerCreation,
+	waitForToastToBeRemoved,
+} from "../../utils";
 
 const triggerName = "entryFunctionTest";
 
@@ -181,7 +187,7 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 
 		await waitForToastToBeRemoved(page, "Trigger created successfully");
 
-		await page.locator('button[aria-label="Return back"]').click();
+		await returnToTriggersList(page);
 
 		const editButton = page.locator(`button[aria-label="Edit ${triggerName}"]`);
 		await editButton.click();

@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
 import { ProjectPage } from "../../pages";
-import { cleanupCurrentProject, createCustomEntryFunction } from "../../utils";
+import { cleanupCurrentProject, createCustomEntryFunction, returnToTriggersList } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "triggerName";
@@ -128,7 +128,7 @@ test.describe("Project Triggers Suite", () => {
 	test("Create trigger with cron expression", async ({ page }) => {
 		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 
-		await page.locator('button[aria-label="Return back"]').click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 		await expect(page.locator(`button[aria-label='Trigger information for "${triggerName}"']`)).toBeVisible();
@@ -138,7 +138,7 @@ test.describe("Project Triggers Suite", () => {
 		testModifyCases.forEach(({ description, modifyParams, expectedEntryPoint, expectedFile, expectedCron }) => {
 			test(`Modify trigger ${description}`, async ({ page }) => {
 				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
-				await page.locator('button[aria-label="Return back"]').click();
+				await returnToTriggersList(page);
 
 				await modifyTrigger(
 					page,
@@ -163,7 +163,7 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
-		await page.locator('button[aria-label="Return back"]').click();
+		await returnToTriggersList(page);
 		await expect(page.getByText("triggerName")).toBeVisible();
 
 		const deleteButton = page.locator(`button[aria-label="Delete ${triggerName}"]`);
@@ -197,7 +197,7 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Modify trigger without a values", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
-		await page.locator('button[aria-label="Return back"]').click();
+		await returnToTriggersList(page);
 
 		const configureButtons = page.locator(`button[aria-label="Edit ${triggerName}"]`);
 		await configureButtons.first().click();

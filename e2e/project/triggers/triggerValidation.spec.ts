@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { cleanupCurrentProject, startTriggerCreation } from "../../utils";
+import { cleanupCurrentProject, returnToTriggersList, startTriggerCreation } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "testTrigger";
@@ -66,8 +66,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -94,8 +93,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -138,8 +136,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 

@@ -93,10 +93,15 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
+        id: cache-node-modules
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies (fallback)
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Restore Playwright browsers
         uses: actions/cache/restore@v4
@@ -174,10 +179,15 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
+        id: cache-node-modules-visual
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies (fallback)
+        if: steps.cache-node-modules-visual.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Restore Playwright browsers
         uses: actions/cache/restore@v4
@@ -239,10 +249,15 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
+        id: cache-node-modules-build
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies (fallback)
+        if: steps.cache-node-modules-build.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Update kittehub.zip
         if: ${{ !env.ACT }}
