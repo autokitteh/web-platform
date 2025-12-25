@@ -54,7 +54,7 @@ export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) 
 	}
 
 	try {
-		closeToast(toast, toastMessage);
+		await closeToast(toast, toastMessage);
 	} catch (error) {
 		console.warn("The close button for toast was not found", toastMessage, error, toastTestId);
 	}
