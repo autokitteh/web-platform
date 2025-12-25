@@ -9,8 +9,8 @@ import { defaultSessionsTableSplit, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { SessionStateType } from "@src/enums";
-import { useAutoRefresh, useResize } from "@src/hooks";
+import { EventListenerName, SessionStateType } from "@src/enums";
+import { triggerEvent, useAutoRefresh, useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import {
@@ -365,6 +365,7 @@ export const SessionsTable = () => {
 		}
 
 		fetchDeployments(false);
+		triggerEvent(EventListenerName.sessionReload);
 	}, [
 		projectId,
 		deploymentId,
