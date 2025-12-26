@@ -39,7 +39,7 @@ import { FilterSessionsByEntityPopoverItem } from "@components/organisms/deploym
 import { CatImage } from "@assets/image";
 import { FilterIcon } from "@assets/image/icons";
 
-const AUTO_REFRESH_INTERVAL_MS = 60000;
+const autoRefreshIntervalMs = 30000;
 
 export const SessionsTable = () => {
 	const resizeId = useId();
@@ -389,7 +389,7 @@ export const SessionsTable = () => {
 		resume: resumeAutoRefresh,
 	} = useAutoRefresh({
 		enabled: true,
-		intervalMs: AUTO_REFRESH_INTERVAL_MS,
+		intervalMs: autoRefreshIntervalMs,
 		onRefresh: handleAutoRefresh,
 		pauseWhenHidden: true,
 	});
@@ -556,6 +556,7 @@ export const SessionsTable = () => {
 							<AutoRefreshIndicator
 								className="mr-2"
 								countdownMs={countdownMs}
+								intervalMs={autoRefreshIntervalMs}
 								isEnabled={isAutoRefreshEnabled}
 								isPaused={isAutoRefreshPaused}
 								isRefreshing={isAutoRefreshing}
