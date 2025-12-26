@@ -28,6 +28,7 @@ export const TriggerSpecificFields = ({
 }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
+		clearErrors,
 		control,
 		formState: { errors },
 		register,
@@ -138,6 +139,7 @@ export const TriggerSpecificFields = ({
 		};
 		setCustomEntryFunctions((prev) => [...prev, newOption]);
 		setValue("entryFunction", newOption);
+		clearErrors("entryFunction");
 	};
 
 	const handleCreateOption = (inputValue: string) => {

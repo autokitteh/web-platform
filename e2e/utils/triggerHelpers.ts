@@ -33,10 +33,7 @@ export async function selectFile(page: Page, fileName: string) {
 export async function createCustomEntryFunction(page: Page, functionName: string) {
 	const input = page.getByRole("combobox", { name: "Function name" });
 	await input.fill(functionName);
-
-	// eslint-disable-next-line security/detect-non-literal-regexp
-	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
-	await createOption.click();
+	await input.press("Enter");
 }
 
 export async function returnToTriggersList(page: Page) {

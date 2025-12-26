@@ -25,9 +25,9 @@ async function fillFileAndFunction(page: Page, fileName?: string, functionName?:
 	}
 
 	if (functionName) {
-		const functionNameInput = page.getByRole("textbox", { name: /Function name/i });
-		await functionNameInput.click();
+		const functionNameInput = page.getByRole("combobox", { name: "Function name" });
 		await functionNameInput.fill(functionName);
+		await functionNameInput.press("Enter");
 	}
 }
 
