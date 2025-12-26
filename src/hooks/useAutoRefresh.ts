@@ -34,6 +34,8 @@ export function useAutoRefresh({
 	const refreshInProgressRef = useRef(false);
 	const lastRefreshTimeRef = useRef(Date.now());
 	const countdownIntervalRef = useRef<ReturnType<typeof setInterval>>();
+	const pausedAtRef = useRef<number | null>(null);
+	const remainingWhenPausedRef = useRef<number | null>(null);
 	const onRefreshRef = useRef(onRefresh);
 	onRefreshRef.current = onRefresh;
 
@@ -45,8 +47,10 @@ export function useAutoRefresh({
 		refreshInProgressRef.current = true;
 		setIsRefreshing(true);
 
+		const minimumLoadingTime = new Promise((resolve) => setTimeout(resolve, 2500));
+
 		try {
-			await onRefreshRef.current();
+			await Promise.all([onRefreshRef.current(), minimumLoadingTime]);
 		} finally {
 			refreshInProgressRef.current = false;
 			setIsRefreshing(false);
@@ -106,11 +110,18 @@ export function useAutoRefresh({
 
 		const handleVisibilityChange = () => {
 			if (document.hidden) {
+				pausedAtRef.current = Date.now();
+				const elapsed = Date.now() - lastRefreshTimeRef.current;
+				remainingWhenPausedRef.current = Math.max(0, intervalMs - elapsed);
 				setIsPaused(true);
 			} else {
 				setIsPaused(false);
-				lastRefreshTimeRef.current = Date.now();
-				setCountdownMs(intervalMs);
+				if (remainingWhenPausedRef.current !== null) {
+					lastRefreshTimeRef.current = Date.now() - (intervalMs - remainingWhenPausedRef.current);
+					setCountdownMs(remainingWhenPausedRef.current);
+				}
+				pausedAtRef.current = null;
+				remainingWhenPausedRef.current = null;
 			}
 		};
 

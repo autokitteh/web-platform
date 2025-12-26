@@ -45,7 +45,8 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 			const { logs, nextPageToken } = data;
 
-			const outputs = force ? [...logs] : [...currentSession.outputs, ...logs];
+			const reversedLogs = [...logs].reverse();
+			const outputs = force ? reversedLogs : [...reversedLogs, ...currentSession.outputs];
 
 			const finishedStates = new Set([
 				SessionStateType.error,
@@ -81,7 +82,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				const lastSessionState = convertSessionLogProtoToViewerOutput(lastStateRecord);
 
 				if (lastSessionState) {
-					const finalOutputs = [lastSessionState, ...outputs];
+					const finalOutputs = [...outputs, lastSessionState];
 
 					updateSession({
 						outputs: finalOutputs,
