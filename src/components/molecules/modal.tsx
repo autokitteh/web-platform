@@ -23,6 +23,7 @@ const modalVariants = {
 };
 
 export const Modal = ({
+	"data-testid": dataTestId,
 	children,
 	className,
 	hideCloseButton,
@@ -112,7 +113,7 @@ export const Modal = ({
 							variants={backdropVariants}
 						/>
 					)}
-					<div className={wrapperClassName}>
+					<div className={wrapperClassName} data-testid={dataTestId}>
 						<motion.div
 							animate="visible"
 							className={modalClasses}

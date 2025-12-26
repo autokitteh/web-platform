@@ -6,11 +6,19 @@ import { getTestIdFromText } from "./test.utils";
 const closeToastDuration = 4000;
 const toastDisplayTimeout = 4000;
 
-export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) => {
+export const waitForAllToastsToDisappear = async (page: Page, timeout = closeToastDuration + 3000) => {
+	const toastContainer = page.locator('[data-testid^="toast-"]');
+	await expect(toastContainer).toHaveCount(0, { timeout });
+};
+
+export const waitForToastToBeRemoved = async (page: Page, toastMessage: string, dontPush?: boolean) => {
 	const closeToast = async (toast: Locator, toastMessage: string) => {
 		const toastCloseButtonTestId = getTestIdFromText("toast-close-btn", toastMessage);
 
-		const toastCloseButton = await toast.getByTestId(toastCloseButtonTestId);
+		console.log("toastCloseButtonTestId", toastCloseButtonTestId);
+
+		const toastCloseButton = toast.getByTestId(toastCloseButtonTestId);
+		console.log("toastCloseButton", toastCloseButton);
 
 		const isToastCloseButtonVisible = await toastCloseButton
 			.isVisible({ timeout: closeToastDuration })
@@ -20,9 +28,11 @@ export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) 
 			await toastCloseButton.click();
 		}
 
-		await page.waitForTimeout(800);
-		await page.mouse.move(0, 0);
-		await page.keyboard.press("Escape");
+		if (!dontPush) {
+			await page.waitForTimeout(800);
+			await page.mouse.move(0, 0);
+			await page.keyboard.press("Escape");
+		}
 
 		await expect(toast).not.toBeVisible();
 	};

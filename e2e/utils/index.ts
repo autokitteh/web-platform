@@ -1,4 +1,4 @@
-export { waitForToastToBeRemoved } from "./waitForToast";
+export { waitForToastToBeRemoved, waitForAllToastsToDisappear } from "./waitForToast";
 export { createNetworkListeners, logNetworkDiagnostics } from "./networkMonitoring";
 export type { NetworkCapture, NetworkRequest, NetworkResponse } from "./networkMonitoring";
 export {
