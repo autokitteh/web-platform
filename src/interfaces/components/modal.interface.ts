@@ -3,6 +3,7 @@ import { SelectOption } from "@src/interfaces/components";
 import { EnrichedEvent, EnrichedOrganization, Variable } from "@src/types/models";
 
 export interface ModalProps {
+	"data-testid"?: string;
 	children: React.ReactNode;
 	className?: string;
 	name: string;

@@ -1,34 +1,10 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { cleanupCurrentProject } from "../../utils";
+import { cleanupCurrentProject, createCustomEntryFunction, selectFile, startTriggerCreation } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "clearableTest";
-
-async function startTriggerCreation(page: Page, name: string, triggerType: string) {
-	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
-	await addTriggersButton.hover();
-	await addTriggersButton.click();
-
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
-	await nameInput.click();
-	await nameInput.fill(name);
-
-	await page.getByTestId("select-trigger-type-empty").click();
-	await page.getByRole("option", { name: triggerType }).click();
-}
-
-async function selectFile(page: Page, fileName: string) {
-	await page.getByTestId("select-file-empty").click();
-	await page.getByRole("option", { name: fileName }).click();
-}
-
-async function fillFunctionName(page: Page, functionName: string) {
-	const functionNameInput = page.getByRole("textbox", { name: /Function name/i });
-	await functionNameInput.click();
-	await functionNameInput.fill(functionName);
-}
 
 async function clearFileSelection(page: Page) {
 	const fileSelectContainer = page.locator('[data-testid^="select-file-"][data-testid$="-selected"]');
@@ -106,12 +82,12 @@ test.describe("Trigger Clearable Select Suite", () => {
 		await cronInput.fill("0 9 * * *");
 
 		await selectFile(page, "program.py");
-		await fillFunctionName(page, "old_function");
+		await createCustomEntryFunction(page, "old_function");
 
 		await clearFileSelection(page);
 
 		await selectFile(page, "program.py");
-		await fillFunctionName(page, "new_function");
+		await createCustomEntryFunction(page, "new_function");
 
 		await page.locator('button[aria-label="Save"]').click();
 

@@ -26,7 +26,7 @@ export type TriggerTypeKeyType = keyof typeof TriggerTypes;
 export type TriggerForm = {
 	connection: { label: string; value: string };
 	cron?: string;
-	entryFunction?: string;
+	entryFunction?: { label?: string; value?: string };
 	eventType?: string;
 	eventTypeSelect?: { label?: string; value?: string };
 	filePath?: { label?: string; value?: string };

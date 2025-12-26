@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { cleanupCurrentProject } from "../../utils";
+import { cleanupCurrentProject, createCustomEntryFunction, returnToTriggersList } from "../../utils";
 
 const triggerName = "timezone_trigger";
 const defaultTimezoneValue = "Etc/GMT";
@@ -14,12 +14,8 @@ async function createTrigger(page: Page, name: string, cronExpression: string, f
 	await page.getByRole("textbox", { name: "Cron expression" }).fill(cronExpression);
 	await page.getByTestId("select-file-empty").click();
 	await page.getByRole("option", { name: fileName }).click();
-	await page.getByRole("textbox", { name: "Function name" }).fill(functionName);
+	await createCustomEntryFunction(page, functionName);
 	await page.getByRole("button", { name: "Save", exact: true }).click();
-}
-
-async function returnToTriggersList(page: Page) {
-	await page.getByRole("button", { name: "Return back" }).click();
 }
 
 async function hoverTriggerInfo(page: Page, triggerName: string) {

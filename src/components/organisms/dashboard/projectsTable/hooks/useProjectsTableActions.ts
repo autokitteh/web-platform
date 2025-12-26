@@ -132,7 +132,10 @@ export const useProjectsTableActions = ({
 		(status: DeploymentStateVariant, deploymentId: string, projectId: string, name: string) => {
 			if (status === DeploymentStateVariant.active) {
 				setSelectedProjectForDeletion({ activeDeploymentId: deploymentId, projectId });
-				openModal(ModalName.deleteWithActiveDeploymentProject);
+				openModal(ModalName.deleteWithActiveDeploymentProject, {
+					projectName: name,
+					projectId: projectId,
+				});
 
 				return;
 			}
@@ -143,7 +146,10 @@ export const useProjectsTableActions = ({
 			}
 
 			setSelectedProjectForDeletion({ projectId });
-			openModal(ModalName.deleteProject, name);
+			openModal(ModalName.deleteProject, {
+				projectName: name,
+				projectId: projectId,
+			});
 		},
 		[openModal]
 	);

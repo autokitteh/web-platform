@@ -150,7 +150,11 @@ export const ProjectTopbarButtons = () => {
 		const deployment = deployments?.find((deployment) => deployment.state);
 		if (deployment?.state === DeploymentStateVariant.active) {
 			setSelectedActiveDeploymentId(deployment.deploymentId);
-			openModal(ModalName.deleteWithActiveDeploymentProject);
+			const projectName = projectsList.find((project) => project.id === projectId)?.name;
+			openModal(ModalName.deleteWithActiveDeploymentProject, {
+				projectName: projectName,
+				projectId: projectId,
+			});
 			return;
 		}
 		if (deployment?.state === DeploymentStateVariant.draining) {
@@ -158,7 +162,10 @@ export const ProjectTopbarButtons = () => {
 			return;
 		}
 
-		openModal(ModalName.deleteProject);
+		openModal(ModalName.deleteProject, {
+			projectName: projectsList.find((project) => project.id === projectId)?.name,
+			projectId: projectId,
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deployments]);
 

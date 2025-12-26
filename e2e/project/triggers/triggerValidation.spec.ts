@@ -1,24 +1,10 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { cleanupCurrentProject } from "../../utils";
+import { cleanupCurrentProject, returnToTriggersList, startTriggerCreation } from "../../utils";
 import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "testTrigger";
-
-async function startTriggerCreation(page: Page, name: string, triggerType: string) {
-	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
-	await addTriggersButton.hover();
-
-	await addTriggersButton.click();
-
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
-	await nameInput.click();
-	await nameInput.fill(name);
-
-	await page.getByTestId("select-trigger-type-empty").click();
-	await page.getByRole("option", { name: triggerType }).click();
-}
 
 async function attemptSaveTrigger(page: Page, shouldSucceed: boolean = true) {
 	const saveButton = page.locator('button[aria-label="Save"]');
@@ -39,9 +25,9 @@ async function fillFileAndFunction(page: Page, fileName?: string, functionName?:
 	}
 
 	if (functionName) {
-		const functionNameInput = page.getByRole("textbox", { name: /Function name/i });
-		await functionNameInput.click();
+		const functionNameInput = page.getByRole("combobox", { name: "Function name" });
 		await functionNameInput.fill(functionName);
+		await functionNameInput.press("Enter");
 	}
 }
 
@@ -80,8 +66,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -108,8 +93,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -152,8 +136,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 

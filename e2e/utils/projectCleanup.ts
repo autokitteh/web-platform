@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import type { Page } from "@playwright/test";
 
+import { getTestId } from "./test.utils";
+
 export async function deleteProjectByName(page: Page, projectName: string, hasActiveDeployment = false): Promise<void> {
 	if (!projectName?.trim()?.length) {
 		return;
@@ -28,10 +30,14 @@ export async function deleteProjectByName(page: Page, projectName: string, hasAc
 		await deleteProjectButton.waitFor({ state: "visible", timeout: 3000 });
 		await deleteProjectButton.click();
 
+		const projectDeleteModalTestId = getTestId.projectDeleteModal(projectName);
+		const deleteProjectModal = page.getByTestId(projectDeleteModalTestId);
+		await deleteProjectModal.waitFor({ state: "visible", timeout: 3000 });
+
 		if (hasActiveDeployment) {
-			await page.locator('button[aria-label="Delete"]').click();
+			await deleteProjectModal.locator('button[aria-label="Delete"]').click();
 		} else {
-			await page.locator('button[aria-label="Ok"]').click();
+			await deleteProjectModal.locator('button[aria-label="Ok"]').click();
 		}
 
 		await Promise.race([
