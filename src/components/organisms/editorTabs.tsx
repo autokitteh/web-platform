@@ -118,6 +118,7 @@ export const EditorTabs = () => {
 	const [grammarLoaded, setGrammarLoaded] = useState(false);
 	const isInitialLoadRef = useRef(true);
 	const prevFileNameRef = useRef<string>("");
+	const prevProjectIdRef = useRef<string>("");
 
 	useEffect(() => {
 		isInitialLoadRef.current = false;
@@ -142,12 +143,28 @@ export const EditorTabs = () => {
 		}
 
 		const isFileSwitching = prevFileNameRef.current !== activeEditorFileName;
-		if (isFileSwitching && currentProject && editorRef.current && content && content.trim() !== "") {
-			restoreCursorPosition(editorRef.current);
+		const isProjectSwitching = prevProjectIdRef.current !== "" && prevProjectIdRef.current !== projectId;
+
+		const currentResource = resources?.[activeEditorFileName];
+		const expectedContent = currentResource ? new TextDecoder().decode(currentResource) : null;
+		const isContentFresh = expectedContent !== null && content === expectedContent;
+
+		if (
+			(isFileSwitching || isProjectSwitching) &&
+			currentProject &&
+			editorRef.current &&
+			content &&
+			content.trim() !== "" &&
+			isContentFresh
+		) {
+			restoreCursorPosition(editorRef.current, projectId, activeEditorFileName);
 			prevFileNameRef.current = activeEditorFileName;
+			prevProjectIdRef.current = projectId;
+		} else if (prevProjectIdRef.current === "") {
+			prevProjectIdRef.current = projectId;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content, currentProject, activeEditorFileName]);
+	}, [content, currentProject, activeEditorFileName, projectId, resources]);
 
 	const updateContentFromResource = useCallback(
 		(resource?: Uint8Array) => {
@@ -366,18 +383,24 @@ export const EditorTabs = () => {
 	};
 
 	const restoreCursorPosition = useCallback(
-		(_editor: monaco.editor.IStandaloneCodeEditor) => {
-			const projectCursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
-			if (!projectCursorPosition) return;
+		(_editor: monaco.editor.IStandaloneCodeEditor, targetProjectId: string, targetFileName: string) => {
+			const latestCursorPositions = useSharedBetweenProjectsStore.getState().cursorPositionPerProject;
+			const projectCursorPosition = latestCursorPositions[targetProjectId]?.[targetFileName];
 
-			_editor.revealLineInCenter(projectCursorPosition.startLine);
-			_editor.focus();
-			_editor.setPosition({
-				lineNumber: projectCursorPosition.startLine,
-				column: projectCursorPosition.startColumn,
+			if (!projectCursorPosition) {
+				return;
+			}
+
+			requestAnimationFrame(() => {
+				_editor.revealLineInCenter(projectCursorPosition.startLine);
+				_editor.setPosition({
+					lineNumber: projectCursorPosition.startLine,
+					column: projectCursorPosition.startColumn,
+				});
+				_editor.focus();
 			});
 		},
-		[projectId, activeEditorFileName, cursorPositionPerProject]
+		[]
 	);
 
 	const handleEditorDidMount = async (_editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
@@ -990,7 +1013,7 @@ export const EditorTabs = () => {
 											minimap: {
 												enabled: false,
 											},
-											renderLineHighlight: "none",
+											renderLineHighlight: "line",
 											scrollBeyondLastLine: false,
 											wordWrap: "on",
 											readOnly: !grammarLoaded,
