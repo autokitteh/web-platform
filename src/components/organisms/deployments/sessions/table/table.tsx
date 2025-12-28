@@ -717,7 +717,10 @@ export const SessionsTable = () => {
 
 			<ResizeButton direction="horizontal" id="sessions-table-resize-button" resizeId={resizeId} />
 
-			<div className="flex rounded-r-2xl bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+			<div
+				className="flex overflow-hidden rounded-r-2xl bg-black"
+				style={{ width: `${100 - (leftSideWidth as number)}%` }}
+			>
 				{sessionIdFromParams ? (
 					<Outlet />
 				) : (
