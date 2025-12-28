@@ -32,7 +32,7 @@ export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils"
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
-export { ValidateURL, ValidateDomain, compareUrlParams } from "@utilities/validateUrl.utils";
+export { ValidateURL, ValidateDomain, compareUrlParams, ValidateCliRedirectPath } from "@utilities/validateUrl.utils";
 export { gTagEvent } from "@utilities/gTag.utils";
 export { isNavigateToProjectMessage, isNavigateToConnectionMessage, isVarUpdatedMessage } from "@utilities/typeGuards";
 export {

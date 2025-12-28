@@ -36,3 +36,11 @@ export const compareUrlParams = (oldUrl: string, newUrl: string): boolean => {
 		return oldUrl !== newUrl;
 	}
 };
+
+export const ValidateCliRedirectPath = (path: string): boolean => {
+	const portMatch = path.match(/^\/auth\/finish-cli-login\?p=(\d+)$/);
+	if (!portMatch) return false;
+
+	const port = parseInt(portMatch[1], 10);
+	return port >= 1024 && port <= 65535;
+};

@@ -10,7 +10,7 @@ import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot, useLoginAttempt } from "@src/hooks";
 import { descopeJwtLogin, logoutBackend } from "@src/services/auth.service";
-import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
+import { gTagEvent, getApiBaseUrl, setLocalStorageValue, ValidateCliRedirectPath } from "@src/utilities";
 import { clearAuthCookies } from "@src/utilities/auth";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -53,6 +53,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
 	const { revokeCookieConsent, trackUserLogin } = useHubspot();
+
+	const apiBaseUrl = getApiBaseUrl();
 
 	useEffect(() => {
 		if (user && !justLoggedIn.current) {
@@ -130,14 +132,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		setDescopeRenderKey((prevKey) => prevKey + 1);
 	};
 
-	const isValidCliRedirectPath = useCallback((path: string): boolean => {
-		const portMatch = path.match(/^\/auth\/finish-cli-login\?p=(\d+)$/);
-		if (!portMatch) return false;
-
-		const port = parseInt(portMatch[1], 10);
-		return port >= 1024 && port <= 65535;
-	}, []);
-
 	const handleCliLoginRedirect = useCallback((): boolean => {
 		const redirPath = Cookies.get(systemCookies.redir);
 
@@ -145,25 +139,23 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 		Cookies.remove(systemCookies.redir, { path: "/", domain: cookieDomain });
 
-		if (!isValidCliRedirectPath(redirPath)) {
+		if (!ValidateCliRedirectPath(redirPath)) {
 			LoggerService.warn(namespaces.ui.loginPage, `[CLI-LOGIN] Invalid redirect path rejected: ${redirPath}`);
 			return false;
 		}
 
-		const apiBaseUrl = getApiBaseUrl();
 		const backendUrl = `${apiBaseUrl}${redirPath}`;
 
 		LoggerService.info(namespaces.ui.loginPage, `[CLI-LOGIN] Redirecting to backend: ${backendUrl}`);
 
 		window.location.href = backendUrl;
 		return true;
-	}, [isValidCliRedirectPath]);
+	}, [apiBaseUrl]);
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
 			try {
 				const token = event.detail.sessionJwt;
-				const apiBaseUrl = getApiBaseUrl();
 
 				try {
 					await descopeJwtLogin(token, apiBaseUrl);
@@ -233,7 +225,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[searchParams]
+		[apiBaseUrl, searchParams]
 	);
 
 	const handleLogout = useCallback(
@@ -241,7 +233,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			logout();
 			clearAuthCookies();
 			try {
-				await logoutBackend(getApiBaseUrl());
+				await logoutBackend(apiBaseUrl);
 			} catch (error) {
 				LoggerService.warn(namespaces.ui.loginPage, t("errors.logoutError", { error }), true);
 			}
@@ -251,7 +243,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			else window.location.reload();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[logout, revokeCookieConsent]
+		[apiBaseUrl, logout, revokeCookieConsent]
 	);
 
 	useEffect(() => {
