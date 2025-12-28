@@ -1,0 +1,35 @@
+{
+	"title": "Workflow Builder",
+	"description": "Drag integrations from the sidebar and connect them to build your workflow",
+	"clearCanvas": "Clear Canvas",
+	"stats": "{{nodes}} nodes, {{edges}} connections",
+	"sidebar": {
+		"title": "Integrations",
+		"description": "Drag to add to canvas"
+	},
+	"modal": {
+		"title": "Connection Code Editor",
+		"description": "Define the logic that executes when data flows between these integrations",
+		"hint": "Use Python to transform data between integrations",
+		"save": "Save",
+		"cancel": "Cancel",
+		"eventType": "Event Type",
+		"selectEventType": "Select an event type",
+		"noEventTypes": "No event types available for this integration"
+	},
+	"deleteModal": {
+		"title": "Delete Connection",
+		"content": "Are you sure you want to delete this connection?",
+		"warning": "This action cannot be undone.",
+		"cancel": "Cancel",
+		"delete": "Delete"
+	},
+	"deleteNodeModal": {
+		"title": "Delete Integration",
+		"content": "Are you sure you want to delete \"{{name}}\"?",
+		"connectionWarning": "This integration has {{count}} connection(s) that will also be deleted.",
+		"warning": "This action cannot be undone.",
+		"cancel": "Cancel",
+		"delete": "Delete"
+	}
+}
