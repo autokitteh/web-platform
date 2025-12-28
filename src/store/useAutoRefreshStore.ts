@@ -25,6 +25,9 @@ interface AutoRefreshState {
 	logsBufferBySession: Record<string, LogsBuffer>;
 	isLogsAtBottom: boolean;
 	selectedSessionId: string | null;
+
+	activitiesBufferBySession: Record<string, LogsBuffer>;
+	isActivitiesAtBottom: boolean;
 }
 
 interface AutoRefreshActions {
@@ -43,6 +46,11 @@ interface AutoRefreshActions {
 	addToLogsBuffer: (sessionId: string, count: number, cursor: string | null) => void;
 	clearLogsBuffer: (sessionId: string) => void;
 	getLogsBuffer: (sessionId: string) => LogsBuffer | undefined;
+
+	setActivitiesAtBottom: (atBottom: boolean) => void;
+	addToActivitiesBuffer: (sessionId: string, count: number, cursor: string | null) => void;
+	clearActivitiesBuffer: (sessionId: string) => void;
+	getActivitiesBuffer: (sessionId: string) => LogsBuffer | undefined;
 
 	reset: () => void;
 }
@@ -63,6 +71,9 @@ const initialState: AutoRefreshState = {
 	logsBufferBySession: {},
 	isLogsAtBottom: true,
 	selectedSessionId: null,
+
+	activitiesBufferBySession: {},
+	isActivitiesAtBottom: true,
 };
 
 const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
@@ -122,6 +133,31 @@ const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
 	},
 
 	getLogsBuffer: (sessionId) => get().logsBufferBySession[sessionId],
+
+	setActivitiesAtBottom: (atBottom) => set({ isActivitiesAtBottom: atBottom }),
+
+	addToActivitiesBuffer: (sessionId, count, cursor) => {
+		const current = get().activitiesBufferBySession[sessionId];
+		set({
+			activitiesBufferBySession: {
+				...get().activitiesBufferBySession,
+				[sessionId]: {
+					sessionId,
+					count: (current?.count || 0) + count,
+					cursor,
+				},
+			},
+		});
+	},
+
+	clearActivitiesBuffer: (sessionId) => {
+		const current = get().activitiesBufferBySession;
+		const { [sessionId]: removed, ...rest } = current;
+		void removed;
+		set({ activitiesBufferBySession: rest });
+	},
+
+	getActivitiesBuffer: (sessionId) => get().activitiesBufferBySession[sessionId],
 
 	reset: () => set(initialState),
 });

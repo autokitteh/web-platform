@@ -5,6 +5,7 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 import { OperationType } from "@type/global";
 
 export type EventRegistry = {
+	[EventListenerName.activitiesNewItemsAvailable]: { count: number; sessionId: string };
 	[EventListenerName.codeFixSuggestion]: {
 		changeType?: OperationType;
 		fileName?: string;

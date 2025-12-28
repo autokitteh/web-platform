@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
 	AutoSizer,
@@ -52,6 +52,8 @@ export const SessionOutputs = () => {
 		nextPageToken,
 		t,
 		loading,
+		reloadLogs,
+		sessionId,
 	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
 
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -59,7 +61,14 @@ export const SessionOutputs = () => {
 	const [newLogsCount, setNewLogsCount] = useState(0);
 	const prevOutputsLengthRef = useRef(0);
 
-	const { setLogsAtBottom } = useAutoRefreshStore();
+	const { setLogsAtBottom, logsBufferBySession, clearLogsBuffer } = useAutoRefreshStore();
+
+	const bufferedLogsCount = useMemo(() => {
+		if (!sessionId) return 0;
+		return logsBufferBySession[sessionId]?.count || 0;
+	}, [sessionId, logsBufferBySession]);
+
+	const totalNewLogsCount = newLogsCount + bufferedLogsCount;
 
 	const cacheRef = useRef(
 		new CellMeasurerCache({
@@ -108,12 +117,27 @@ export const SessionOutputs = () => {
 		[setLogsAtBottom, newLogsCount]
 	);
 
-	const scrollToBottom = useCallback(() => {
-		listRef.current?.scrollToRow(outputs.length - 1);
+	const scrollToBottom = useCallback(async () => {
+		if (sessionId && bufferedLogsCount > 0) {
+			await reloadLogs();
+			clearLogsBuffer(sessionId);
+		}
+		requestAnimationFrame(() => {
+			listRef.current?.scrollToRow(outputs.length - 1);
+		});
 		setNewLogsCount(0);
 		setIsAtBottom(true);
 		setLogsAtBottom(true);
-	}, [listRef, outputs.length, setLogsAtBottom]);
+	}, [listRef, outputs.length, setLogsAtBottom, sessionId, bufferedLogsCount, reloadLogs, clearLogsBuffer]);
+
+	useEventListener(
+		EventListenerName.logsNewItemsAvailable,
+		(event: CustomEvent<{ count: number; sessionId: string }>) => {
+			if (event.detail?.sessionId === sessionId) {
+				setNewLogsCount((prev) => prev + (event.detail?.count || 1));
+			}
+		}
+	);
 
 	const customRowRenderer = useCallback(
 		({ index, key, parent, style }: ListRowProps) => {
@@ -151,9 +175,9 @@ export const SessionOutputs = () => {
 	return (
 		<div className="scrollbar relative size-full">
 			<NewItemsIndicator
-				count={newLogsCount}
+				count={totalNewLogsCount}
 				direction="bottom"
-				isVisible={Boolean(!isAtBottom && newLogsCount > 0)}
+				isVisible={Boolean(!isAtBottom && totalNewLogsCount > 0)}
 				onJump={scrollToBottom}
 			/>
 			<AutoSizer>

@@ -69,6 +69,7 @@ export const NewItemsIndicator = ({
 					) : null}
 					<Button
 						className="flex items-center gap-1 rounded-full bg-gray-1100 px-2 py-0.5 text-xs text-white hover:bg-gray-1050"
+						id="new-items-indicator-jump-button"
 						onClick={onJump}
 					>
 						<IconSvg className="size-3 fill-white" size="xs" src={ArrowIcon} />

@@ -9,14 +9,16 @@ import { defaultSessionsTableSplit, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { EventListenerName, SessionStateType } from "@src/enums";
+import { EventListenerName, SessionLogType, SessionStateType } from "@src/enums";
 import { triggerEvent, useAutoRefresh, useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import {
+	useActivitiesCacheStore,
 	useAutoRefreshStore,
 	useCacheStore,
 	useModalStore,
+	useOutputsCacheStore,
 	useSharedBetweenProjectsStore,
 	useToastStore,
 } from "@src/store";
@@ -63,8 +65,19 @@ export const SessionsTable = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache, deployments } = useCacheStore();
 
-	const { isSessionsAtTop, setSessionsAtTop, sessionsBuffer, addToSessionsBuffer, clearSessionsBuffer } =
-		useAutoRefreshStore();
+	const {
+		isSessionsAtTop,
+		setSessionsAtTop,
+		sessionsBuffer,
+		addToSessionsBuffer,
+		clearSessionsBuffer,
+		addToLogsBuffer,
+		isLogsAtBottom,
+		addToActivitiesBuffer,
+		isActivitiesAtBottom,
+	} = useAutoRefreshStore();
+	const { sessions: outputsSessions } = useOutputsCacheStore();
+	const { sessions: activitiesSessions } = useActivitiesCacheStore();
 	const listRef = useRef<{ scrollToTop: () => void } | null>(null);
 	const [deploymentItemsData, setDeploymentItemsData] = useState<
 		Array<{ id: string; totalSessions: number; translationKey: string }>
@@ -365,7 +378,73 @@ export const SessionsTable = () => {
 		}
 
 		fetchDeployments(false);
-		triggerEvent(EventListenerName.sessionReload);
+
+		if (sessionIdFromParams) {
+			const currentOutputs = outputsSessions[sessionIdFromParams]?.outputs || [];
+			const currentOutputsCount = currentOutputs.length;
+
+			const { data: newOutputsData } = await SessionsService.getOutputsBySessionId(
+				sessionIdFromParams,
+				undefined,
+				1
+			);
+
+			if (newOutputsData?.logs?.length) {
+				const latestLog = newOutputsData.logs[0];
+				const latestCurrentLog = currentOutputs[currentOutputs.length - 1];
+
+				if (latestLog && latestCurrentLog && latestLog.time !== latestCurrentLog.time) {
+					const estimatedNewCount = Math.max(1, newOutputsData.logs.length);
+					if (!isLogsAtBottom) {
+						addToLogsBuffer(sessionIdFromParams, estimatedNewCount, newOutputsData.nextPageToken || null);
+						triggerEvent(EventListenerName.logsNewItemsAvailable, {
+							count: estimatedNewCount,
+							sessionId: sessionIdFromParams,
+						});
+					} else {
+						triggerEvent(EventListenerName.sessionReload);
+					}
+				} else if (currentOutputsCount === 0 && newOutputsData.logs.length > 0) {
+					triggerEvent(EventListenerName.sessionReload);
+				}
+			}
+
+			const currentActivities = activitiesSessions[sessionIdFromParams]?.activities || [];
+			const currentActivitiesCount = currentActivities.length;
+
+			const { data: newActivitiesData } = await SessionsService.getLogRecordsBySessionId(
+				sessionIdFromParams,
+				undefined,
+				1,
+				SessionLogType.Activity
+			);
+
+			if (newActivitiesData?.records?.length) {
+				const latestCurrentActivity = currentActivities[0];
+				const newTotalCount = newActivitiesData.count;
+
+				if (latestCurrentActivity && newTotalCount > currentActivitiesCount) {
+					const estimatedNewCount = newTotalCount - currentActivitiesCount;
+					if (!isActivitiesAtBottom) {
+						addToActivitiesBuffer(
+							sessionIdFromParams,
+							estimatedNewCount,
+							newActivitiesData.nextPageToken || null
+						);
+						triggerEvent(EventListenerName.activitiesNewItemsAvailable, {
+							count: estimatedNewCount,
+							sessionId: sessionIdFromParams,
+						});
+					} else {
+						triggerEvent(EventListenerName.sessionReloadActivity);
+					}
+				} else if (currentActivitiesCount === 0 && newActivitiesData.records.length > 0) {
+					triggerEvent(EventListenerName.sessionReloadActivity);
+				}
+			}
+		} else {
+			triggerEvent(EventListenerName.sessionReload);
+		}
 	}, [
 		projectId,
 		deploymentId,
@@ -377,6 +456,13 @@ export const SessionsTable = () => {
 		addToSessionsBuffer,
 		clearSessionsBuffer,
 		fetchDeployments,
+		sessionIdFromParams,
+		outputsSessions,
+		isLogsAtBottom,
+		addToLogsBuffer,
+		activitiesSessions,
+		isActivitiesAtBottom,
+		addToActivitiesBuffer,
 	]);
 
 	const {

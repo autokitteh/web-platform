@@ -110,6 +110,11 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 		[items, customRowRenderer]
 	);
 
+	const reloadLogs = useCallback(async () => {
+		if (!sessionId) return;
+		await fetchLogs(sessionId, pageSize, true);
+	}, [sessionId, fetchLogs, pageSize]);
+
 	return {
 		items,
 		isRowLoaded,
@@ -121,5 +126,7 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 		loading,
 		nextPageToken: session?.nextPageToken || null,
 		rowRenderer,
+		reloadLogs,
+		sessionId,
 	};
 }

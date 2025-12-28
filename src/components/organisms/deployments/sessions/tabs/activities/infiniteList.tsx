@@ -7,10 +7,11 @@ import { defaultSessionsActivitiesPageSize } from "@src/constants";
 import { SessionLogType, EventListenerName } from "@src/enums";
 import { useVirtualizedList, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
+import { useAutoRefreshStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
-import { LoadingOverlay } from "@components/molecules";
+import { LoadingOverlay, NewItemsIndicator } from "@components/molecules";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
@@ -25,7 +26,13 @@ export const ActivityList = () => {
 		loadMoreRows,
 		nextPageToken,
 		loading: loadingActivities,
+		reloadLogs,
+		sessionId,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
+
+	const { setActivitiesAtBottom, activitiesBufferBySession, clearActivitiesBuffer } = useAutoRefreshStore();
+	const [newActivitiesCount, setNewActivitiesCount] = useState(0);
+	const [isAtBottom, setIsAtBottom] = useState(true);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -39,10 +46,72 @@ export const ActivityList = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
+	const bufferedActivitiesCount = useMemo(() => {
+		if (!sessionId) return 0;
+		return activitiesBufferBySession[sessionId]?.count || 0;
+	}, [sessionId, activitiesBufferBySession]);
+
+	const totalNewActivitiesCount = newActivitiesCount + bufferedActivitiesCount;
+
 	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity?: SessionActivity }>) => {
 		const activity = event.detail?.activity;
 		setSelectedActivity(activity);
 	});
+
+	useEventListener(
+		EventListenerName.activitiesNewItemsAvailable,
+		(event: CustomEvent<{ count: number; sessionId: string }>) => {
+			if (event.detail?.sessionId === sessionId) {
+				setNewActivitiesCount((prev) => prev + event.detail.count);
+			}
+		}
+	);
+
+	useEventListener(EventListenerName.sessionReloadActivity, () => {
+		reloadLogs();
+	});
+
+	const scrollToBottom = useCallback(async () => {
+		if (sessionId && bufferedActivitiesCount > 0) {
+			await reloadLogs();
+			clearActivitiesBuffer(sessionId);
+		}
+		setNewActivitiesCount(0);
+		listRef.current?.scrollToRow(activities.length - 1);
+		setIsAtBottom(true);
+		setActivitiesAtBottom(true);
+	}, [
+		sessionId,
+		bufferedActivitiesCount,
+		reloadLogs,
+		clearActivitiesBuffer,
+		setActivitiesAtBottom,
+		listRef,
+		activities.length,
+	]);
+
+	const handleScroll = useCallback(
+		({
+			scrollTop,
+			scrollHeight,
+			clientHeight,
+		}: {
+			clientHeight: number;
+			scrollHeight: number;
+			scrollTop: number;
+		}) => {
+			const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
+			const newIsAtBottom = distanceFromBottom <= 96;
+
+			setIsAtBottom(newIsAtBottom);
+			setActivitiesAtBottom(newIsAtBottom);
+
+			if (newIsAtBottom && newActivitiesCount > 0) {
+				setNewActivitiesCount(0);
+			}
+		},
+		[setActivitiesAtBottom, newActivitiesCount]
+	);
 
 	const customRowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => (
@@ -65,12 +134,19 @@ export const ActivityList = () => {
 	);
 
 	return (
-		<Frame className="mr-3 size-full rounded-b-none pb-0 transition md:py-0">
+		<Frame className="relative mr-3 size-full rounded-b-none pb-0 transition md:py-0">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
 
 			<LoadingOverlay isLoading={loadingActivities} />
+
+			<NewItemsIndicator
+				count={totalNewActivitiesCount}
+				direction="bottom"
+				isVisible={Boolean(!isAtBottom && totalNewActivitiesCount > 0)}
+				onJump={scrollToBottom}
+			/>
 
 			<AutoSizer className={autoSizerClass}>
 				{({ height, width }) => (
@@ -85,6 +161,7 @@ export const ActivityList = () => {
 								className="scrollbar"
 								height={height}
 								onRowsRendered={onRowsRendered}
+								onScroll={handleScroll}
 								overscanRowCount={5}
 								ref={(ref) => {
 									if (ref) {
