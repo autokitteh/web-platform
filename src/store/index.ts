@@ -5,7 +5,6 @@ export { useDashboardStatisticsStore } from "@src/store/useDashboardStatisticsSt
 export { useTemplatesStore } from "@src/store/useTemplatesStore";
 export { useBuildFilesStore } from "@store/useBuildFilesStore";
 export { useConnectionStore } from "@store/useConnectionStore";
-export { useDashboardStore, makeScopeKey } from "@store/useDashboardStore";
 export { useEventsDrawerStore } from "@store/useEventsDrawerStore";
 export { useOrgConnectionsStore } from "@store/useOrgConnectionsStore";
 export { useFileStore } from "@store/useFileStore";
