@@ -104,7 +104,6 @@ export const ProjectFiles = () => {
 			} else {
 				await deleteFile(fileName);
 			}
-			await fetchResources(projectId, true);
 			setIsDeletingFile(false);
 			closeModal(ModalName.deleteFile);
 
