@@ -26,7 +26,6 @@ export const ProjectFiles = () => {
 	const { setIsProjectFilesVisible, closeDrawer } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
-	const { closeOpenedFile } = useFileStore();
 	const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 	const [isSearchVisible, setIsSearchVisible] = useState(false);
 
@@ -103,7 +102,6 @@ export const ProjectFiles = () => {
 			if (isDirectory) {
 				await deleteDirectory(fileName);
 			} else {
-				await closeOpenedFile(fileName);
 				await deleteFile(fileName);
 			}
 			await fetchResources(projectId, true);

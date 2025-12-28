@@ -159,7 +159,7 @@ const store = (
 					files.push({ name, content: new Uint8Array(content) });
 				}
 			}
-			await dbService.put(projectId, files);
+			await dbService.replaceAll(projectId, files);
 
 			if (resources) {
 				await get().checkState(projectId, { resources });
