@@ -1,3 +1,7 @@
+## <small>2.246.1 (2025-12-28)</small>
+
+* fix: redirect to api url after cli login (#1509) ([6038d53](https://github.com/autokitteh/web-platform/commit/6038d53)), closes [#1509](https://github.com/autokitteh/web-platform/issues/1509)
+
 ## 2.246.0 (2025-12-26)
 
 * feat: change the function entrypoint in triggers to a dropdown with file functions (#1513) ([a5654ee](https://github.com/autokitteh/web-platform/commit/a5654ee)), closes [#1513](https://github.com/autokitteh/web-platform/issues/1513)
