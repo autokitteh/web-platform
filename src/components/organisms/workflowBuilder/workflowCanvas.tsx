@@ -83,13 +83,12 @@ export const WorkflowCanvas = () => {
 				sourceHandle: connection.sourceHandle,
 				targetHandle: connection.targetHandle,
 				type: "code",
-				animated: true,
-				style: { stroke: "#22c55e", strokeWidth: 2 },
+				animated: false,
 				markerEnd: {
 					type: MarkerType.ArrowClosed,
-					color: "#22c55e",
+					color: "#6b7280",
 				},
-				data: { code: "", eventType: "" },
+				data: { code: "", eventType: "", variables: [], status: "draft" },
 			};
 
 			const updatedEdges = addEdge(newEdge as Edge, storeEdges as Edge[]) as WorkflowEdge[];
