@@ -214,6 +214,11 @@ export const EditorTabs = () => {
 	}, [location.state, isLoadingCode, resources]);
 
 	const loadFileResource = useCallback(async () => {
+		if (!activeEditorFileName) {
+			setContent("");
+			return;
+		}
+
 		const fetchedResources = await fetchResources(projectId, true);
 		if (!fetchedResources || !fetchedResources[activeEditorFileName]) {
 			if (activeEditorFileName) {
