@@ -23,11 +23,11 @@ interface AutoRefreshState {
 	isSessionsAtTop: boolean;
 
 	logsBufferBySession: Record<string, LogsBuffer>;
-	isLogsAtBottom: boolean;
+	logsAtBottomBySession: Record<string, boolean>;
 	selectedSessionId: string | null;
 
 	activitiesBufferBySession: Record<string, LogsBuffer>;
-	isActivitiesAtBottom: boolean;
+	activitiesAtBottomBySession: Record<string, boolean>;
 }
 
 interface AutoRefreshActions {
@@ -41,13 +41,15 @@ interface AutoRefreshActions {
 	clearSessionsBuffer: () => void;
 	getSessionsBuffer: () => Session[];
 
-	setLogsAtBottom: (atBottom: boolean) => void;
+	setLogsAtBottom: (sessionId: string, atBottom: boolean) => void;
+	getLogsAtBottom: (sessionId: string) => boolean;
 	setSelectedSessionId: (sessionId: string | null) => void;
 	addToLogsBuffer: (sessionId: string, count: number, cursor: string | null) => void;
 	clearLogsBuffer: (sessionId: string) => void;
 	getLogsBuffer: (sessionId: string) => LogsBuffer | undefined;
 
-	setActivitiesAtBottom: (atBottom: boolean) => void;
+	setActivitiesAtBottom: (sessionId: string, atBottom: boolean) => void;
+	getActivitiesAtBottom: (sessionId: string) => boolean;
 	addToActivitiesBuffer: (sessionId: string, count: number, cursor: string | null) => void;
 	clearActivitiesBuffer: (sessionId: string) => void;
 	getActivitiesBuffer: (sessionId: string) => LogsBuffer | undefined;
@@ -57,23 +59,23 @@ interface AutoRefreshActions {
 
 type AutoRefreshStore = AutoRefreshState & AutoRefreshActions;
 
-const DEFAULT_INTERVAL_MS = 60000;
+const defaultIntervalMs = 60000;
 
 const initialState: AutoRefreshState = {
 	isEnabled: true,
 	isPaused: false,
-	countdownMs: DEFAULT_INTERVAL_MS,
-	intervalMs: DEFAULT_INTERVAL_MS,
+	countdownMs: defaultIntervalMs,
+	intervalMs: defaultIntervalMs,
 
 	sessionsBuffer: { sessions: [], count: 0 },
 	isSessionsAtTop: true,
 
 	logsBufferBySession: {},
-	isLogsAtBottom: true,
+	logsAtBottomBySession: {},
 	selectedSessionId: null,
 
 	activitiesBufferBySession: {},
-	isActivitiesAtBottom: true,
+	activitiesAtBottomBySession: {},
 };
 
 const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
@@ -107,7 +109,15 @@ const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
 
 	getSessionsBuffer: () => get().sessionsBuffer.sessions,
 
-	setLogsAtBottom: (atBottom) => set({ isLogsAtBottom: atBottom }),
+	setLogsAtBottom: (sessionId, atBottom) =>
+		set({
+			logsAtBottomBySession: {
+				...get().logsAtBottomBySession,
+				[sessionId]: atBottom,
+			},
+		}),
+
+	getLogsAtBottom: (sessionId) => get().logsAtBottomBySession[sessionId] ?? true,
 
 	setSelectedSessionId: (sessionId) => set({ selectedSessionId: sessionId }),
 
@@ -134,7 +144,15 @@ const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
 
 	getLogsBuffer: (sessionId) => get().logsBufferBySession[sessionId],
 
-	setActivitiesAtBottom: (atBottom) => set({ isActivitiesAtBottom: atBottom }),
+	setActivitiesAtBottom: (sessionId, atBottom) =>
+		set({
+			activitiesAtBottomBySession: {
+				...get().activitiesAtBottomBySession,
+				[sessionId]: atBottom,
+			},
+		}),
+
+	getActivitiesAtBottom: (sessionId) => get().activitiesAtBottomBySession[sessionId] ?? true,
 
 	addToActivitiesBuffer: (sessionId, count, cursor) => {
 		const current = get().activitiesBufferBySession[sessionId];

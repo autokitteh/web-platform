@@ -72,9 +72,9 @@ export const SessionsTable = () => {
 		addToSessionsBuffer,
 		clearSessionsBuffer,
 		addToLogsBuffer,
-		isLogsAtBottom,
+		getLogsAtBottom,
 		addToActivitiesBuffer,
-		isActivitiesAtBottom,
+		getActivitiesAtBottom,
 	} = useAutoRefreshStore();
 	const { sessions: outputsSessions } = useOutputsCacheStore();
 	const { sessions: activitiesSessions } = useActivitiesCacheStore();
@@ -395,6 +395,7 @@ export const SessionsTable = () => {
 
 				if (latestLog && latestCurrentLog && latestLog.time !== latestCurrentLog.time) {
 					const estimatedNewCount = Math.max(1, newOutputsData.logs.length);
+					const isLogsAtBottom = getLogsAtBottom(sessionIdFromParams);
 					if (!isLogsAtBottom) {
 						addToLogsBuffer(sessionIdFromParams, estimatedNewCount, newOutputsData.nextPageToken || null);
 						triggerEvent(EventListenerName.logsNewItemsAvailable, {
@@ -425,6 +426,7 @@ export const SessionsTable = () => {
 
 				if (latestCurrentActivity && newTotalCount > currentActivitiesCount) {
 					const estimatedNewCount = newTotalCount - currentActivitiesCount;
+					const isActivitiesAtBottom = getActivitiesAtBottom(sessionIdFromParams);
 					if (!isActivitiesAtBottom) {
 						addToActivitiesBuffer(
 							sessionIdFromParams,
@@ -458,10 +460,10 @@ export const SessionsTable = () => {
 		fetchDeployments,
 		sessionIdFromParams,
 		outputsSessions,
-		isLogsAtBottom,
+		getLogsAtBottom,
 		addToLogsBuffer,
 		activitiesSessions,
-		isActivitiesAtBottom,
+		getActivitiesAtBottom,
 		addToActivitiesBuffer,
 	]);
 

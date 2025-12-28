@@ -18,7 +18,7 @@ import { useAutoRefreshStore } from "@src/store";
 
 import { NewItemsIndicator } from "@components/molecules";
 
-const BOTTOM_THRESHOLD = 96;
+const bottomThreshold = 0;
 
 const OutputRow = memo(({ log, measure }: { log: SessionOutputLog; measure: () => void }) => {
 	const rowRef = useRef<HTMLDivElement>(null);
@@ -57,11 +57,22 @@ export const SessionOutputs = () => {
 	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
 
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
-	const [isAtBottom, setIsAtBottom] = useState(true);
 	const [newLogsCount, setNewLogsCount] = useState(0);
 	const prevOutputsLengthRef = useRef(0);
 
-	const { setLogsAtBottom, logsBufferBySession, clearLogsBuffer } = useAutoRefreshStore();
+	const { setLogsAtBottom, getLogsAtBottom, logsBufferBySession, clearLogsBuffer } = useAutoRefreshStore();
+
+	const isAtBottom = sessionId ? getLogsAtBottom(sessionId) : true;
+
+	useEffect(() => {
+		setIsInitialLoad(true);
+		setNewLogsCount(0);
+		prevOutputsLengthRef.current = 0;
+		cacheRef.current.clearAll();
+		if (sessionId) {
+			clearLogsBuffer(sessionId);
+		}
+	}, [sessionId, clearLogsBuffer]);
 
 	const bufferedLogsCount = useMemo(() => {
 		if (!sessionId) return 0;
@@ -84,16 +95,25 @@ export const SessionOutputs = () => {
 			cacheRef.current.clearAll();
 			listRef.current.recomputeRowHeights();
 		}
-		if (isInitialLoad) {
+
+		const scrollToEnd = () => listRef.current?.scrollToRow(outputs.length - 1);
+
+		if (isInitialLoad && outputs.length > 0) {
 			setIsInitialLoad(false);
+			scrollToEnd();
+			setTimeout(scrollToEnd, 50);
+			setTimeout(scrollToEnd, 150);
+			prevOutputsLengthRef.current = outputs.length;
+
+			return;
 		}
 
 		const newCount = outputs.length - prevOutputsLengthRef.current;
-		if (newCount > 0 && !isInitialLoad) {
+		if (newCount > 0) {
 			if (isAtBottom) {
-				requestAnimationFrame(() => {
-					listRef.current?.scrollToRow(outputs.length - 1);
-				});
+				scrollToEnd();
+				setTimeout(scrollToEnd, 50);
+				setTimeout(scrollToEnd, 150);
 			} else {
 				setNewLogsCount((prev) => prev + newCount);
 			}
@@ -104,30 +124,35 @@ export const SessionOutputs = () => {
 
 	const handleScroll = useCallback(
 		({ scrollHeight, scrollTop, clientHeight }: ScrollParams) => {
-			const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
-			const newIsAtBottom = distanceFromBottom <= BOTTOM_THRESHOLD;
+			if (!sessionId) return;
 
-			setIsAtBottom(newIsAtBottom);
-			setLogsAtBottom(newIsAtBottom);
+			const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
+			const newIsAtBottom = distanceFromBottom <= bottomThreshold;
+
+			setLogsAtBottom(sessionId, newIsAtBottom);
 
 			if (newIsAtBottom && newLogsCount > 0) {
 				setNewLogsCount(0);
 			}
 		},
-		[setLogsAtBottom, newLogsCount]
+		[sessionId, setLogsAtBottom, newLogsCount]
 	);
 
 	const scrollToBottom = useCallback(async () => {
-		if (sessionId && bufferedLogsCount > 0) {
+		if (!sessionId) return;
+
+		if (bufferedLogsCount > 0) {
 			await reloadLogs();
 			clearLogsBuffer(sessionId);
 		}
-		requestAnimationFrame(() => {
+		const scrollToEnd = () => {
 			listRef.current?.scrollToRow(outputs.length - 1);
-		});
+		};
+		scrollToEnd();
+		setTimeout(scrollToEnd, 50);
+		setTimeout(scrollToEnd, 150);
 		setNewLogsCount(0);
-		setIsAtBottom(true);
-		setLogsAtBottom(true);
+		setLogsAtBottom(sessionId, true);
 	}, [listRef, outputs.length, setLogsAtBottom, sessionId, bufferedLogsCount, reloadLogs, clearLogsBuffer]);
 
 	useEventListener(
@@ -203,6 +228,7 @@ export const SessionOutputs = () => {
 								rowCount={outputs.length}
 								rowHeight={cacheRef.current.rowHeight}
 								rowRenderer={customRowRenderer}
+								scrollToAlignment="end"
 								width={width}
 							/>
 						)}

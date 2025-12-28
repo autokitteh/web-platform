@@ -30,9 +30,18 @@ export const ActivityList = () => {
 		sessionId,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
 
-	const { setActivitiesAtBottom, activitiesBufferBySession, clearActivitiesBuffer } = useAutoRefreshStore();
+	const { setActivitiesAtBottom, getActivitiesAtBottom, activitiesBufferBySession, clearActivitiesBuffer } =
+		useAutoRefreshStore();
 	const [newActivitiesCount, setNewActivitiesCount] = useState(0);
-	const [isAtBottom, setIsAtBottom] = useState(true);
+
+	const isAtBottom = sessionId ? getActivitiesAtBottom(sessionId) : true;
+
+	useEffect(() => {
+		setNewActivitiesCount(0);
+		if (sessionId) {
+			clearActivitiesBuffer(sessionId);
+		}
+	}, [sessionId, clearActivitiesBuffer]);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -72,14 +81,15 @@ export const ActivityList = () => {
 	});
 
 	const scrollToBottom = useCallback(async () => {
-		if (sessionId && bufferedActivitiesCount > 0) {
+		if (!sessionId) return;
+
+		if (bufferedActivitiesCount > 0) {
 			await reloadLogs();
 			clearActivitiesBuffer(sessionId);
 		}
 		setNewActivitiesCount(0);
 		listRef.current?.scrollToRow(activities.length - 1);
-		setIsAtBottom(true);
-		setActivitiesAtBottom(true);
+		setActivitiesAtBottom(sessionId, true);
 	}, [
 		sessionId,
 		bufferedActivitiesCount,
@@ -100,17 +110,18 @@ export const ActivityList = () => {
 			scrollHeight: number;
 			scrollTop: number;
 		}) => {
+			if (!sessionId) return;
+
 			const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
 			const newIsAtBottom = distanceFromBottom <= 96;
 
-			setIsAtBottom(newIsAtBottom);
-			setActivitiesAtBottom(newIsAtBottom);
+			setActivitiesAtBottom(sessionId, newIsAtBottom);
 
 			if (newIsAtBottom && newActivitiesCount > 0) {
 				setNewActivitiesCount(0);
 			}
 		},
-		[setActivitiesAtBottom, newActivitiesCount]
+		[sessionId, setActivitiesAtBottom, newActivitiesCount]
 	);
 
 	const customRowRenderer = useCallback(
@@ -172,7 +183,7 @@ export const ActivityList = () => {
 								rowCount={activities.length}
 								rowHeight={rowHeight}
 								rowRenderer={customRowRenderer}
-								scrollToAlignment="start"
+								scrollToAlignment="end"
 								width={width}
 							/>
 						)}
