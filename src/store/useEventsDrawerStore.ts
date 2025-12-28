@@ -27,11 +27,8 @@ const store: StateCreator<EventsDrawerStore> = (set) => ({
 		})),
 });
 
-export const useEventsDrawerStore = create<EventsDrawerStore>(
+export const useEventsDrawerStore = create<EventsDrawerStore>()(
 	persist(store, {
 		name: "events-drawer-store",
-		partialize: (state) => ({
-			...state,
-		}),
-	}) as any
+	})
 );
