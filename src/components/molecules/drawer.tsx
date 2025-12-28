@@ -21,6 +21,7 @@ export const Drawer = ({
 	divId,
 	isScreenHeight = true,
 	position = "right",
+	"data-testid": dataTestId,
 }: DrawerProps) => {
 	const { projectId } = useParams();
 	const isOpen = useSharedBetweenProjectsStore(
@@ -76,7 +77,7 @@ export const Drawer = ({
 		<AnimatePresence>
 			{isOpen ? (
 				<>
-					<div className={wrapperClass} id={divId} style={wrapperStyle}>
+					<div className={wrapperClass} data-testid={dataTestId} id={divId} style={wrapperStyle}>
 						<motion.aside
 							animate={{
 								x: 0,

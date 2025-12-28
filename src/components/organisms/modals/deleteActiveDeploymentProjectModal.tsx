@@ -2,6 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { getTestId } from "../../../../e2e/utils/test.utils";
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 
@@ -14,8 +15,11 @@ export const DeleteActiveDeploymentProjectModal = ({ isDeleting, onDelete }: Del
 	const { t } = useTranslation("modals", { keyPrefix: "deleteProject" });
 	const { closeModal } = useModalStore();
 
+	const projectName = useModalStore((state) => state.data as { projectId: string; projectName: string })?.projectName;
+	const modalTestId = getTestId.projectDeleteModal(projectName);
+
 	return (
-		<Modal hideCloseButton name={ModalName.deleteWithActiveDeploymentProject}>
+		<Modal data-testid={modalTestId} hideCloseButton name={ModalName.deleteWithActiveDeploymentProject}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p className="mb-2 font-semibold">

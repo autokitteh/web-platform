@@ -1,3 +1,23 @@
+## 2.246.0 (2025-12-26)
+
+* feat: change the function entrypoint in triggers to a dropdown with file functions (#1513) ([a5654ee](https://github.com/autokitteh/web-platform/commit/a5654ee)), closes [#1513](https://github.com/autokitteh/web-platform/issues/1513)
+
+## 2.245.0 (2025-12-24)
+
+* feat: add dashboard statistics components and hooks  (#1479) ([cef6fc3](https://github.com/autokitteh/web-platform/commit/cef6fc3)), closes [#1479](https://github.com/autokitteh/web-platform/issues/1479)
+
+## <small>2.244.1 (2025-12-24)</small>
+
+* fix: prevent 404 on session page refresh (#1512) ([68798cd](https://github.com/autokitteh/web-platform/commit/68798cd)), closes [#1512](https://github.com/autokitteh/web-platform/issues/1512)
+
+## 2.244.0 (2025-12-23)
+
+* feat: clear entry function when file path is unset (#1511) ([2cd584a](https://github.com/autokitteh/web-platform/commit/2cd584a)), closes [#1511](https://github.com/autokitteh/web-platform/issues/1511)
+
+## 2.243.0 (2025-12-22)
+
+* feat: add 'isClearable' prop to the Select component (#1503) ([ba76819](https://github.com/autokitteh/web-platform/commit/ba76819)), closes [#1503](https://github.com/autokitteh/web-platform/issues/1503)
+
 ## <small>2.242.4 (2025-12-22)</small>
 
 * fix(manual-run): prevent typing in entrypoint select (#1505) ([cd043d8](https://github.com/autokitteh/web-platform/commit/cd043d8)), closes [#1505](https://github.com/autokitteh/web-platform/issues/1505)

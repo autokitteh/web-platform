@@ -32,3 +32,4 @@ export { PlanComparisonTable } from "@components/molecules/planComparisonTable";
 export { DiffNavigationToolbar } from "@components/molecules/diffNavigationToolbar";
 export { InfoPopover } from "@components/molecules/infoPopover";
 export { AddButton } from "@components/molecules/configListAddButton";
+export { ActiveDeploymentsTable, SessionStatusDonutChart, TotalCountersGrid } from "@components/molecules/charts";

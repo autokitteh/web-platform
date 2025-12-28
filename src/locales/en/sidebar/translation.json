@@ -32,6 +32,7 @@
 	"openSidebar": "Open Sidebar",
 	"intro": "Introduction",
 	"connections": "Connections",
+	"stats": "Statistics",
 	"events": "Events",
 	"logToReview": "Unread system logs",
 	"systemLog": "System Log",

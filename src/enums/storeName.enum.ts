@@ -10,4 +10,7 @@ export enum StoreName {
 	sharedBetweenProjects = "SharedBetweenProjectsStore",
 	tour = "TourStore",
 	drawer = "DrawerStore",
+	dashboard = "DashboardStore",
+	tablePreferences = "TablePreferencesStore",
+	buildFiles = "BuildFilesStore",
 }

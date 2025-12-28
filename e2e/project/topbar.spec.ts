@@ -1,15 +1,19 @@
 import { expect, test } from "../fixtures";
+import { cleanupCurrentProject } from "../utils";
 
 test.describe("Project Topbar Suite", () => {
-	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
+	test("Changed deployments topbar", async ({ dashboardPage, projectPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 
 		await expect(page.locator('button[aria-label="Explorer"]')).toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Sessions"]')).toBeDisabled();
 
-		const deployButton = page.locator('button[aria-label="Deploy project"]');
-		await deployButton.click();
+		await projectPage.deployProject();
 
 		await page.locator('button[aria-label="Deployments"]').click();
 
@@ -28,6 +32,10 @@ test.describe("Project Topbar Suite", () => {
 	});
 
 	test.describe("Responsive button behavior", () => {
+		test.afterEach(async ({ page }) => {
+			await cleanupCurrentProject(page);
+		});
+
 		test("Navigation buttons - icons always visible on all screen sizes", async ({ dashboardPage, page }) => {
 			await page.setViewportSize({ width: 1920, height: 1080 });
 			await dashboardPage.createProjectFromMenu();
@@ -92,6 +100,8 @@ test.describe("Project Topbar Suite", () => {
 
 			const buildButton = page.locator('button[aria-label="Validate project"]');
 			const deployButton = page.locator('button[aria-label="Deploy project"]');
+			await page.waitForTimeout(800);
+
 			const moreButton = page.locator('button[aria-label="Project additional actions"]');
 
 			await expect(buildButton.getByText("Validate")).toBeVisible();
@@ -105,6 +115,8 @@ test.describe("Project Topbar Suite", () => {
 
 			const buildButton = page.locator('button[aria-label="Validate project"]');
 			const deployButton = page.locator('button[aria-label="Deploy project"]');
+			await page.waitForTimeout(800);
+
 			const moreButton = page.locator('button[aria-label="Project additional actions"]');
 
 			await expect(buildButton.getByText("Validate")).toBeHidden();
@@ -122,8 +134,7 @@ test.describe("Project Topbar Suite", () => {
 
 			const deployButton = page.locator('button[aria-label="Deploy project"]');
 			await deployButton.click();
-
-			await page.waitForTimeout(2000);
+			await page.waitForTimeout(800);
 
 			const manualRunButton = page.locator('button[aria-label="Run"]');
 			const settingsButton = page.locator('button[aria-label="Settings manual run"]');
@@ -160,6 +171,7 @@ test.describe("Project Topbar Suite", () => {
 
 			const buildButton = page.locator('button[aria-label="Validate project"]');
 			const deployButton = page.locator('button[aria-label="Deploy project"]');
+			await page.waitForTimeout(800);
 
 			await expect(buildButton.getByText("Validate")).toBeHidden();
 			await expect(deployButton.getByText("Deploy")).toBeHidden();

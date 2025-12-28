@@ -10,13 +10,13 @@ import { AddTriggerProps, SelectOption } from "@interfaces/components";
 import { LoggerService, TriggersService } from "@services";
 import { defaultTimezoneValue, namespaces } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
-import { TriggerTypes } from "@src/enums";
+import { DeploymentStateVariant, TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerForm } from "@src/types/models";
 import { extractSettingsPath } from "@src/utilities/navigation";
 import { triggerResolver } from "@validations";
 
-import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
+import { useBuildFilesStore, useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
 import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
@@ -39,8 +39,10 @@ export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 	} = useCacheStore();
 
 	const hasActiveDeployments = useHasActiveDeployments();
+	const { fetchBuildFiles } = useBuildFilesStore();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
+	const [buildFiles, setBuildFiles] = useState<Record<string, string[]>>({});
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
 
 	const methods = useForm<TriggerForm>({
@@ -48,7 +50,7 @@ export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 			name: "",
 			connection: emptySelectItem,
 			filePath: emptySelectItem,
-			entryFunction: "",
+			entryFunction: undefined,
 			cron: "",
 			eventTypeSelect: emptySelectItem,
 			filter: "",
@@ -61,6 +63,8 @@ export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 
 	const { control, handleSubmit, watch, setValue } = methods;
 
+	const { deployments } = useCacheStore();
+
 	useEffect(() => {
 		const loadFiles = async () => {
 			setIsLoadingFiles(true);
@@ -72,6 +76,16 @@ export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 					value: name,
 				}));
 				setFilesNameList(formattedResources);
+
+				const activeDeployment = deployments?.find(
+					(deployment) => deployment.state === DeploymentStateVariant.active
+				);
+				if (activeDeployment?.buildId) {
+					const { data: files } = await fetchBuildFiles(projectId!, activeDeployment.buildId);
+					if (files) {
+						setBuildFiles(files);
+					}
+				}
 			} finally {
 				setIsLoadingFiles(false);
 			}
@@ -79,7 +93,7 @@ export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 
 		loadFiles();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [deployments]);
 
 	const onSubmit = async (data: TriggerForm) => {
 		setIsSaving(true);
@@ -98,7 +112,7 @@ export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 				connectionId,
 				name,
 				path: filePath?.value,
-				entryFunction,
+				entryFunction: entryFunction?.value,
 				schedule: cron,
 				timezone,
 				eventType: eventTypeSelect?.value || "",
@@ -170,7 +184,11 @@ export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 				>
 					<NameAndConnectionFields />
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
-					<TriggerSpecificFields connectionId={connectionType} filesNameList={filesNameList} />
+					<TriggerSpecificFields
+						buildFiles={buildFiles}
+						connectionId={connectionType}
+						filesNameList={filesNameList}
+					/>
 					{connectionType === TriggerTypes.webhook ? <WebhookFields connectionId={connectionType} /> : null}
 				</form>
 

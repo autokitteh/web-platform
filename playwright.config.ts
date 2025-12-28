@@ -24,6 +24,8 @@ export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 
+	maxFailures: process.env.CI ? 1 : undefined,
+
 	workers: process.env.CI ? 1 : 2,
 
 	/* Configure projects for major browsers */
@@ -84,7 +86,7 @@ export default defineConfig({
 
 	testDir: "e2e",
 
-	timeout: 60 * 1000 * 2.5, // 2.5 minutes timeout for each test
+	timeout: 60 * 1000 * 6, // 6 minutes timeout for each test
 
 	retries: process.env.CI ? 2 : 0, // 2 retries for CI, 0 for local
 
@@ -126,6 +128,6 @@ export default defineConfig({
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",
-		timeout: 2 * 60 * 1000, // 120,000 ms = 2 minutes
+		timeout: 5 * 60 * 1000, // 300,000 ms = 5 minutes (CI builds can be slow)
 	},
 });

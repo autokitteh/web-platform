@@ -57,7 +57,6 @@ test.describe("Org Connections Suite", () => {
 		await orgConnectionsPage.goto();
 
 		await orgConnectionsPage.createTwilioConnection(connectionName);
-		await connectionsConfig.closeConnectionCreatedSuccessfullyToast();
 		await connectionsConfig.clickDeleteButton(connectionName);
 
 		await expect(page.getByText("Delete Connection")).toBeVisible();

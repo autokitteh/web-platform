@@ -2,7 +2,9 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { ProjectPage } from "../../pages";
+import { cleanupCurrentProject, createCustomEntryFunction, returnToTriggersList } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "triggerName";
 const testModifyCases = [
@@ -54,13 +56,17 @@ async function createTriggerScheduler(
 	await page.getByTestId("select-file-empty").click();
 	await page.getByRole("option", { name: fileName }).click();
 
-	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await functionNameInput.click();
-	await functionNameInput.fill(on_trigger);
+	await createCustomEntryFunction(page, on_trigger);
 
 	await page.locator('button[aria-label="Save"]').click();
 	await expect(nameInput).toBeDisabled({ timeout: 1500 });
 	await expect(nameInput).toHaveValue(name);
+}
+
+async function clearEntryFunctionSelection(page: Page) {
+	const entryFunctionContainer = page.locator('[data-testid^="select-entry-function-"][data-testid$="-selected"]');
+	const clearButton = entryFunctionContainer.locator(".react-select__clear-indicator");
+	await clearButton.click();
 }
 
 async function modifyTrigger(
@@ -72,17 +78,14 @@ async function modifyTrigger(
 ) {
 	if (withActiveDeployment) {
 		await page.locator('button[aria-label="Close Project Settings"]').click();
-		const deployButton = page.locator('button[aria-label="Deploy project"]');
-		await deployButton.click();
-
-		const toast = await waitForToast(page, "Project deployment completed successfully");
-		await expect(toast).toBeVisible();
+		const projectPage = new ProjectPage(page);
+		await projectPage.deployProject();
 
 		await page.locator('button[aria-label="Config"]').click();
 
 		await page.waitForSelector("#project-sidebar-config", {
 			state: "visible",
-			timeout: 10000,
+			timeout: 2000,
 		});
 
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
@@ -104,9 +107,8 @@ async function modifyTrigger(
 	await cronInput.click();
 	await cronInput.fill(newCronExpression);
 
-	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await functionNameInput.click();
-	await functionNameInput.fill(newFunctionName);
+	await clearEntryFunctionSelection(page);
+	await createCustomEntryFunction(page, newFunctionName);
 
 	await page.locator('button[aria-label="Save"]').click();
 
@@ -119,10 +121,14 @@ test.describe("Project Triggers Suite", () => {
 		await dashboardPage.createProjectFromMenu();
 	});
 
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("Create trigger with cron expression", async ({ page }) => {
 		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 
-		await page.locator('button[aria-label="Return back"]').click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 		await expect(page.locator(`button[aria-label='Trigger information for "${triggerName}"']`)).toBeVisible();
@@ -132,7 +138,7 @@ test.describe("Project Triggers Suite", () => {
 		testModifyCases.forEach(({ description, modifyParams, expectedEntryPoint, expectedFile, expectedCron }) => {
 			test(`Modify trigger ${description}`, async ({ page }) => {
 				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
-				await page.locator('button[aria-label="Return back"]').click();
+				await returnToTriggersList(page);
 
 				await modifyTrigger(
 					page,
@@ -142,8 +148,7 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				const successToast = page.locator('[data-testid="toast-success"]').last();
-				await successToast.waitFor({ state: "hidden", timeout: 10000 });
+				await waitForToastToBeRemoved(page, "Trigger updated successfully");
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
@@ -151,13 +156,14 @@ test.describe("Project Triggers Suite", () => {
 				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(expectedEntryPoint);
 				await expect(page.getByTestId("trigger-detail-file")).toHaveText(expectedFile);
 				await expect(page.getByText(triggerName)).toBeVisible();
+				await waitForToastToBeRemoved(page, "Trigger created successfully");
 			});
 		});
 	});
 
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
-		await page.locator('button[aria-label="Return back"]').click();
+		await returnToTriggersList(page);
 		await expect(page.getByText("triggerName")).toBeVisible();
 
 		const deleteButton = page.locator(`button[aria-label="Delete ${triggerName}"]`);
@@ -191,19 +197,18 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Modify trigger without a values", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
-		await page.locator('button[aria-label="Return back"]').click();
+		await returnToTriggersList(page);
 
 		const configureButtons = page.locator(`button[aria-label="Edit ${triggerName}"]`);
 		await configureButtons.first().click();
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
 
-		await page.getByRole("textbox", { name: "Function name" }).click();
-		await page.getByRole("textbox", { name: "Function name" }).fill("");
+		await clearEntryFunctionSelection(page);
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		const functionNameErrorMessage = page.locator("text=/.*function.*required.*/i");
-		await expect(functionNameErrorMessage).toBeVisible();
+		const entryFunctionErrorMessage = page.getByText("Entry function is required");
+		await expect(entryFunctionErrorMessage).toBeVisible();
 	});
 });

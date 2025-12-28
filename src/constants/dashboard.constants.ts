@@ -4,6 +4,42 @@ export const defaultSelectedMultipleSelect = "All";
 export const meowWorldProjectName = "quickstart";
 export const templateCategoriesOrder = ["DevOps", "Samples", "Durable workflows", "Office Automation"];
 
+// Row heights in pixels - matches design system spacing (38px for table, 44px for cards)
+export const projectsTableRowHeight = 38;
+export const projectsBoardCardHeight = 44;
+export const projectsBoardCardGap = 2;
+
+// Viewport ratios - percentage of viewport height dedicated to projects section
+// Desktop table uses less vertical space (26%) due to other dashboard elements
+// Mobile board uses more space (55%) for better touch interaction
+export const projectsTableViewportRatio = 0.26;
+export const projectsBoardViewportRatio = 0.55;
+
+// Progressive loading batch configuration
+// Minimum batch size ensures reasonable initial data load
+export const projectsTableMinBatchSize = 5;
+// Subsequent batches keep UI responsive while loading remaining data
+export const projectsTableSubsequentBatchSize = 5;
+// Hide loading skeleton after this many batches to show progressive results
+export const projectsTableInitialBatchesBeforeHideLoading = 3;
+
+// Tailwind's sm breakpoint
+const mobileBreakpoint = 640;
+
+export const calculateVisibleRows = (): number => {
+	const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 800;
+	const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1024;
+
+	const isMobile = viewportWidth < mobileBreakpoint;
+	const viewportRatio = isMobile ? projectsBoardViewportRatio : projectsTableViewportRatio;
+	const containerHeight = viewportHeight * viewportRatio;
+	const rowHeight = isMobile ? projectsBoardCardHeight + projectsBoardCardGap : projectsTableRowHeight;
+
+	const visibleRows = Math.max(projectsTableMinBatchSize, Math.ceil(containerHeight / rowHeight));
+
+	return visibleRows;
+};
+
 export const whatIsAutoKitteh = [
 	"Serverless automation platform",
 	"Support of long-running, durable workflows",

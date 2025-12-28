@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { getTestId } from "../../../../e2e/utils/test.utils";
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 
@@ -17,13 +18,17 @@ export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) =
 	const { closeModal } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const projectName = projectsList.find(({ id }) => id === projectId)?.name;
-	const projectNameFromStore = useModalStore((state) => state.data as string);
+	const projectNameFromStore = useModalStore(
+		(state) => state.data as { projectId: string; projectName: string }
+	)?.projectName;
+	const projectNameToDisplay = projectName || projectNameFromStore;
+	const modalTestId = getTestId.projectDeleteModal(projectNameToDisplay);
 
 	return (
-		<Modal hideCloseButton name={ModalName.deleteProject}>
+		<Modal data-testid={modalTestId} hideCloseButton name={ModalName.deleteProject}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
-				<p>{t("content", { name: projectName || projectNameFromStore })}</p>
+				<p>{t("content", { name: projectNameToDisplay })}</p>
 				<p>{t("deleteWarning")}</p>
 			</div>
 

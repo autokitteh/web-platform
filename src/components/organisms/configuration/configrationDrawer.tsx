@@ -71,6 +71,7 @@ export const ProjectConfigurationDrawer = () => {
 			bgClickable
 			bgTransparent
 			className={className}
+			data-testid="project-sidebar-config"
 			divId="project-sidebar-config"
 			isForcedOpen={true}
 			isScreenHeight={false}

@@ -130,9 +130,11 @@
 			"modifyTrigger": "Modify trigger",
 			"noConnectionsAvailable": "No connections available",
 			"noFilesAvailable": "No files available",
+			"noFunctionsAvailable": "No functions available",
 			"placeholders": {
 				"connection": "Connection",
 				"cron": "Cron expression",
+				"enterFunctionName": "Enter function name",
 				"eventTypeLabel": "Event type",
 				"eventTypeSelect": "Enter the event type",
 				"file": "File",
@@ -144,7 +146,8 @@
 				"name": "Name",
 				"noTriggerTypesAvailable": "No trigger types available",
 				"selectFile": "Select file",
-				"selectFileFirst": "Please select a file first",
+				"selectFileFirst": "Select file first",
+				"selectFunction": "Select or enter function name",
 				"selectTriggerType": "Select trigger type",
 				"triggerType": "Trigger type",
 				"value": "Value",
@@ -156,10 +159,12 @@
 			"updatedSuccessfully": "Trigger updated successfully",
 			"validations": {
 				"connectionRequired": "Connection is required",
+				"fileRequired": "File is required",
 				"functionRequired": "Entry function is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
 				"nameRequired": "Name is required",
-				"timezoneRequired": "Timezone is required for scheduled triggers"
+				"timezoneRequired": "Timezone is required for scheduled triggers",
+				"cronRequired": "Cron expression is required for scheduled triggers"
 			},
 			"webhookInfo": {
 				"firstLink": "https://docs.autokitteh.com/integrations/http/events/#event-types",

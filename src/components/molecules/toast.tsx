@@ -3,9 +3,10 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
+import { getTestIdFromText } from "../../../e2e/utils/test.utils";
 import { closeToastDuration } from "@src/constants";
 import { ToasterTypes } from "@src/types/components";
-import { cn } from "@utilities";
+import { cn } from "@src/utilities";
 
 import { useLoggerStore, useToastStore } from "@store";
 
@@ -107,7 +108,8 @@ export const Toast = () => {
 			const title = t(`titles.${type}`);
 			const ariaLabel = typeof message === "string" ? message : undefined;
 			const closeButtonToastTestId =
-				typeof message === "string" ? `close-${message.toLowerCase().replace(/ /g, "-")}-toast` : undefined;
+				typeof message === "string" ? getTestIdFromText("toast-close-btn", message) : undefined;
+			const toastTestId = typeof message === "string" ? getTestIdFromText("toast", message) : undefined;
 
 			return (
 				<AnimatePresence key={id}>
@@ -123,7 +125,13 @@ export const Toast = () => {
 						transition={{ duration: 0.3 }}
 						variants={variants}
 					>
-						<div aria-label={ariaLabel} className="flex gap-2.5" role="alert" title={title}>
+						<div
+							aria-label={ariaLabel}
+							className="flex gap-2.5"
+							data-testid={toastTestId}
+							role="alert"
+							title={title}
+						>
 							<div className="text-white">
 								<p className={titleStyle(type)}>{title}</p>
 								{message}

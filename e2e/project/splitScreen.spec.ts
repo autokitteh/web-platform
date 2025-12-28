@@ -1,8 +1,13 @@
 import { expect, test } from "../fixtures";
+import { cleanupCurrentProject } from "../utils";
 
 test.describe("Split Screen Suite", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Should show project files panel by default", async ({ page }) => {

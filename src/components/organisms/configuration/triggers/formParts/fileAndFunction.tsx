@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { CiEdit } from "react-icons/ci";
 
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
@@ -10,35 +11,40 @@ import { useCacheStore, useOrgConnectionsStore } from "@src/store";
 import { TriggerForm } from "@src/types/models";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 
-import { ErrorMessage, Input, Tooltip } from "@components/atoms";
+import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
 
 export const TriggerSpecificFields = ({
 	connectionId,
 	filesNameList,
+	buildFiles,
 	selectedEventType,
 }: {
+	buildFiles?: Record<string, string[]>;
 	connectionId: string;
 	filesNameList: SelectOption[];
 	selectedEventType?: PartialSelectOption;
 }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
+		clearErrors,
 		control,
 		formState: { errors },
 		register,
 		setValue,
 	} = useFormContext<TriggerForm>();
 	const connectionType = useWatch({ name: "connection.value" });
-	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
+	const watchedFilePath = useWatch({ control, name: "filePath" });
+	const watchedEntryFunction = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
-	const watchedFilePath = useWatch({ control, name: "filePath" });
 	const { connections } = useCacheStore();
 	const { orgConnections } = useOrgConnectionsStore();
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
+	const [entryFunctionKey, setEntryFunctionKey] = useState(0);
+	const [customEntryFunctions, setCustomEntryFunctions] = useState<SelectOption[]>([]);
 
 	const isScheduleTrigger = connectionType === TriggerTypes.schedule;
 
@@ -81,6 +87,61 @@ export const TriggerSpecificFields = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId, orgConnections]);
 
+	useEffect(() => {
+		if (!watchedFilePath) {
+			setValue("entryFunction", undefined);
+			setEntryFunctionKey((prev) => prev + 1);
+		}
+	}, [watchedFilePath, setValue]);
+
+	useEffect(() => {
+		if (!watchedEntryFunction?.value) return;
+
+		const entryFunctionValue = watchedEntryFunction.value;
+		const entryFunctionLabel = watchedEntryFunction.label || entryFunctionValue;
+		const functionsFromBuild = watchedFilePath?.value && buildFiles ? buildFiles[watchedFilePath.value] || [] : [];
+
+		const isInBuildFiles = functionsFromBuild.includes(entryFunctionValue);
+
+		if (!isInBuildFiles) {
+			setCustomEntryFunctions((prev) => {
+				const alreadyExists = prev.some((opt) => opt.value === entryFunctionValue);
+				if (alreadyExists) return prev;
+
+				return [
+					...prev,
+					{
+						value: entryFunctionValue,
+						label: entryFunctionLabel,
+						icon: CiEdit,
+						iconClassName: "!size-5.5 rounded-none bg-transparent fill-white",
+					},
+				];
+			});
+		}
+	}, [watchedEntryFunction?.value, watchedEntryFunction?.label, watchedFilePath?.value, buildFiles]);
+
+	const entryFunctionOptions = useMemo(() => {
+		if (!watchedFilePath?.value || !buildFiles) {
+			return customEntryFunctions;
+		}
+		const functions = buildFiles[watchedFilePath.value] || [];
+		const buildOptions = functions.map((fn) => ({ label: fn, value: fn }));
+		return [...buildOptions, ...customEntryFunctions];
+	}, [watchedFilePath?.value, buildFiles, customEntryFunctions]);
+
+	const handleCreateEntryFunction = (inputValue: string) => {
+		const newOption: SelectOption = {
+			value: inputValue,
+			label: inputValue,
+			icon: CiEdit,
+			iconClassName: "!size-5.5 rounded-none bg-transparent fill-white",
+		};
+		setCustomEntryFunctions((prev) => [...prev, newOption]);
+		setValue("entryFunction", newOption);
+		clearErrors("entryFunction");
+	};
+
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {
 			value: inputValue,
@@ -89,8 +150,6 @@ export const TriggerSpecificFields = ({
 		setOptions((prevOptions) => [...prevOptions, newOption]);
 		setValue("eventTypeSelect", newOption);
 	};
-
-	const shouldDisableFunctionInput = !watchedFilePath || !watchedFilePath.value;
 
 	return (
 		<>
@@ -103,6 +162,7 @@ export const TriggerSpecificFields = ({
 							{...field}
 							aria-label={t("placeholders.selectFile")}
 							dataTestid="select-file"
+							isClearable
 							isError={!!errors.filePath}
 							isRequired={isScheduleTrigger}
 							label={t("placeholders.file")}
@@ -117,20 +177,28 @@ export const TriggerSpecificFields = ({
 			</div>
 
 			<div className="relative">
-				<Tooltip
-					content={shouldDisableFunctionInput ? t("placeholders.selectFileFirst") : ""}
-					hide={!shouldDisableFunctionInput}
-				>
-					<Input
-						aria-label={t("placeholders.functionName")}
-						disabled={shouldDisableFunctionInput}
-						{...register("entryFunction")}
-						isError={!!errors.entryFunction}
-						isRequired={isScheduleTrigger}
-						label={t("placeholders.functionName")}
-						value={watchedFunctionName}
-					/>
-				</Tooltip>
+				<Controller
+					control={control}
+					name="entryFunction"
+					render={({ field }) => (
+						<SelectCreatable
+							{...field}
+							aria-label={t("placeholders.functionName")}
+							createLabel={t("createFunctionNameLabel")}
+							dataTestid="select-entry-function"
+							isClearable
+							isError={!!errors.entryFunction}
+							isRequired={isScheduleTrigger}
+							key={entryFunctionKey}
+							label={t("placeholders.functionName")}
+							noOptionsLabel={t("noFunctionsAvailable")}
+							onCreateOption={handleCreateEntryFunction}
+							options={entryFunctionOptions}
+							placeholder={t("placeholders.selectFunction")}
+							value={watchedEntryFunction as SelectOption | null}
+						/>
+					)}
+				/>
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>
 
@@ -146,6 +214,7 @@ export const TriggerSpecificFields = ({
 									aria-label={t("placeholders.eventTypeLabel")}
 									createLabel={t("createFunctionNameLabel")}
 									defaultValue={selectedEventType as SelectOption | null}
+									isClearable
 									isError={!!errors.eventTypeSelect}
 									key={triggerRerender}
 									label={t("placeholders.eventTypeLabel")}

@@ -1,9 +1,14 @@
 import { baseTriggerTypes } from "../../../src/constants/triggersBase.constants";
 import { expect, test } from "../../fixtures";
+import { cleanupCurrentProject } from "../../utils";
 
 test.describe("Trigger Grouped Select Suite", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Grouped select displays Base Trigger Types", async ({ page }) => {

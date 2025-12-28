@@ -101,6 +101,24 @@ const getSelectStyles = (
 			color: oppositeSchemeColor,
 			transform: state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
 		}),
+		clearIndicator: (provided) => ({
+			...provided,
+			color: formThemes["gray-600"],
+			cursor: "pointer",
+			padding: "0",
+			width: "20px",
+			height: "20px",
+			display: "flex",
+			alignItems: "center",
+			justifyContent: "center",
+			"&:hover": {
+				color: formThemes.light,
+			},
+			svg: {
+				height: "20px",
+				width: "20px",
+			},
+		}),
 		indicatorSeparator: () => ({
 			display: "none",
 		}),
@@ -144,7 +162,7 @@ const getSelectStyles = (
 		}),
 		placeholder: (provided, state) => ({
 			...provided,
-			color: state.isFocused ? "transparent" : formThemes["gray-600"],
+			color: state.isFocused && state.selectProps.value ? "transparent" : formThemes["gray-600"],
 		}),
 		singleValue: (provided) => ({
 			...provided,

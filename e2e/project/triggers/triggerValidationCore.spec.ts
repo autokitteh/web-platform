@@ -1,19 +1,10 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { cleanupCurrentProject, createCustomEntryFunction, startTriggerCreation } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
-async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
-	await page.locator('button[aria-label="Add Triggers"]').hover();
-	await page.locator('button[aria-label="Add Triggers"]').click();
-
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
-	await nameInput.click();
-	await nameInput.fill(name);
-
-	await page.getByTestId("select-trigger-type-empty").click();
-	await page.getByRole("option", { name: triggerType }).click();
-}
+const triggerName = "testTrigger";
 
 async function expectValidationError(page: Page, errorText: string, shouldBeVisible: boolean = true) {
 	let errorMessage;
@@ -32,8 +23,7 @@ async function expectValidationError(page: Page, errorText: string, shouldBeVisi
 
 async function saveAndExpectSuccess(page: Page) {
 	await page.locator('button[aria-label="Save"]').click();
-	const toast = await waitForToast(page, "Trigger created successfully");
-	await expect(toast).toBeVisible();
+	await waitForToastToBeRemoved(page, "Trigger created successfully");
 }
 
 async function saveAndExpectFailure(page: Page, expectedError: string) {
@@ -49,8 +39,12 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await dashboardPage.createProjectFromMenu();
 	});
 
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("1. Webhook trigger without file/function - pass", async ({ page }) => {
-		await startTriggerCreation(page, "Webhook");
+		await startTriggerCreation(page, triggerName, "Webhook");
 		await saveAndExpectSuccess(page);
 	});
 
@@ -71,7 +65,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		const triggersHeader = page.getByText("Triggers").first();
 		await triggersHeader.click();
 
-		await startTriggerCreation(page, "Connection");
+		await startTriggerCreation(page, triggerName, "Connection");
 
 		await page.getByTestId("select-connection-empty").click();
 		await page.getByRole("option").first().click();
@@ -80,7 +74,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 	});
 
 	test("3. Scheduler trigger missing file/function - error", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 		await cronInput.click();
@@ -89,21 +83,35 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await saveAndExpectFailure(page, "Entry function is required");
 	});
 
-	test("4. Function name without file selected - fail", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
+	test("4. Function name is editable without file selected", async ({ page }) => {
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
-		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await expect(functionInput).toBeDisabled();
+		const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
+		await expect(entryFunctionSelect).toBeVisible();
+
+		await createCustomEntryFunction(page, "my_test_function");
+
+		const selectedValue = page.locator('[data-testid^="select-entry-function-"][data-testid$="-selected"]');
+		await expect(selectedValue).toBeVisible();
+
+		const valueText = selectedValue.locator(".react-select__single-value");
+		await expect(valueText).toContainText("my_test_function");
+	});
+
+	test("5. Function name without file - cannot save", async ({ page }) => {
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 		await cronInput.click();
 		await cronInput.fill("0 9 * * *");
 
-		await saveAndExpectFailure(page, "Entry function is required");
+		await createCustomEntryFunction(page, "my_test_function");
+
+		await saveAndExpectFailure(page, "File is required");
 	});
 
-	test("5. Scheduler trigger with file/function - pass", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
+	test("6. Scheduler trigger with file/function - pass", async ({ page }) => {
+		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 		await cronInput.click();
@@ -112,24 +120,8 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: "program.py" }).click();
 
-		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await expect(functionInput).toBeEnabled();
-
-		await functionInput.click();
-		await functionInput.fill("test_function");
+		await createCustomEntryFunction(page, "test_function");
 
 		await saveAndExpectSuccess(page);
-	});
-
-	test("Function input becomes enabled when file is selected", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
-
-		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await expect(functionInput).toBeDisabled();
-
-		await page.getByTestId("select-file-empty").click();
-		await page.getByRole("option", { name: "program.py" }).click();
-
-		await expect(functionInput).toBeEnabled();
 	});
 });

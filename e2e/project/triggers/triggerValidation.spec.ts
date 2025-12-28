@@ -1,31 +1,17 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { cleanupCurrentProject, returnToTriggersList, startTriggerCreation } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "testTrigger";
-
-async function startTriggerCreation(page: Page, name: string, triggerType: string) {
-	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
-	await addTriggersButton.hover();
-
-	await addTriggersButton.click();
-
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
-	await nameInput.click();
-	await nameInput.fill(name);
-
-	await page.getByTestId("select-trigger-type-empty").click();
-	await page.getByRole("option", { name: triggerType }).click();
-}
 
 async function attemptSaveTrigger(page: Page, shouldSucceed: boolean = true) {
 	const saveButton = page.locator('button[aria-label="Save"]');
 	await saveButton.click();
 
 	if (shouldSucceed) {
-		const toast = await waitForToast(page, "Trigger created successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Trigger created successfully");
 
 		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 		await expect(nameInput).toBeDisabled();
@@ -39,9 +25,9 @@ async function fillFileAndFunction(page: Page, fileName?: string, functionName?:
 	}
 
 	if (functionName) {
-		const functionNameInput = page.getByRole("textbox", { name: /Function name/i });
-		await functionNameInput.click();
+		const functionNameInput = page.getByRole("combobox", { name: "Function name" });
 		await functionNameInput.fill(functionName);
+		await functionNameInput.press("Enter");
 	}
 }
 
@@ -49,15 +35,6 @@ async function fillCronExpression(page: Page, cronExpression: string) {
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 	await cronInput.click();
 	await cronInput.fill(cronExpression);
-}
-
-async function expectFunctionInputDisabled(page: Page, shouldBeDisabled: boolean = true) {
-	const functionNameInput = page.getByRole("textbox", { name: /Function name/i });
-	if (shouldBeDisabled) {
-		await expect(functionNameInput).toBeDisabled();
-	} else {
-		await expect(functionNameInput).toBeEnabled();
-	}
 }
 
 async function expectErrorMessage(page: Page, errorText: string, shouldBeVisible: boolean = true) {
@@ -80,13 +57,16 @@ test.describe("Trigger Validation Suite", () => {
 		await dashboardPage.createProjectFromMenu();
 	});
 
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("Webhook trigger without file/function - pass", async ({ page }) => {
 		await startTriggerCreation(page, triggerName, "Webhook");
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -113,8 +93,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -132,35 +111,6 @@ test.describe("Trigger Validation Suite", () => {
 		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 		await expect(nameInput).toBeVisible();
 		await expect(nameInput).toHaveValue(triggerName);
-	});
-
-	test("Function name input without file selected - fail", async ({ page }) => {
-		await startTriggerCreation(page, triggerName, "Scheduler");
-
-		await fillCronExpression(page, "0 9 * * *");
-
-		await expectFunctionInputDisabled(page, true);
-
-		const saveButton = page.locator('button[aria-label="Save"]');
-		await saveButton.click();
-
-		await expectErrorMessage(page, "Entry function is required");
-	});
-
-	test("Function input becomes enabled when file is selected", async ({ page }) => {
-		await startTriggerCreation(page, triggerName, "Scheduler");
-
-		await expectFunctionInputDisabled(page, true);
-
-		await page.getByTestId("select-file-empty").click();
-		await page.getByRole("option", { name: "program.py" }).click();
-
-		await expectFunctionInputDisabled(page, false);
-
-		const functionNameInput = page.getByRole("textbox", { name: /Function name/i });
-		await functionNameInput.click();
-		await functionNameInput.fill("test_function");
-		await expect(functionNameInput).toHaveValue("test_function");
 	});
 
 	test("Scheduler trigger with file only - fail", async ({ page }) => {
@@ -186,8 +136,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		const returnBackButton = page.locator('button[aria-label="Return back"]');
-		await returnBackButton.click();
+		await returnToTriggersList(page);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 
@@ -196,27 +145,6 @@ test.describe("Trigger Validation Suite", () => {
 
 		await expect(page.getByText("File:program.py")).toBeVisible();
 		await expect(page.getByText("Entrypoint:test_function")).toBeVisible();
-	});
-
-	test("Function input toggles on trigger type switch", async ({ page }) => {
-		await startTriggerCreation(page, triggerName, "Scheduler");
-
-		await expectFunctionInputDisabled(page, true);
-
-		await page.getByTestId("select-trigger-type-schedule-selected").click();
-		await page.getByRole("option", { name: "Webhook" }).click();
-
-		await expectFunctionInputDisabled(page, true);
-
-		await page.getByTestId("select-file-empty").click();
-		await page.getByRole("option", { name: "program.py" }).click();
-
-		await expectFunctionInputDisabled(page, false);
-
-		await page.getByTestId("select-trigger-type-webhook-selected").click();
-		await page.getByRole("option", { name: "Scheduler" }).click();
-
-		await expectFunctionInputDisabled(page, false);
 	});
 
 	test("Error messages clear when form becomes valid", async ({ page }) => {

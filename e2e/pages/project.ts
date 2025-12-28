@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
-import { waitForToast, waitForToastToBeRemoved } from "../utils";
+import { waitForToastToBeRemoved } from "../utils/waitForToast";
 
 export class ProjectPage {
 	private readonly page: Page;
@@ -32,7 +32,6 @@ export class ProjectPage {
 		} else {
 			await this.page.locator('button[aria-label="Ok"]').click();
 		}
-		await waitForToastToBeRemoved(this.page, "Project deletion completed successfully");
 
 		try {
 			await Promise.race([
@@ -64,10 +63,21 @@ export class ProjectPage {
 
 		await this.page.locator('button[aria-label="Deactivate deployment"]').click();
 
-		const toast = await waitForToast(this.page, "Deployment deactivated successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(this.page, "Deployment deactivated successfully");
 
 		const deploymentTableRow = this.page.getByRole("cell", { name: "inactive" });
 		await expect(deploymentTableRow).toHaveCount(1);
+	}
+
+	async deployProject() {
+		await this.page.getByRole("button", { name: "Deploy project" }).click();
+		await this.page.waitForTimeout(800);
+		await this.page.mouse.move(0, 0);
+		await this.page.keyboard.press("Escape");
+
+		await waitForToastToBeRemoved(this.page, "Deployment activated successfully");
+		await waitForToastToBeRemoved(this.page, "Project successfully deployed with 1 warning");
+
+		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 	}
 }

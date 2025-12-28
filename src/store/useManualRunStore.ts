@@ -6,13 +6,12 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { DeploymentStateVariant, StoreName } from "@enums";
-import { BuildsService, SessionsService } from "@services";
+import { SessionsService } from "@services";
 import { emptySelectItem } from "@src/constants/forms";
 import { tours } from "@src/constants/tour.constants";
 import { ManualRunStore } from "@src/interfaces/store";
-import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
 
-import { useCacheStore, useToastStore } from "@store";
+import { useBuildFilesStore, useCacheStore, useToastStore } from "@store";
 
 const defaultManualRunState = {
 	files: [],
@@ -44,20 +43,17 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			return;
 		}
 
-		const { data: buildDescription, error: buildDescriptionError } = await BuildsService.getBuildDescription(
-			activeDeployment.buildId
-		);
+		const { data: files, error: buildFilesError } = await useBuildFilesStore
+			.getState()
+			.fetchBuildFiles(projectId, activeDeployment.buildId);
 
-		if (buildDescriptionError || !buildDescription) {
+		if (buildFilesError || !files) {
 			useToastStore.getState().addToast({
 				message: t("history.buildInformationForSingleshotNotLoaded", { ns: "deployments" }),
 				type: "error",
 			});
 			return;
 		}
-
-		const buildInfo = JSON.parse(buildDescription);
-		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
 		if (!preSelectRunValuesTourId) {
 			get().updateManualRunConfiguration(projectId, {

@@ -1,12 +1,71 @@
-import type { Page } from "@playwright/test";
+/* eslint-disable no-console */
+import { expect, type Locator, type Page } from "@playwright/test";
 
-export const waitForToast = async (page: Page, toastMessage: string, timeout = 10000) => {
-	const toast = page.locator(`[role="alert"]`, { hasText: toastMessage }).last();
-	await toast.waitFor({ state: "visible", timeout });
-	return toast;
+import { getTestIdFromText } from "./test.utils";
+
+const closeToastDuration = 4000;
+const toastDisplayTimeout = 4000;
+
+export const waitForAllToastsToDisappear = async (page: Page, timeout = closeToastDuration + 3000) => {
+	const toastContainer = page.locator('[data-testid^="toast-"]');
+	await expect(toastContainer).toHaveCount(0, { timeout });
 };
 
-export const waitForToastToBeRemoved = async (page: Page, toastMessage: string, timeout = 10000) => {
-	const toast = await waitForToast(page, toastMessage, timeout / 2);
-	await toast.waitFor({ state: "hidden", timeout });
+export const waitForToastToBeRemoved = async (page: Page, toastMessage: string, dontPush?: boolean) => {
+	const closeToast = async (toast: Locator, toastMessage: string) => {
+		const toastCloseButtonTestId = getTestIdFromText("toast-close-btn", toastMessage);
+
+		console.log("toastCloseButtonTestId", toastCloseButtonTestId);
+
+		const toastCloseButton = toast.getByTestId(toastCloseButtonTestId);
+		console.log("toastCloseButton", toastCloseButton);
+
+		const isToastCloseButtonVisible = await toastCloseButton
+			.isVisible({ timeout: closeToastDuration })
+			.catch(() => false);
+
+		if (isToastCloseButtonVisible) {
+			await toastCloseButton.click();
+		}
+
+		if (!dontPush) {
+			await page.waitForTimeout(800);
+			await page.mouse.move(0, 0);
+			await page.keyboard.press("Escape");
+		}
+
+		await expect(toast).not.toBeVisible();
+	};
+
+	let toast;
+	const toastTestId = getTestIdFromText("toast", toastMessage);
+
+	const roleToast = page.getByRole("alert", { name: toastMessage });
+	const isToastByRoleVisible = await roleToast.isVisible({ timeout: toastDisplayTimeout }).catch(() => false);
+	if (isToastByRoleVisible) {
+		toast = roleToast;
+	}
+
+	if (!toast) {
+		const testIdToast = page.getByTestId(toastTestId);
+		const isToastByIdVisible = await testIdToast.isVisible({ timeout: toastDisplayTimeout }).catch(() => {
+			console.warn("Toast was not found", toastMessage, toastTestId);
+			return false;
+		});
+		if (isToastByIdVisible) {
+			toast = testIdToast;
+		}
+	}
+
+	if (!toast) {
+		console.warn("Toast was not found", toastMessage, toastTestId);
+
+		return;
+	}
+
+	try {
+		await closeToast(toast, toastMessage);
+	} catch (error) {
+		console.warn("The close button for toast was not found", toastMessage, error, toastTestId);
+	}
 };

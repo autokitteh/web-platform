@@ -10,4 +10,4 @@ export const optionalSelectSchema = z
 		label: z.string().optional(),
 		value: z.string().optional(),
 	})
-	.optional();
+	.nullish();

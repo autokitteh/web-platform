@@ -28,6 +28,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			defaultValue,
 			disabled = false,
 			hint,
+			isClearable = false,
 			isError = false,
 			isRequired = false,
 			label,
@@ -131,13 +132,20 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const iconOption = (props: OptionProps<SelectOption>) => {
 			const { ariaLabel, icon, iconClassName, label, isHighlighted, highlightLabel, connectionStatus } =
 				props.data;
+			const selectedIconClassName =
+				(props.isSelected || props.isFocused) && icon
+					? cn(iconClassName, "rounded-full bg-white fill-black p-1", {
+							"bg-white": !!connectionStatus,
+						})
+					: iconClassName;
+
 			return (
 				<Option {...props} innerProps={{ ...props.innerProps, "aria-label": ariaLabel || label }}>
 					<ConnectionIconLabel
 						connectionStatus={connectionStatus}
 						highlightLabel={highlightLabel}
 						icon={icon}
-						iconClassName={iconClassName}
+						iconClassName={selectedIconClassName}
 						isHighlighted={isHighlighted}
 						label={label}
 					/>
@@ -196,6 +204,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 				<div className="relative" data-testid={selectTestId} ref={ref}>
 					<SelectComponent
 						{...rest}
+						classNamePrefix="react-select"
 						components={{
 							Option: iconOption,
 							SingleValue: iconSingleValue,
@@ -205,6 +214,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 							`${createLabel || defaultCreateLabel} "${createLabelItem}"`
 						}
 						id={id}
+						isClearable={isClearable}
 						isDisabled={disabled}
 						isOptionDisabled={(option: SelectOption) => !!option.disabled}
 						noOptionsMessage={noOptionsMessage}
