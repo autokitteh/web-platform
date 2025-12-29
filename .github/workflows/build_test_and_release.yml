@@ -71,15 +71,16 @@ jobs:
           key: playwright-${{ hashFiles('package-lock.json') }}
 
   test:
-    name: 🧪 Testing ${{ matrix.browser }}
-    needs: setup
+    name: 🧪 ${{ matrix.browser }} (shard ${{ matrix.shard }}/4)
+    needs: [setup, build]
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main'
-    timeout-minutes: 90
+    timeout-minutes: 30
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
-      fail-fast: true
+        shard: [1, 2, 3, 4]
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
@@ -109,6 +110,12 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
+      - name: Download built files
+        uses: actions/download-artifact@v4
+        with:
+          name: built-files
+          path: ./dist
+
       - name: Cache Docker images
         id: cache-docker
         uses: ./.github/actions/cache-docker-images
@@ -122,7 +129,7 @@ jobs:
         if: always()
         run: |
           {
-            echo "## 🗂️ Docker Cache Metrics (${{ matrix.browser }})"
+            echo "## 🗂️ Docker Cache Metrics (${{ matrix.browser }} shard ${{ matrix.shard }})"
             echo ""
             echo "| Metric | Value |"
             echo "|--------|-------|"
@@ -150,13 +157,13 @@ jobs:
           VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           VITE_DISPLAY_CHATBOT: true
           CI: true
-        run: npx playwright test --project=${{ matrix.browser }}
+        run: npx playwright test --project=${{ matrix.browser }} --shard=${{ matrix.shard }}/4
 
       - name: Upload test artifacts
         if: always()
         uses: ./.github/actions/upload-test-artifacts
         with:
-          browser: ${{ matrix.browser }}
+          browser: ${{ matrix.browser }}-shard-${{ matrix.shard }}
           run-id: ${{ github.run_id }}
 
   visual-regression:
