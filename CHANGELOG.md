@@ -1,3 +1,8 @@
+## 2.247.0 (2025-12-29)
+
+* feat: prevent connection name change in the edit form (#1519) ([06f647a](https://github.com/autokitteh/web-platform/commit/06f647a)), closes [#1519](https://github.com/autokitteh/web-platform/issues/1519)
+* test: fix project deletion in e2e tests (#1520) ([8a34538](https://github.com/autokitteh/web-platform/commit/8a34538)), closes [#1520](https://github.com/autokitteh/web-platform/issues/1520)
+
 ## <small>2.246.2 (2025-12-29)</small>
 
 * fix: prevent deleted files from reappearing after autosave (#1518) ([b157c3a](https://github.com/autokitteh/web-platform/commit/b157c3a)), closes [#1518](https://github.com/autokitteh/web-platform/issues/1518)
