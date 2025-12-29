@@ -17,7 +17,7 @@ export class OrgConnectionsPage {
 	async goto() {
 		await this.page.goto("/");
 		await waitForLoadingOverlayGone(this.page);
-		await this.page.goto("/connections");
+		await this.page.getByRole("link", { name: "Connections" }).click();
 		await waitForLoadingOverlayGone(this.page);
 		await expect(this.page.getByRole("heading", { name: /Org Connections \(\d+\)/ })).toBeVisible();
 	}
