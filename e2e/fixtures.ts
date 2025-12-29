@@ -22,7 +22,8 @@ const test = base.extend<
 	{ workerBackendPort: number }
 >({
 	workerBackendPort: [
-		async (_deps, use, workerInfo) => {
+		// eslint-disable-next-line no-empty-pattern
+		async ({}, use, workerInfo) => {
 			const port = BACKEND_BASE_PORT + workerInfo.workerIndex;
 			await use(port);
 		},
