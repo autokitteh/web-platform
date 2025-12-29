@@ -1,5 +1,6 @@
 {
 	"errorDeletingProject": "Failed to delete project",
+	"warningDeletingProjectMissingName": "Project name is missing, project deleted successfully",
 	"deleteProjectSuccess": "Project deletion completed successfully",
 	"topbar": {
 		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",

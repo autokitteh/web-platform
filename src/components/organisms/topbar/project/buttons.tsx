@@ -112,7 +112,7 @@ export const ProjectTopbarButtons = () => {
 				}
 			}
 
-			const { error: errorDeleteProject } = await deleteProject(projectId!);
+			const { error: errorDeleteProject, projectName } = await deleteProject(projectId!);
 			if (errorDeleteProject) {
 				addToast({
 					message: t("errorDeletingProject"),
@@ -121,16 +121,26 @@ export const ProjectTopbarButtons = () => {
 				return;
 			}
 
+			if (!projectName) {
+				addToast({
+					message: t("warningDeletingProjectMissingName"),
+					type: "warning",
+				});
+				return;
+			}
+
+			LoggerService.info(
+				namespaces.projectUI,
+				t("topbar.deleteProjectSuccessExtended", { projectId, projectName })
+			);
+
 			addToast({
 				message: t("deleteProjectSuccess"),
 				type: "success",
 			});
 
-			navigate("/", { replace: true });
 			setTimeout(() => {
-				if (window.location.pathname !== "/") {
-					window.location.href = "/";
-				}
+				navigate("/", { replace: true });
 			}, 100);
 		} catch {
 			addToast({

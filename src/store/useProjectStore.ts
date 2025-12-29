@@ -162,12 +162,16 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return { data: undefined, error };
 		}
 
+		let projectName = "";
+
 		set((state) => {
 			const projectIndex = state.projectsList.findIndex(({ id }) => id === projectId);
 
 			if (projectIndex === -1) {
 				return state;
 			}
+
+			projectName = state.projectsList[projectIndex].name;
 
 			const updatedProjectsList = [...state.projectsList];
 			updatedProjectsList.splice(projectIndex, 1);
@@ -177,7 +181,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		triggerEvent(EventListenerName.clearTourStepListener);
 
-		return { data: undefined, error: undefined };
+		return { data: projectName, error: undefined };
 	},
 
 	getProject: async (projectId: string) => {
