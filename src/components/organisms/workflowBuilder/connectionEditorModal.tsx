@@ -153,8 +153,9 @@ export const ConnectionEditorModal = () => {
 
 	return (
 		<Modal
-			className="flex h-[90vh] max-h-[90vh] min-h-[600px] w-full max-w-5xl flex-col bg-gray-950 text-white"
+			className="flex h-[90vh] max-h-[90vh] min-h-[600px] w-full max-w-5xl flex-col"
 			name={ModalName.connectionCodeEditor}
+			variant="dark"
 		>
 			<div className="mb-4 flex items-center justify-between border-b border-gray-700 pb-4">
 				<div>

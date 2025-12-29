@@ -1,26 +1,70 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 
 import { ReactFlowProvider } from "@xyflow/react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { ConnectionEditorModal } from "./connectionEditorModal";
 import { DeleteEdgeModal } from "./deleteEdgeModal";
 import { DeleteNodeModal } from "./deleteNodeModal";
 import { ConnectionConfigModal, TriggerConfigModal } from "./modals";
 import { WorkflowSidebar } from "./sidebar";
+import { WorkflowBuilderError } from "./workflowBuilderError";
+import { WorkflowBuilderSkeleton } from "./workflowBuilderSkeleton";
+import { WorkflowBuilderWarnings } from "./workflowBuilderWarnings";
 import { WorkflowCanvas } from "./workflowCanvas";
 import { useWorkflowBuilderStore } from "@store/useWorkflowBuilderStore";
 
 import { Button, Typography } from "@components/atoms";
 
-export const WorkflowBuilder = () => {
+interface WorkflowBuilderProps {
+	projectId?: string;
+	buildId?: string;
+}
+
+export const WorkflowBuilder = ({ projectId: propProjectId, buildId }: WorkflowBuilderProps) => {
+	const { projectId: paramProjectId } = useParams<{ projectId: string }>();
+	const projectId = propProjectId || paramProjectId;
 	const { t } = useTranslation("workflowBuilder");
-	const { clearWorkflow, nodes, edges, variables, getTriggerNodes, getCodeNodes, getConnectionNodes } =
-		useWorkflowBuilderStore();
+	const {
+		clearWorkflow,
+		nodes,
+		edges,
+		variables,
+		getTriggerNodes,
+		getCodeNodes,
+		getConnectionNodes,
+		isLoadingProject,
+		loadError,
+		loadProjectWorkflow,
+		clearLoadError,
+		warnings,
+		hasUnsavedChanges,
+	} = useWorkflowBuilderStore();
+
+	useEffect(() => {
+		if (projectId) {
+			loadProjectWorkflow(projectId, buildId);
+		}
+	}, [projectId, buildId, loadProjectWorkflow]);
+
+	const handleRetry = useCallback(() => {
+		if (projectId) {
+			loadProjectWorkflow(projectId, buildId);
+		}
+	}, [projectId, buildId, loadProjectWorkflow]);
 
 	const triggerCount = getTriggerNodes().length;
 	const codeCount = getCodeNodes().length;
 	const connectionCount = getConnectionNodes().length;
+
+	if (isLoadingProject) {
+		return <WorkflowBuilderSkeleton />;
+	}
+
+	if (loadError) {
+		return <WorkflowBuilderError error={loadError} onDismiss={clearLoadError} onRetry={handleRetry} />;
+	}
 
 	return (
 		<ReactFlowProvider>
@@ -63,6 +107,12 @@ export const WorkflowBuilder = () => {
 								</div>
 							) : null}
 						</div>
+						{hasUnsavedChanges ? (
+							<div className="flex items-center gap-1.5">
+								<span className="size-2 animate-pulse rounded-full bg-yellow-500" />
+								<span className="text-yellow-500">{t("unsavedChanges")}</span>
+							</div>
+						) : null}
 						<div className="h-6 w-px bg-gray-700" />
 						<Typography className="text-gray-500" element="span" size="small">
 							{t("stats", { nodes: nodes.length, edges: edges.length })}
@@ -74,9 +124,10 @@ export const WorkflowBuilder = () => {
 						) : null}
 					</div>
 				</div>
-				<div className="flex flex-1 overflow-hidden">
+				<div className="relative flex flex-1 overflow-hidden">
 					<WorkflowSidebar />
-					<div className="flex-1 bg-gray-1000">
+					<div className="relative flex-1 bg-gray-1000">
+						<WorkflowBuilderWarnings warnings={warnings} />
 						<WorkflowCanvas />
 					</div>
 				</div>

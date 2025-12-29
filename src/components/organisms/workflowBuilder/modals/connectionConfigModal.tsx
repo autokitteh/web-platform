@@ -80,7 +80,7 @@ export const ConnectionConfigModal = () => {
 	const StatusIcon = statusInfo.icon;
 
 	return (
-		<Modal name={ModalName.connectionConfig}>
+		<Modal name={ModalName.connectionConfig} variant="dark">
 			<div className="w-[480px]">
 				<div className="mb-6 flex items-start gap-4">
 					{integration?.icon ? (
@@ -144,7 +144,7 @@ export const ConnectionConfigModal = () => {
 								) : null}
 								<Button
 									ariaLabel="Test Connection"
-									className="px-3 py-1.5 text-sm"
+									className="px-4 py-1.5 text-sm text-gray-300"
 									disabled={isTesting}
 									onClick={handleTestConnection}
 									variant="outline"
@@ -171,7 +171,11 @@ export const ConnectionConfigModal = () => {
 								This connection needs to be authenticated before it can be used. Click the button below
 								to set up authentication.
 							</Typography>
-							<Button ariaLabel="Set up authentication" className="mt-3 w-full" variant="outline">
+							<Button
+								ariaLabel="Set up authentication"
+								className="mt-3 w-full pl-4 text-gray-300"
+								variant="outline"
+							>
 								Set Up Authentication
 							</Button>
 						</div>
@@ -203,7 +207,12 @@ export const ConnectionConfigModal = () => {
 				</div>
 
 				<div className="mt-8 flex justify-end gap-3">
-					<Button ariaLabel="Cancel" className="px-4 py-2" onClick={handleCancel} variant="outline">
+					<Button
+						ariaLabel="Cancel"
+						className="px-4 py-2 text-gray-300"
+						onClick={handleCancel}
+						variant="outline"
+					>
 						Cancel
 					</Button>
 					<Button ariaLabel="Save" className="px-4 py-2" onClick={handleSave} variant="filled">

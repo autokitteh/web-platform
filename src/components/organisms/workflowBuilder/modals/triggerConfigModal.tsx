@@ -109,7 +109,7 @@ export const TriggerConfigModal = () => {
 	}, [closeModal]);
 
 	return (
-		<Modal name={ModalName.triggerConfig}>
+		<Modal name={ModalName.triggerConfig} variant="dark">
 			<div className="w-[480px]">
 				<Typography className="mb-6 text-white" variant="h2">
 					Configure Trigger

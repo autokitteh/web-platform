@@ -15,6 +15,12 @@ export { VariablesService } from "@services/variables.service";
 export { OrganizationsService } from "@services/organizations.service";
 export { UsersService } from "@services/users.service";
 export { VersionService } from "@services/version.service";
+export { WorkflowBuilderService } from "@services/workflowBuilder.service";
+export type {
+	ProjectWorkflowData,
+	ExistingCodeFile,
+	LoadProjectWorkflowDataOptions,
+} from "@services/workflowBuilder.service";
 
 export {
 	IndexedDBService,

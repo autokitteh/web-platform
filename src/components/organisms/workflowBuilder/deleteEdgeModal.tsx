@@ -29,17 +29,17 @@ export const DeleteEdgeModal = () => {
 	}, [closeModal]);
 
 	return (
-		<Modal hideCloseButton name={ModalName.deleteWorkflowEdge}>
+		<Modal hideCloseButton name={ModalName.deleteWorkflowEdge} variant="dark">
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
-				<p>{t("content")}</p>
+				<h3 className="mb-5 text-xl font-bold text-white">{t("title")}</h3>
+				<p className="text-gray-200">{t("content")}</p>
 				<p className="mt-1 text-gray-400">{t("warning")}</p>
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
 					ariaLabel={t("cancel")}
-					className="px-4 py-3 hover:bg-gray-1100 hover:text-white"
+					className="border-gray-600 px-4 py-3 text-gray-200 hover:bg-gray-800 hover:text-white"
 					onClick={handleCancel}
 					variant="outline"
 				>
@@ -48,7 +48,7 @@ export const DeleteEdgeModal = () => {
 
 				<Button
 					ariaLabel={t("delete")}
-					className="bg-error px-4 py-3 hover:bg-error/80"
+					className="bg-error px-4 py-3 text-white hover:bg-error/80"
 					onClick={handleDelete}
 					variant="filled"
 				>

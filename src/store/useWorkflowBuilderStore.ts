@@ -6,6 +6,7 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 import {
 	CodeNode,
 	ConnectionNode,
+	GraphBuildWarning,
 	LegacyWorkflowEdgeData,
 	ProjectVariable,
 	TriggerNode,
@@ -14,6 +15,16 @@ import {
 	WorkflowEdgeVariable,
 	WorkflowNode,
 } from "@interfaces/components/workflowBuilder.interface";
+import { WorkflowBuilderService } from "@services/workflowBuilder.service";
+import { applyAutoLayout, buildWorkflowGraph } from "@utilities/index";
+
+interface OriginalProjectState {
+	nodes: WorkflowNode[];
+	edges: WorkflowEdge[];
+	variables: ProjectVariable[];
+}
+
+let originalProjectState: OriginalProjectState | null = null;
 
 const store: StateCreator<WorkflowBuilderState> = (set, get) => ({
 	nodes: [],
@@ -22,6 +33,13 @@ const store: StateCreator<WorkflowBuilderState> = (set, get) => ({
 	selectedNodeId: null,
 	selectedEdgeId: null,
 	triggerNodeId: null,
+
+	projectId: null,
+	buildId: null,
+	isLoadingProject: false,
+	loadError: null,
+	hasUnsavedChanges: false,
+	warnings: [] as GraphBuildWarning[],
 
 	addNode: (node: WorkflowNode) =>
 		set((state) => ({
@@ -113,7 +131,8 @@ const store: StateCreator<WorkflowBuilderState> = (set, get) => ({
 
 	setVariables: (variables: ProjectVariable[]) => set({ variables }),
 
-	clearWorkflow: () =>
+	clearWorkflow: () => {
+		originalProjectState = null;
 		set({
 			nodes: [],
 			edges: [],
@@ -121,13 +140,83 @@ const store: StateCreator<WorkflowBuilderState> = (set, get) => ({
 			selectedNodeId: null,
 			selectedEdgeId: null,
 			triggerNodeId: null,
-		}),
+			projectId: null,
+			buildId: null,
+			isLoadingProject: false,
+			loadError: null,
+			hasUnsavedChanges: false,
+			warnings: [],
+		});
+	},
 
 	getTriggerNodes: () => get().nodes.filter((node): node is TriggerNode => node.type === "trigger"),
 
 	getCodeNodes: () => get().nodes.filter((node): node is CodeNode => node.type === "code"),
 
 	getConnectionNodes: () => get().nodes.filter((node): node is ConnectionNode => node.type === "connection"),
+
+	loadProjectWorkflow: async (projectId: string, buildId?: string) => {
+		set({
+			isLoadingProject: true,
+			loadError: null,
+			projectId,
+			buildId: buildId || null,
+		});
+
+		const result = await WorkflowBuilderService.loadProjectWorkflowData(projectId, buildId);
+
+		if (!result.data) {
+			set({
+				isLoadingProject: false,
+				loadError: typeof result.error === "string" ? result.error : "Failed to load project workflow data",
+			});
+
+			return;
+		}
+
+		const graphResult = buildWorkflowGraph(result.data);
+		const layoutedNodes = applyAutoLayout(graphResult.nodes, graphResult.edges);
+
+		originalProjectState = {
+			nodes: layoutedNodes,
+			edges: graphResult.edges,
+			variables: graphResult.variables,
+		};
+
+		set({
+			nodes: layoutedNodes,
+			edges: graphResult.edges,
+			variables: graphResult.variables,
+			warnings: graphResult.warnings,
+			isLoadingProject: false,
+			loadError: null,
+			hasUnsavedChanges: false,
+			selectedNodeId: null,
+			selectedEdgeId: null,
+		});
+
+		const triggerNodes = layoutedNodes.filter((n) => n.type === "trigger");
+		if (triggerNodes.length > 0) {
+			set({ triggerNodeId: triggerNodes[0].id });
+		}
+	},
+
+	resetToProjectState: () => {
+		if (originalProjectState) {
+			set({
+				nodes: originalProjectState.nodes,
+				edges: originalProjectState.edges,
+				variables: originalProjectState.variables,
+				hasUnsavedChanges: false,
+				selectedNodeId: null,
+				selectedEdgeId: null,
+			});
+		}
+	},
+
+	setHasUnsavedChanges: (hasChanges: boolean) => set({ hasUnsavedChanges: hasChanges }),
+
+	clearLoadError: () => set({ loadError: null }),
 });
 
 export const useWorkflowBuilderStore = create(
@@ -137,6 +226,9 @@ export const useWorkflowBuilderStore = create(
 			nodes: state.nodes,
 			edges: state.edges,
 			variables: state.variables,
+			projectId: state.projectId,
+			buildId: state.buildId,
+			warnings: state.warnings,
 		}),
 	}),
 	shallow

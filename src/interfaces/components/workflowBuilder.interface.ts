@@ -106,6 +106,12 @@ export type LegacyWorkflowEdge = Edge<LegacyWorkflowEdgeData>;
 
 export type WorkflowEdge = ExecutionEdge | DataEdge | EventEdge | LegacyWorkflowEdge;
 
+export interface GraphBuildWarning {
+	type: string;
+	message: string;
+	affectedIds: string[];
+}
+
 export interface WorkflowBuilderState {
 	nodes: WorkflowNode[];
 	edges: WorkflowEdge[];
@@ -113,6 +119,13 @@ export interface WorkflowBuilderState {
 	selectedNodeId: string | null;
 	selectedEdgeId: string | null;
 	triggerNodeId: string | null;
+
+	projectId: string | null;
+	buildId: string | null;
+	isLoadingProject: boolean;
+	loadError: string | null;
+	hasUnsavedChanges: boolean;
+	warnings: GraphBuildWarning[];
 
 	addNode: (node: WorkflowNode) => void;
 	removeNode: (nodeId: string) => void;
@@ -141,4 +154,9 @@ export interface WorkflowBuilderState {
 	getTriggerNodes: () => TriggerNode[];
 	getCodeNodes: () => CodeNode[];
 	getConnectionNodes: () => ConnectionNode[];
+
+	loadProjectWorkflow: (projectId: string, buildId?: string) => Promise<void>;
+	resetToProjectState: () => void;
+	setHasUnsavedChanges: (hasChanges: boolean) => void;
+	clearLoadError: () => void;
 }

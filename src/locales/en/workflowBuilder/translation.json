@@ -3,6 +3,7 @@
 	"description": "Build your automation workflow by connecting triggers, code, and integrations",
 	"clearCanvas": "Clear Canvas",
 	"stats": "{{nodes}} nodes, {{edges}} edges",
+	"unsavedChanges": "Unsaved changes",
 	"sidebar": {
 		"title": "Workflow Components",
 		"description": "Drag components to the canvas",

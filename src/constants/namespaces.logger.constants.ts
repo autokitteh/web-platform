@@ -82,4 +82,5 @@ export const namespaces = {
 	},
 	feedbackForm: "User Feedback Form",
 	datadog: "Datadog",
+	workflowBuilderService: "Workflow Builder Service",
 };

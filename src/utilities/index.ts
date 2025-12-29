@@ -112,3 +112,59 @@ export type { SendMessageFn, ConnectionResolverFn } from "@utilities/iframeMessa
 export { getErrorMessage } from "@utilities/error.utils";
 export { formatNumber, formatDuration } from "@utilities/formatDashboard.utils";
 export { formatDate, formatDateShort } from "@utilities/formatDate.utils";
+export {
+	parseEntryPoints,
+	parseImports,
+	parseConnectionReferences,
+	parseCode,
+	findEntryPointByName,
+	getActiveEntryPoints,
+	extractFunctionNameFromCall,
+	formatEntryPointCall,
+} from "@utilities/codeParser";
+export type { ParsedEntryPoint, ParseResult } from "@utilities/codeParser";
+export {
+	analyzeConnectionUsage,
+	getConnectionsUsedByFunction,
+	getFunctionsUsingConnection,
+	getOperationsByConnection,
+	summarizeConnectionUsage,
+	analyzeMultipleFiles,
+	aggregateUsagesByConnection,
+} from "@utilities/connectionAnalyzer";
+export type {
+	ConnectionUsage,
+	ConnectionOperation,
+	FileConnectionUsage,
+	OperationType,
+} from "@utilities/connectionAnalyzer";
+export {
+	buildWorkflowGraph,
+	getNodeById,
+	getNodesByType,
+	getTriggerNodesFromResult,
+	getCodeNodesFromResult,
+	getConnectionNodesFromResult,
+	createEdgeBetweenNodes,
+	getEdgesBySourceNode,
+	getEdgesByTargetNode,
+	getEdgesBetweenNodes,
+	getExecutionEdges,
+	getDataEdges,
+} from "@utilities/workflowGraphBuilder";
+export type {
+	GraphBuildResult,
+	GraphBuildWarning,
+	GraphBuildWarningType,
+	GraphBuildContext,
+} from "@utilities/workflowGraphBuilder";
+export {
+	applyAutoLayout,
+	DEFAULT_LAYOUT_CONFIG,
+	getLayoutBounds,
+	centerLayoutInViewport,
+	fitLayoutToViewport,
+	createCompactLayout,
+	createSpreadLayout,
+} from "@utilities/workflowAutoLayout";
+export type { LayoutConfig } from "@utilities/workflowAutoLayout";
