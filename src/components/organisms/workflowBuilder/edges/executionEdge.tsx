@@ -63,7 +63,7 @@ export const ExecutionEdge = ({
 			cn(
 				"flex items-center gap-1.5 rounded-full border px-3 py-1.5 transition-all duration-200",
 				isActive
-					? "bg-amber-900/40 border-amber-500/50 shadow-lg shadow-amber-500/20"
+					? "border-amber-500/50 bg-amber-900/40 shadow-lg shadow-amber-500/20"
 					: "border-gray-600 bg-gray-800",
 				isHovered && "scale-105"
 			),

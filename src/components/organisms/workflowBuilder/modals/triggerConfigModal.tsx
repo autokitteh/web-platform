@@ -135,7 +135,7 @@ export const TriggerConfigModal = () => {
 										className={cn(
 											"flex flex-1 items-center justify-center gap-2 rounded-lg border-2 py-3 transition-all",
 											triggerType === t.type
-												? "bg-blue-900/20 border-blue-500"
+												? "border-blue-500 bg-blue-900/20"
 												: "border-gray-700 bg-gray-900 hover:border-gray-600"
 										)}
 										key={t.type}

@@ -77,12 +77,25 @@ const CodeNodeComponent = ({ id, data, selected }: CodeNodeProps) => {
 	const activeEntryPoints = data.entryPoints.filter((ep) => ep.isActive);
 	const inactiveEntryPoints = data.entryPoints.filter((ep) => !ep.isActive);
 
+	const handleKeyDown = useCallback(
+		(event: React.KeyboardEvent) => {
+			if (event.key === "Enter" || event.key === " ") {
+				event.preventDefault();
+				handleNodeClick();
+			}
+		},
+		[handleNodeClick]
+	);
+
 	return (
 		<div
 			className={containerClass}
 			onClick={handleNodeClick}
+			onKeyDown={handleKeyDown}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
+			role="button"
+			tabIndex={0}
 		>
 			<button className={deleteButtonClass} onClick={handleDeleteClick} type="button">
 				<LuX className="size-3 text-red-500" />
@@ -126,7 +139,7 @@ const CodeNodeComponent = ({ id, data, selected }: CodeNodeProps) => {
 					</Typography>
 					<div className="space-y-1">
 						{activeEntryPoints.map((ep) => (
-							<div className="bg-green-900/20 flex items-center gap-2 rounded px-2 py-1" key={ep.name}>
+							<div className="flex items-center gap-2 rounded bg-green-900/20 px-2 py-1" key={ep.name}>
 								<span className="size-1.5 rounded-full bg-green-500" />
 								<Typography className="text-green-400" element="span" size="small">
 									{ep.name}()

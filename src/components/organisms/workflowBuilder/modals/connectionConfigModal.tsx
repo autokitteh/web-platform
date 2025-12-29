@@ -163,7 +163,7 @@ export const ConnectionConfigModal = () => {
 					</div>
 
 					{status === "disconnected" ? (
-						<div className="bg-amber-900/10 rounded-lg border border-amber-500/30 p-4">
+						<div className="rounded-lg border border-amber-500/30 bg-amber-900/10 p-4">
 							<Typography className="mb-2 text-amber-400" element="span" size="small">
 								Authentication Required
 							</Typography>

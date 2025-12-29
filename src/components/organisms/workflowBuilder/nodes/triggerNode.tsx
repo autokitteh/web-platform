@@ -85,12 +85,25 @@ const TriggerNodeComponent = ({ id, data, selected }: TriggerNodeProps) => {
 		return "Configure...";
 	}, [data]);
 
+	const handleKeyDown = useCallback(
+		(event: React.KeyboardEvent) => {
+			if (event.key === "Enter" || event.key === " ") {
+				event.preventDefault();
+				handleNodeClick();
+			}
+		},
+		[handleNodeClick]
+	);
+
 	return (
 		<div
 			className="relative cursor-pointer"
 			onClick={handleNodeClick}
+			onKeyDown={handleKeyDown}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
+			role="button"
+			tabIndex={0}
 		>
 			<button className={deleteButtonClass} onClick={handleDeleteClick} type="button">
 				<LuX className="size-3 text-red-500" />

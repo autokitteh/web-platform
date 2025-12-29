@@ -56,7 +56,7 @@ const CodeFileItem = ({ file, onDragStart }: CodeFileItemProps) => {
 					</Typography>
 				</div>
 				{activeEntryPoints.length > 0 ? (
-					<span className="bg-green-900/50 rounded-full px-1.5 py-0.5 text-10 text-green-400">
+					<span className="rounded-full bg-green-900/50 px-1.5 py-0.5 text-10 text-green-400">
 						{activeEntryPoints.length} active
 					</span>
 				) : null}
@@ -158,7 +158,7 @@ export const CodeFilesSection = () => {
 						Code Files
 					</Typography>
 					{allFiles.length > 0 ? (
-						<span className="bg-blue-900/50 rounded-full px-1.5 py-0.5 text-10 text-blue-400">
+						<span className="rounded-full bg-blue-900/50 px-1.5 py-0.5 text-10 text-blue-400">
 							{allFiles.length}
 						</span>
 					) : null}

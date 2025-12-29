@@ -148,6 +148,12 @@ export const DataEdge = ({
 						<div
 							className={labelContainerClass}
 							onClick={() => setShowDetails(!showDetails)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									e.preventDefault();
+									setShowDetails(!showDetails);
+								}
+							}}
 							role="button"
 							tabIndex={0}
 						>
@@ -170,13 +176,13 @@ export const DataEdge = ({
 									{readOps.length > 0 ? (
 										<div className="flex items-center gap-0.5">
 											<LuBookOpen className="size-2.5 text-blue-400" />
-											<span className="text-blue-300 text-10">{readOps.length}</span>
+											<span className="text-10 text-blue-300">{readOps.length}</span>
 										</div>
 									) : null}
 									{writeOps.length > 0 ? (
 										<div className="flex items-center gap-0.5">
-											<LuPencil className="text-orange-400 size-2.5" />
-											<span className="text-orange-300 text-10">{writeOps.length}</span>
+											<LuPencil className="size-2.5 text-orange-400" />
+											<span className="text-10 text-orange-300">{writeOps.length}</span>
 										</div>
 									) : null}
 								</div>
@@ -203,7 +209,7 @@ export const DataEdge = ({
 								) : null}
 								{writeOps.length > 0 ? (
 									<div>
-										<div className="text-orange-400 mb-1 flex items-center gap-1 text-10 font-medium">
+										<div className="mb-1 flex items-center gap-1 text-10 font-medium text-orange-400">
 											<LuPencil className="size-3" />
 											Write Operations
 										</div>

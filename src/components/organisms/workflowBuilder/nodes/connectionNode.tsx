@@ -108,12 +108,25 @@ const ConnectionNodeComponent = ({ id, data, selected }: ConnectionNodeProps) =>
 		[statusStyle.border, statusStyle.bg, statusStyle.pulse, selected, isHovered]
 	);
 
+	const handleKeyDown = useCallback(
+		(event: React.KeyboardEvent) => {
+			if (event.key === "Enter" || event.key === " ") {
+				event.preventDefault();
+				handleNodeClick();
+			}
+		},
+		[handleNodeClick]
+	);
+
 	return (
 		<div
 			className={containerClass}
 			onClick={handleNodeClick}
+			onKeyDown={handleKeyDown}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
+			role="button"
+			tabIndex={0}
 		>
 			<button className={deleteButtonClass} onClick={handleDeleteClick} type="button">
 				<LuX className="size-2.5 text-red-500" />

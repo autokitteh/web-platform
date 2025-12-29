@@ -118,7 +118,7 @@ export const ConnectionsSection = () => {
 						Connections
 					</Typography>
 					{projectConnections.length > 0 ? (
-						<span className="bg-green-900/50 rounded-full px-1.5 py-0.5 text-10 text-green-400">
+						<span className="rounded-full bg-green-900/50 px-1.5 py-0.5 text-10 text-green-400">
 							{projectConnections.length}
 						</span>
 					) : null}
