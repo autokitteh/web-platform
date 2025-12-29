@@ -1,3 +1,7 @@
+## <small>2.247.1 (2025-12-29)</small>
+
+* fix: restore cursor position when switching between projects in editor (#1517) ([1bf7e68](https://github.com/autokitteh/web-platform/commit/1bf7e68)), closes [#1517](https://github.com/autokitteh/web-platform/issues/1517)
+
 ## 2.247.0 (2025-12-29)
 
 * feat: prevent connection name change in the edit form (#1519) ([06f647a](https://github.com/autokitteh/web-platform/commit/06f647a)), closes [#1519](https://github.com/autokitteh/web-platform/issues/1519)
