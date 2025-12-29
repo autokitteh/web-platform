@@ -1,3 +1,7 @@
+## <small>2.246.2 (2025-12-29)</small>
+
+* fix: prevent deleted files from reappearing after autosave (#1518) ([b157c3a](https://github.com/autokitteh/web-platform/commit/b157c3a)), closes [#1518](https://github.com/autokitteh/web-platform/issues/1518)
+
 ## <small>2.246.1 (2025-12-28)</small>
 
 * fix: redirect to api url after cli login (#1509) ([6038d53](https://github.com/autokitteh/web-platform/commit/6038d53)), closes [#1509](https://github.com/autokitteh/web-platform/issues/1509)
