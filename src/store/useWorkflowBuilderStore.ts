@@ -4,23 +4,22 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 import {
-	EdgeStatus,
+	CodeNode,
+	ConnectionNode,
+	LegacyWorkflowEdgeData,
+	ProjectVariable,
+	TriggerNode,
 	WorkflowBuilderState,
 	WorkflowEdge,
 	WorkflowEdgeVariable,
 	WorkflowNode,
 } from "@interfaces/components/workflowBuilder.interface";
 
-const computeEdgeStatus = (code: string, eventType: string): EdgeStatus => {
-	const hasCode = code && code.trim().length > 0;
-	const hasEventType = eventType && eventType.trim().length > 0;
-	if (hasCode && hasEventType) return "configured";
-	return "draft";
-};
-
-const store: StateCreator<WorkflowBuilderState> = (set) => ({
+const store: StateCreator<WorkflowBuilderState> = (set, get) => ({
 	nodes: [],
 	edges: [],
+	variables: [],
+	selectedNodeId: null,
 	selectedEdgeId: null,
 	triggerNodeId: null,
 
@@ -30,14 +29,18 @@ const store: StateCreator<WorkflowBuilderState> = (set) => ({
 		})),
 
 	removeNode: (nodeId: string) =>
-		set((state) => {
-			const newTriggerNodeId = state.triggerNodeId === nodeId ? null : state.triggerNodeId;
-			return {
-				nodes: state.nodes.filter((node) => node.id !== nodeId),
-				edges: state.edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
-				triggerNodeId: newTriggerNodeId,
-			};
-		}),
+		set((state) => ({
+			nodes: state.nodes.filter((node) => node.id !== nodeId),
+			edges: state.edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
+			selectedNodeId: state.selectedNodeId === nodeId ? null : state.selectedNodeId,
+		})),
+
+	updateNode: (nodeId: string, data: Partial<WorkflowNode["data"]>) =>
+		set((state) => ({
+			nodes: state.nodes.map((node) =>
+				node.id === nodeId ? ({ ...node, data: { ...node.data, ...data } } as WorkflowNode) : node
+			),
+		})),
 
 	updateNodePosition: (nodeId: string, position: { x: number; y: number }) =>
 		set((state) => ({
@@ -46,98 +49,46 @@ const store: StateCreator<WorkflowBuilderState> = (set) => ({
 
 	setNodes: (nodes: WorkflowNode[]) => set({ nodes }),
 
+	setSelectedNodeId: (nodeId: string | null) => set({ selectedNodeId: nodeId }),
+
+	setTriggerNodeId: (nodeId: string | null) => set({ triggerNodeId: nodeId }),
+
 	addEdge: (edge: WorkflowEdge) =>
-		set((state) => {
-			const isFirstEdgeFromSource = !state.edges.some((e) => e.source === edge.source);
-			const shouldSetTrigger = isFirstEdgeFromSource && !state.triggerNodeId;
-			return {
-				edges: [...state.edges, edge],
-				triggerNodeId: shouldSetTrigger ? edge.source : state.triggerNodeId,
-			};
-		}),
+		set((state) => ({
+			edges: [...state.edges, edge],
+		})),
 
 	removeEdge: (edgeId: string) =>
-		set((state) => {
-			const edgeToRemove = state.edges.find((e) => e.id === edgeId);
-			const remainingEdges = state.edges.filter((edge) => edge.id !== edgeId);
-			const sourceStillHasEdges = remainingEdges.some((e) => e.source === edgeToRemove?.source);
-			const newTriggerNodeId =
-				state.triggerNodeId === edgeToRemove?.source && !sourceStillHasEdges ? null : state.triggerNodeId;
-			return {
-				edges: remainingEdges,
-				selectedEdgeId: state.selectedEdgeId === edgeId ? null : state.selectedEdgeId,
-				triggerNodeId: newTriggerNodeId,
-			};
-		}),
+		set((state) => ({
+			edges: state.edges.filter((edge) => edge.id !== edgeId),
+			selectedEdgeId: state.selectedEdgeId === edgeId ? null : state.selectedEdgeId,
+		})),
+
+	updateEdge: (edgeId: string, data: Partial<WorkflowEdge["data"]>) =>
+		set((state) => ({
+			edges: state.edges.map((edge) =>
+				edge.id === edgeId ? ({ ...edge, data: { ...edge.data, ...data } } as WorkflowEdge) : edge
+			),
+		})),
 
 	updateEdgeCode: (edgeId: string, code: string) =>
 		set((state) => ({
-			edges: state.edges.map((edge) => {
-				if (edge.id !== edgeId) return edge;
-				const eventType = edge.data?.eventType || "";
-				const variables = edge.data?.variables || [];
-				return {
-					...edge,
-					data: {
-						code,
-						eventType,
-						variables,
-						status: computeEdgeStatus(code, eventType),
-					},
-				};
-			}),
+			edges: state.edges.map((edge) =>
+				edge.id === edgeId ? { ...edge, data: { ...(edge.data as LegacyWorkflowEdgeData), code } } : edge
+			),
 		})),
 
 	updateEdgeEventType: (edgeId: string, eventType: string) =>
 		set((state) => ({
-			edges: state.edges.map((edge) => {
-				if (edge.id !== edgeId) return edge;
-				const code = edge.data?.code || "";
-				const variables = edge.data?.variables || [];
-				return {
-					...edge,
-					data: {
-						code,
-						eventType,
-						variables,
-						status: computeEdgeStatus(code, eventType),
-					},
-				};
-			}),
+			edges: state.edges.map((edge) =>
+				edge.id === edgeId ? { ...edge, data: { ...(edge.data as LegacyWorkflowEdgeData), eventType } } : edge
+			),
 		})),
 
 	updateEdgeVariables: (edgeId: string, variables: WorkflowEdgeVariable[]) =>
 		set((state) => ({
-			edges: state.edges.map((edge) => {
-				if (edge.id !== edgeId) return edge;
-				return {
-					...edge,
-					data: {
-						...edge.data,
-						code: edge.data?.code || "",
-						eventType: edge.data?.eventType || "",
-						status: edge.data?.status || "draft",
-						variables,
-					},
-				};
-			}),
-		})),
-
-	updateEdgeStatus: (edgeId: string, status: EdgeStatus) =>
-		set((state) => ({
 			edges: state.edges.map((edge) =>
-				edge.id === edgeId
-					? {
-							...edge,
-							data: {
-								...edge.data,
-								code: edge.data?.code || "",
-								eventType: edge.data?.eventType || "",
-								variables: edge.data?.variables || [],
-								status,
-							},
-						}
-					: edge
+				edge.id === edgeId ? { ...edge, data: { ...(edge.data as LegacyWorkflowEdgeData), variables } } : edge
 			),
 		})),
 
@@ -145,22 +96,48 @@ const store: StateCreator<WorkflowBuilderState> = (set) => ({
 
 	setSelectedEdgeId: (edgeId: string | null) => set({ selectedEdgeId: edgeId }),
 
-	setTriggerNodeId: (nodeId: string | null) =>
+	addVariable: (variable: ProjectVariable) =>
 		set((state) => ({
-			triggerNodeId: nodeId,
-			nodes: state.nodes.map((node) => ({
-				...node,
-				data: { ...node.data, isTrigger: node.id === nodeId },
-			})),
+			variables: [...state.variables, variable],
 		})),
 
-	clearWorkflow: () => set({ nodes: [], edges: [], selectedEdgeId: null, triggerNodeId: null }),
+	updateVariable: (id: string, updates: Partial<ProjectVariable>) =>
+		set((state) => ({
+			variables: state.variables.map((v) => (v.id === id ? { ...v, ...updates } : v)),
+		})),
+
+	removeVariable: (id: string) =>
+		set((state) => ({
+			variables: state.variables.filter((v) => v.id !== id),
+		})),
+
+	setVariables: (variables: ProjectVariable[]) => set({ variables }),
+
+	clearWorkflow: () =>
+		set({
+			nodes: [],
+			edges: [],
+			variables: [],
+			selectedNodeId: null,
+			selectedEdgeId: null,
+			triggerNodeId: null,
+		}),
+
+	getTriggerNodes: () => get().nodes.filter((node): node is TriggerNode => node.type === "trigger"),
+
+	getCodeNodes: () => get().nodes.filter((node): node is CodeNode => node.type === "code"),
+
+	getConnectionNodes: () => get().nodes.filter((node): node is ConnectionNode => node.type === "connection"),
 });
 
 export const useWorkflowBuilderStore = create(
 	persist(store, {
 		name: "workflow-builder-storage",
-		partialize: (state) => ({ nodes: state.nodes, edges: state.edges }),
+		partialize: (state) => ({
+			nodes: state.nodes,
+			edges: state.edges,
+			variables: state.variables,
+		}),
 	}),
 	shallow
 );

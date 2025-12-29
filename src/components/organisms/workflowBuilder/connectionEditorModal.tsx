@@ -6,7 +6,7 @@ import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { LuEye, LuEyeOff, LuPlus, LuTrash2 } from "react-icons/lu";
 
-import { WorkflowEdgeVariable } from "@interfaces/components/workflowBuilder.interface";
+import { LegacyWorkflowEdgeData, WorkflowEdgeVariable } from "@interfaces/components/workflowBuilder.interface";
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { ModalName } from "@src/enums";
 import { Integrations } from "@src/enums/components";
@@ -56,9 +56,10 @@ export const ConnectionEditorModal = () => {
 	useEffect(() => {
 		if (edgeId) {
 			const edge = edges.find((e) => e.id === edgeId);
-			const existingCode = edge?.data?.code || defaultCode;
-			const existingEventType = edge?.data?.eventType;
-			const existingVars = edge?.data?.variables || [];
+			const edgeData = edge?.data as LegacyWorkflowEdgeData | undefined;
+			const existingCode = edgeData?.code || defaultCode;
+			const existingEventType = edgeData?.eventType;
+			const existingVars = edgeData?.variables || [];
 			setCode(existingCode);
 			setVariables(existingVars);
 			if (existingEventType) {

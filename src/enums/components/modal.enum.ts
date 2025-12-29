@@ -45,4 +45,7 @@ export enum ModalName {
 	connectionCodeEditor = "connectionCodeEditor",
 	deleteWorkflowEdge = "deleteWorkflowEdge",
 	deleteWorkflowNode = "deleteWorkflowNode",
+	triggerConfig = "triggerConfig",
+	connectionConfig = "connectionConfig",
+	codeEditor = "codeEditor",
 }

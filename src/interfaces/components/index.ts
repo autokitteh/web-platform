@@ -167,7 +167,8 @@ export type { ProjectsTableMeta } from "./projectsTable.interface";
 export type {
 	IntegrationNodeData,
 	WorkflowNode,
-	WorkflowEdgeData,
 	WorkflowEdge,
 	WorkflowBuilderState,
+	LegacyWorkflowEdgeData,
+	WorkflowEdgeVariable,
 } from "./workflowBuilder.interface";
