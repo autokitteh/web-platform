@@ -137,8 +137,8 @@ const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
 
 	clearLogsBuffer: (sessionId) => {
 		const current = get().logsBufferBySession;
-		const { [sessionId]: removed, ...rest } = current;
-		void removed;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { [sessionId]: _removed, ...rest } = current;
 		set({ logsBufferBySession: rest });
 	},
 
@@ -170,8 +170,8 @@ const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
 
 	clearActivitiesBuffer: (sessionId) => {
 		const current = get().activitiesBufferBySession;
-		const { [sessionId]: removed, ...rest } = current;
-		void removed;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { [sessionId]: _removed, ...rest } = current;
 		set({ activitiesBufferBySession: rest });
 	},
 
