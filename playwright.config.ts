@@ -119,7 +119,7 @@ export default defineConfig({
 
 		viewport: { width: 1920, height: 1080 },
 
-		actionTimeout: 3000,
+		actionTimeout: 6000,
 	},
 
 	webServer: {
