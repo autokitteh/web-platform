@@ -116,7 +116,7 @@ export default [
 				{
 					callees: ["cn"],
 					cssFiles: ["src/assets/index.css", "src/assets/loader.css"],
-					whitelist: ["(.*)current"],
+					whitelist: ["(.*)current", "nodrag", "nopan", "react-flow__edge-interaction"],
 				},
 			],
 			"@typescript-eslint/no-unused-expressions": "off",

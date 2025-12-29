@@ -164,3 +164,11 @@ export type {
 	TotalCountersData,
 } from "./dashboardStats.interface";
 export type { ProjectsTableMeta } from "./projectsTable.interface";
+export type {
+	IntegrationNodeData,
+	WorkflowNode,
+	WorkflowEdge,
+	WorkflowBuilderState,
+	LegacyWorkflowEdgeData,
+	WorkflowEdgeVariable,
+} from "./workflowBuilder.interface";

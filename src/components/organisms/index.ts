@@ -28,3 +28,10 @@ export { FileNode } from "@components/organisms/files/fileNode";
 export { OrgConnectionsTable } from "@components/organisms/orgConnections";
 export { OrgConnectionsDrawer } from "@components/organisms/orgConnectionsDrawer";
 export { ProjectConfigurationDrawer } from "@components/organisms/configuration/configrationDrawer";
+export {
+	WorkflowBuilder,
+	WorkflowCanvas,
+	IntegrationsSidebar,
+	IntegrationNode,
+	ConnectionEditorModal,
+} from "@components/organisms/workflowBuilder";
