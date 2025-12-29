@@ -79,6 +79,7 @@ export const SessionsTableList = ({
 
 	useEffect(() => {
 		onScrollPositionChange?.(lastScrollTopRef.current <= TOP_THRESHOLD);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [onScrollPositionChange]);
 
 	return (

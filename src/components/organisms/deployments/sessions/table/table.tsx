@@ -315,8 +315,9 @@ export const SessionsTable = () => {
 			const existingIds = new Set(existing.map((s) => s.sessionId));
 			const newSessions = incoming.filter((s) => !existingIds.has(s.sessionId));
 
+			const incomingMap = new Map(incoming.map((s) => [s.sessionId, s]));
 			const updatedExisting = existing.map((existingSession) => {
-				const incomingSession = incoming.find((s) => s.sessionId === existingSession.sessionId);
+				const incomingSession = incomingMap.get(existingSession.sessionId);
 				return incomingSession ? { ...existingSession, ...incomingSession } : existingSession;
 			});
 
@@ -348,14 +349,16 @@ export const SessionsTable = () => {
 
 		const { merged, addedCount } = mergeSessions(sessions, data.sessions);
 
-		if (addedCount === 0) {
-			setSessions((prev) => {
-				const updatedSessions = prev.map((existingSession) => {
-					const updated = data.sessions.find((s: Session) => s.sessionId === existingSession.sessionId);
-					return updated ? { ...existingSession, ...updated } : existingSession;
-				});
-				return updatedSessions;
+		const updateExistingSessions = (prev: Session[]) => {
+			const incomingMap = new Map(data.sessions.map((s: Session) => [s.sessionId, s]));
+			return prev.map((existingSession) => {
+				const updated = incomingMap.get(existingSession.sessionId);
+				return updated ? { ...existingSession, ...updated } : existingSession;
 			});
+		};
+
+		if (addedCount === 0) {
+			setSessions(updateExistingSessions);
 			return;
 		}
 
@@ -369,12 +372,7 @@ export const SessionsTable = () => {
 			if (newSessions.length > 0) {
 				addToSessionsBuffer(newSessions);
 			}
-			setSessions((prev) => {
-				return prev.map((existingSession) => {
-					const updated = data.sessions.find((s: Session) => s.sessionId === existingSession.sessionId);
-					return updated ? { ...existingSession, ...updated } : existingSession;
-				});
-			});
+			setSessions(updateExistingSessions);
 		}
 
 		fetchDeployments(false);
