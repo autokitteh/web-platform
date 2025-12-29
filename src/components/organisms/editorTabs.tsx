@@ -214,6 +214,11 @@ export const EditorTabs = () => {
 	}, [location.state, isLoadingCode, resources]);
 
 	const loadFileResource = useCallback(async () => {
+		if (!activeEditorFileName) {
+			setContent("");
+			return;
+		}
+
 		const fetchedResources = await fetchResources(projectId, true);
 		if (!fetchedResources || !fetchedResources[activeEditorFileName]) {
 			if (activeEditorFileName) {
@@ -462,6 +467,12 @@ export const EditorTabs = () => {
 				return false;
 			}
 
+			const currentResources = useCacheStore.getState().resources;
+			if (!currentResources || !(fileName in currentResources)) {
+				LoggerService.warn(namespaces.projectUICode, tErrors("fileNoLongerExists", { fileName, projectId }));
+				return false;
+			}
+
 			if (fileContent === null || fileContent === undefined) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
@@ -545,9 +556,17 @@ export const EditorTabs = () => {
 				return;
 			}
 
+			if (!resources || !(activeEditorFileName in resources)) {
+				LoggerService.warn(
+					namespaces.projectUICode,
+					tErrors("fileNoLongerExists", { fileName: activeEditorFileName, projectId })
+				);
+				return;
+			}
+
 			await saveFileWithContent(activeEditorFileName, newContent || "");
 		},
-		[activeEditorFileName, projectId, addToast, tErrors, saveFileWithContent]
+		[activeEditorFileName, projectId, resources, addToast, tErrors, saveFileWithContent]
 	);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps

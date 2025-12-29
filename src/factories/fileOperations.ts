@@ -68,6 +68,7 @@ export const fileOperations = (projectId: string) => {
 			const { error } = await ProjectsService.setResources(projectId, resources);
 			setFileList({ isLoading: false, list: Object.keys(resources) });
 			checkState(projectId, { resources });
+			useCacheStore.setState((state) => ({ ...state, resources }));
 			if (error) throw error;
 		} catch (error) {
 			LoggerService.error(
@@ -260,6 +261,7 @@ export const fileOperations = (projectId: string) => {
 
 			const { error } = await ProjectsService.setResources(projectId, updatedResources);
 			checkState(projectId, { resources: updatedResources });
+			useCacheStore.setState((state) => ({ ...state, resources: updatedResources }));
 			if (error) {
 				throw error;
 			}

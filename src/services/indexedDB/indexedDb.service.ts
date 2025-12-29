@@ -84,6 +84,11 @@ export class IndexedDBService {
 		await this.db.put(this.storeName, { projectId, files: updatedFiles });
 	}
 
+	async replaceAll(projectId: string, files: { content: Uint8Array; name: string }[]) {
+		await this.EnsureDBInitialized();
+		await this.db.put(this.storeName, { projectId, files });
+	}
+
 	async clearStore() {
 		await this.EnsureDBInitialized();
 		const tx = this.db.transaction(this.storeName, "readwrite");

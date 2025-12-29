@@ -410,9 +410,19 @@ Before submitting any code, ensure the following steps are completed:
 
 ### 1. Code Quality Checks
 - **Linting:** Run and resolve all ESLint warnings/errors
-- **Type Checking:** Ensure TypeScript compilation succeeds without errors
-- **Build:** Verify production build completes successfully
 - **Formatting:** Apply Prettier formatting consistently
+
+#### Incremental Checks (Changed Files Only)
+
+When running quality checks during a conversation, Claude should run linting **only on files modified in this conversation**:
+
+```bash
+# Instead of: npm run lint:fix (full project)
+# Run ESLint only on changed files:
+npx eslint --fix src/path/to/changed-file1.tsx src/path/to/changed-file2.ts
+```
+
+Claude should track which files were modified during the conversation and use targeted linting to save time.
 
 ### 2. Testing Validation
 - **E2E Tests:** All Playwright tests pass
@@ -841,9 +851,6 @@ Before submitting a PR for a new connection integration:
 - [ ] **E2E Tests:** Comprehensive tests covering CRUD operations
 - [ ] **Tests Pass:** All tests run successfully with `--workers=1 --project=Chrome`
 - [ ] **No Comments:** All code files are clean without comments
-- [ ] **Linting:** `npm run lint:fix` passes
-- [ ] **Type Check:** `npm run tsc` passes
-- [ ] **Build:** `npm run build` completes successfully
 
 ### Files Modified in Reddit Integration Example
 

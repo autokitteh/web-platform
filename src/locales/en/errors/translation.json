@@ -137,5 +137,6 @@
 	"directoryMoveFailed": "Failed to move directory \"{{directoryName}}\"",
 	"directoryMoveFailedExtended": "Failed to move directory \"{{directoryName}}\" to \"{{newPath}}\" in project {{projectId}}",
 	"cannotMoveIntoFile": "Cannot move \"{{itemName}}\" into a file, \"{{targetPath}}\" is a file",
-	"moveOperationFailed": "Failed to move item"
+	"moveOperationFailed": "Failed to move item",
+	"fileNoLongerExists": "File \"{{fileName}}\" no longer exists in project {{projectId}}, skipping save"
 }
