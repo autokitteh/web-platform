@@ -51,13 +51,13 @@ export const TemplateLanding = () => {
 			if (!foundTemplate) {
 				setShouldRedirect(true);
 			}
-			Cookies.remove(systemCookies.templatesLandingName);
+			Cookies.remove(systemCookies.templatesLandingName, { path: "/" });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sortedCategories, assetDir]);
 
 	if (shouldRedirect || !assetDir) {
-		Cookies.remove(systemCookies.templatesLandingName);
+		Cookies.remove(systemCookies.templatesLandingName, { path: "/" });
 		return <Navigate replace to="/" />;
 	}
 
