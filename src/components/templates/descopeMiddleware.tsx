@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import { cookieDomain, googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
+import { googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot, useLoginAttempt } from "@src/hooks";
@@ -137,7 +137,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 		if (!redirPath) return false;
 
-		Cookies.remove(systemCookies.redir, { path: "/", domain: cookieDomain });
+		Cookies.remove(systemCookies.redir, { path: "/" });
 
 		if (!ValidateCliRedirectPath(redirPath)) {
 			LoggerService.warn(namespaces.ui.loginPage, `[CLI-LOGIN] Invalid redirect path rejected: ${redirPath}`);

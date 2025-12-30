@@ -1,7 +1,6 @@
 export { featureFlags } from "@constants/featureFlags.constants";
 export {
 	descopeProjectId,
-	cookieDomain,
 	fetchProjectsMenuItemsInterval,
 	fetchSessionsInterval,
 	isDevelopment,
