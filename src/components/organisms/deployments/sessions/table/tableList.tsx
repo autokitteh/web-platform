@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 
 import { useParams } from "react-router-dom";
-import { AutoSizer, List, ListRowRenderer } from "react-virtualized";
+import { AutoSizer, List, ListRowRenderer, ScrollParams } from "react-virtualized";
 
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
@@ -11,18 +11,35 @@ import { useModalStore } from "@store";
 import { TBody } from "@components/atoms";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 
+const topThreshold = 48;
+const rowHeight = 40;
+
 export const SessionsTableList = ({
 	onItemsRendered,
 	onSelectedSessionId,
 	onSessionRemoved,
+	onScrollPositionChange,
 	sessions,
 	openSession,
 	hideSourceColumn,
 	hideActionsColumn,
+	listRef: externalListRef,
 }: SessionsTableListProps) => {
 	const { sessionId } = useParams();
 	const { openModal } = useModalStore();
 	const [resizeHeight, setResizeHeight] = useState(0);
+	const internalListRef = useRef<List | null>(null);
+	const lastScrollTopRef = useRef(0);
+
+	useImperativeHandle(
+		externalListRef,
+		() => ({
+			scrollToTop: () => {
+				internalListRef.current?.scrollToPosition(0);
+			},
+		}),
+		[]
+	);
 
 	const showDeleteModal = useCallback((id: string) => {
 		onSelectedSessionId(id);
@@ -51,6 +68,19 @@ export const SessionsTableList = ({
 		setResizeHeight(height - 20);
 	}, []);
 
+	const handleScroll = useCallback(
+		({ scrollTop }: ScrollParams) => {
+			lastScrollTopRef.current = scrollTop;
+			const isAtTop = scrollTop <= topThreshold;
+			onScrollPositionChange?.(isAtTop);
+		},
+		[onScrollPositionChange]
+	);
+
+	useEffect(() => {
+		onScrollPositionChange?.(lastScrollTopRef.current <= topThreshold);
+	}, [onScrollPositionChange]);
+
 	return (
 		<TBody className="h-full">
 			<AutoSizer onResize={handleResize}>
@@ -66,8 +96,10 @@ export const SessionsTableList = ({
 								overscanStopIndex,
 							})
 						}
+						onScroll={handleScroll}
+						ref={internalListRef}
 						rowCount={sessions.length}
-						rowHeight={40}
+						rowHeight={rowHeight}
 						rowRenderer={rowRenderer}
 						width={width}
 					/>

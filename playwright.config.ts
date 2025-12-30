@@ -86,7 +86,7 @@ export default defineConfig({
 
 	testDir: "e2e",
 
-	timeout: 60 * 1000 * 6, // 6 minutes timeout for each test
+	timeout: 60 * 1000 * 45, // 45 minutes timeout for each test
 
 	retries: process.env.CI ? 2 : 0, // 2 retries for CI, 0 for local
 

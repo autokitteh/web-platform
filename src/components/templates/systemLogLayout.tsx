@@ -11,6 +11,7 @@ import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src
 import { cn, navigateToProject, useNavigateWithSettings, useCloseSettings } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
+import { NewItemsIndicator } from "@components/molecules";
 import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";
 import { SystemLog } from "@components/organisms";
 import { DiagramViewerModal } from "@components/organisms/modals/diagramViewerModal";
@@ -32,7 +33,13 @@ export const SystemLogLayout = ({
 	const location = useLocation();
 	const { pathname } = location;
 	const { projectId } = useParams();
-	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
+	const {
+		setSystemLogHeight,
+		systemLogHeight,
+		systemLogNewItemsCount,
+		systemLogIsAtBottom,
+		scrollToSystemLogBottom,
+	} = useLoggerStore();
 	useTourActionListener();
 	const closeSettings = useCloseSettings();
 
@@ -82,7 +89,7 @@ export const SystemLogLayout = ({
 	});
 
 	const buttonResizeClasses = cn("my-0.5", { "my-0": systemLogHeight === 100 });
-	const innerLayoutClasses = cn("mr-2 flex min-w-0 flex-1 flex-col md:mb-2", {
+	const innerLayoutClasses = cn("mr-2 flex min-w-0 flex-1 flex-col md:mb-4", {
 		"md:mb-0.5": systemLogHeight === 0,
 		"w-0": ["/", "/intro"].includes(pathname),
 		"mr-0": isMobile,
@@ -121,8 +128,17 @@ export const SystemLogLayout = ({
 					<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
 				)}
 				{hideSystemLog ? null : (
-					<div className="z-systemLog overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
-						<SystemLog />
+					<div className="relative z-systemLog" style={{ height: `${systemLogHeight}%` }}>
+						<NewItemsIndicator
+							className="z-[200]"
+							count={systemLogNewItemsCount}
+							direction="bottom"
+							isVisible={Boolean(!systemLogIsAtBottom && systemLogNewItemsCount > 0)}
+							onJump={() => scrollToSystemLogBottom?.()}
+						/>
+						<div className="h-full overflow-hidden">
+							<SystemLog />
+						</div>
 					</div>
 				)}
 			</div>

@@ -25,3 +25,4 @@ export { useProjectMetadataHandler } from "./useProjectActionsResponseHandler";
 export { useCodeFixSuggestions } from "./useCodeFixSuggestions";
 export { useMonacoEditorCleanup } from "./useMonacoEditorCleanup";
 export { useProjectFilesVisibility } from "./useProjectFilesVisibility";
+export { useAutoRefresh } from "./useAutoRefresh";

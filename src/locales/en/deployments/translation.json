@@ -176,6 +176,19 @@
 			"sessionRemovedSuccessfully": "Session removed successfully",
 			"sessionRemovedSuccessfullyExtended": "Session removed successfully, session ID: {{sessionId}}"
 		},
+		"autoRefresh": {
+			"disabled": "Auto-refresh off",
+			"enable": "Enable auto-refresh",
+			"pause": "Pause",
+			"resume": "Resume",
+			"refreshNow": "Refresh now",
+			"refreshing": "Refreshing...",
+			"moreItem": "more item",
+			"moreItems": "more items",
+			"show": "Show",
+			"jumpToTop": "Jump to top",
+			"jumpToBottom": "Jump to latest"
+		},
 		"executionFlowChart": {
 			"status": "Status",
 			"duration": "Duration",
