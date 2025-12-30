@@ -10,7 +10,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const ApiKeyTwilioForm = ({
+export const ApiTokenTwilioForm = ({
 	control,
 	errors,
 	isLoading,
