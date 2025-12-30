@@ -10,7 +10,7 @@ import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPer
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
-import { legacyOauthSchema, twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
+import { legacyOauthSchema, twilioApiTokenIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -33,13 +33,8 @@ export const TwilioIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.AuthToken) {
-			setValidationSchema(twilioTokenIntegrationSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.ApiKey) {
-			setValidationSchema(twilioApiKeyIntegrationSchema);
+		if (connectionType.value === ConnectionAuthType.ApiToken) {
+			setValidationSchema(twilioApiTokenIntegrationSchema);
 
 			return;
 		}
