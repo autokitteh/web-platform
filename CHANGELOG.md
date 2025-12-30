@@ -1,3 +1,7 @@
+## 2.248.0 (2025-12-30)
+
+* feat(sessions): add auto-refresh system for sessions list and logs (#1514) ([2bf15fa](https://github.com/autokitteh/web-platform/commit/2bf15fa)), closes [#1514](https://github.com/autokitteh/web-platform/issues/1514)
+
 ## <small>2.247.3 (2025-12-30)</small>
 
 * fix: handle missing tour configuration in useTourStore (#1524) ([8b83df8](https://github.com/autokitteh/web-platform/commit/8b83df8)), closes [#1524](https://github.com/autokitteh/web-platform/issues/1524)
