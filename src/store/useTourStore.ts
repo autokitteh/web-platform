@@ -111,6 +111,18 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 		getProjectsList();
 
+		// Re-fetch tourConfig to ensure we have the latest version (tours might be loaded asynchronously)
+		const currentTourConfig = get().tours[tourId];
+		if (!currentTourConfig || !currentTourConfig.steps || currentTourConfig.steps.length === 0) {
+			LoggerService.error(
+				namespaces.tourStore,
+				t("tours.tourConfigInvalid", { tourId, ns: "dashboard" }) ||
+					`Tour config for ${tourId} is invalid or has no steps`,
+				true
+			);
+			return { data: undefined, error: true };
+		}
+
 		set((state) => ({
 			...state,
 			isPopoverVisible: true,
@@ -119,11 +131,11 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				tourId,
 				currentStepIndex: 0,
 			},
-			activeStep: tourConfig.steps[0],
+			activeStep: currentTourConfig.steps[0],
 		}));
 
 		return {
-			data: { projectId: newProjectId, defaultFile: tourConfig.defaultFile || defaultOpenedProjectFile },
+			data: { projectId: newProjectId, defaultFile: currentTourConfig.defaultFile || defaultOpenedProjectFile },
 			error: false,
 		};
 	},
@@ -143,7 +155,14 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const { tourId } = activeTour;
 
 		const tourConfig = storeTours[tourId];
-		if (!tourConfig) return;
+		if (!tourConfig || !tourConfig.steps || tourConfig.steps.length === 0) {
+			LoggerService.error(
+				namespaces.tourStore,
+				`Tour config for ${tourId} is invalid or has no steps in nextStep`,
+				true
+			);
+			return;
+		}
 
 		const totalSteps = tourConfig.steps.length;
 		const nextStepIndex = activeTour.currentStepIndex + 1;
@@ -170,6 +189,15 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const { activeTour, tours: storeTours } = get();
 		if (!activeTour) return;
 		const tourConfig = storeTours[activeTour.tourId];
+
+		if (!tourConfig || !tourConfig.steps || tourConfig.steps.length === 0) {
+			LoggerService.error(
+				namespaces.tourStore,
+				`Tour config for ${activeTour.tourId} is invalid or has no steps in prevStep`,
+				true
+			);
+			return;
+		}
 
 		const prevStep = Math.max(0, activeTour.currentStepIndex - 1);
 
