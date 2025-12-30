@@ -35,6 +35,12 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const { activeTour, reset } = get();
 		const { createProjectFromManifest, getProjectsList, isProjectNameTaken } = useProjectStore.getState();
 
+		const tourConfig = tours[tourId];
+		if (!tourConfig) {
+			LoggerService.error(namespaces.tourStore, t("tours.tourConfigNotFound", { tourId, ns: "dashboard" }));
+			return { data: undefined, error: true };
+		}
+
 		if (activeTour && activeTour.tourId === tourId) reset();
 
 		let templateData = await parseTemplateManifestAndFiles(tourId, tourStorage, tourId);
@@ -111,11 +117,11 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				tourId,
 				currentStepIndex: 0,
 			},
-			activeStep: tours[tourId].steps[0],
+			activeStep: tourConfig.steps[0],
 		}));
 
 		return {
-			data: { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile },
+			data: { projectId: newProjectId, defaultFile: tourConfig.defaultFile || defaultOpenedProjectFile },
 			error: false,
 		};
 	},
