@@ -27,17 +27,18 @@ export class OrgConnectionsPage {
 		await this.page.waitForURL("/connections/new");
 	}
 
-	async fillTwilioAccountSidAndAuthToken() {
+	async fillTwilioAccountSidAndApiTokenAndApiSecret() {
 		await this.page.getByRole("textbox", { name: "Account SID" }).fill("AC1234567890");
-		await this.page.getByRole("textbox", { name: "Auth Token" }).fill("1234567890");
+		await this.page.getByRole("textbox", { name: "API Token" }).fill("1234567890");
+		await this.page.getByRole("textbox", { name: "API Secret" }).fill("1234567899");
 	}
 
 	async createTwilioConnection(connectionName: string): Promise<string> {
 		await this.clickAddConnection();
 		await this.connectionsConfig.fillConnectionName(connectionName);
 		await this.connectionsConfig.selectIntegration(testIntegrationName);
-		await this.connectionsConfig.selectConnectionType("Auth Token");
-		await this.fillTwilioAccountSidAndAuthToken();
+		await this.connectionsConfig.selectConnectionType("API Token");
+		await this.fillTwilioAccountSidAndApiTokenAndApiSecret();
 
 		await this.connectionsConfig.clickSaveConnection();
 		await this.page.waitForURL(/\/connections\/.*\/edit/);
