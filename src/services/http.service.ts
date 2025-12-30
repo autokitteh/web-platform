@@ -15,19 +15,26 @@ const createAxiosInstance = (
 	withCredentials = false,
 	contentType = "application/x-www-form-urlencoded"
 ) => {
-	const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
-	const isWithCredentials = !apiToken && withCredentials;
-	const jwtAuthToken = apiToken ? `Bearer ${apiToken}` : undefined;
-
-	return axios.create({
+	const instance = axios.create({
 		baseURL: baseAddress,
 		headers: {
 			"Content-Type": contentType,
-			Authorization: jwtAuthToken,
 		},
-		withCredentials: isWithCredentials,
+		withCredentials: withCredentials,
 		timeout: apiRequestTimeout,
 	});
+
+	instance.interceptors.request.use((config) => {
+		const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
+		if (apiToken) {
+			config.headers.Authorization = `Bearer ${apiToken}`;
+		}
+		config.withCredentials = !apiToken && withCredentials;
+
+		return config;
+	});
+
+	return instance;
 };
 
 // Axios instance for API requests
