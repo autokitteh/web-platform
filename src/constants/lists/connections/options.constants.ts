@@ -238,10 +238,7 @@ export const selectIntegrationHttp: SelectOption[] = [
 	{ label: "Bearer", value: ConnectionAuthType.Bearer, disabled: true },
 ];
 
-export const selectIntegrationTwilio: SelectOption[] = [
-	{ label: "Auth Token", value: ConnectionAuthType.AuthToken },
-	{ label: "API Key", value: ConnectionAuthType.ApiKey },
-];
+export const selectIntegrationTwilio: SelectOption[] = [{ label: "API Token", value: ConnectionAuthType.ApiToken }];
 
 export const selectIntegrationJira: SelectOption[] = [
 	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },
