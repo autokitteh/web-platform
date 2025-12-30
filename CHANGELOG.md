@@ -1,3 +1,7 @@
+## <small>2.247.2 (2025-12-30)</small>
+
+* fix: simplify cookie removal by removing the domain (#1522) ([b595732](https://github.com/autokitteh/web-platform/commit/b595732)), closes [#1522](https://github.com/autokitteh/web-platform/issues/1522)
+
 ## <small>2.247.1 (2025-12-29)</small>
 
 * fix: restore cursor position when switching between projects in editor (#1517) ([1bf7e68](https://github.com/autokitteh/web-platform/commit/1bf7e68)), closes [#1517](https://github.com/autokitteh/web-platform/issues/1517)
