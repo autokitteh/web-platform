@@ -26,7 +26,7 @@ export const AiLandingPage = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const [visiblePillsCount, setVisiblePillsCount] = useState(initialPillsCount);
-	const { startTour } = useTourStore();
+	const { startTour, isToursReady } = useTourStore();
 	const [isStarting, setIsStarting] = useState(false);
 
 	const {
@@ -131,7 +131,8 @@ export const AiLandingPage = () => {
 						<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3 md:gap-4">
 							{showQuickstart ? (
 								<Button
-									className="flex w-full items-center rounded-full border border-green-400/30 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/50 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-sm"
+									className="flex w-full items-center rounded-full border border-green-400/30 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/50 hover:bg-green-400/10 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto md:px-6 md:text-sm"
+									disabled={isStarting || !isToursReady}
 									onClick={() => handleStartTutorial(TourId.quickstart)}
 								>
 									{isStarting ? (
