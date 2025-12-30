@@ -1,3 +1,7 @@
+## <small>2.247.3 (2025-12-30)</small>
+
+* fix: handle missing tour configuration in useTourStore (#1524) ([8b83df8](https://github.com/autokitteh/web-platform/commit/8b83df8)), closes [#1524](https://github.com/autokitteh/web-platform/issues/1524)
+
 ## <small>2.247.2 (2025-12-30)</small>
 
 * fix: simplify cookie removal by removing the domain (#1522) ([b595732](https://github.com/autokitteh/web-platform/commit/b595732)), closes [#1522](https://github.com/autokitteh/web-platform/issues/1522)
