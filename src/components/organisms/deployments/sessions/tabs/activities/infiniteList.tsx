@@ -113,7 +113,8 @@ export const ActivityList = () => {
 			if (!sessionId) return;
 
 			const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
-			const newIsAtBottom = distanceFromBottom <= 96;
+			const bottomThreshold = 96;
+			const newIsAtBottom = distanceFromBottom <= bottomThreshold;
 
 			setActivitiesAtBottom(sessionId, newIsAtBottom);
 

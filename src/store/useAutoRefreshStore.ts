@@ -14,11 +14,6 @@ export interface LogsBuffer {
 }
 
 interface AutoRefreshState {
-	isEnabled: boolean;
-	isPaused: boolean;
-	countdownMs: number;
-	intervalMs: number;
-
 	sessionsBuffer: SessionsBuffer;
 	isSessionsAtTop: boolean;
 
@@ -31,11 +26,6 @@ interface AutoRefreshState {
 }
 
 interface AutoRefreshActions {
-	setEnabled: (enabled: boolean) => void;
-	setPaused: (paused: boolean) => void;
-	setCountdownMs: (ms: number) => void;
-	setIntervalMs: (ms: number) => void;
-
 	setSessionsAtTop: (atTop: boolean) => void;
 	addToSessionsBuffer: (sessions: Session[]) => void;
 	clearSessionsBuffer: () => void;
@@ -59,14 +49,7 @@ interface AutoRefreshActions {
 
 type AutoRefreshStore = AutoRefreshState & AutoRefreshActions;
 
-const defaultIntervalMs = 60000;
-
 const initialState: AutoRefreshState = {
-	isEnabled: true,
-	isPaused: false,
-	countdownMs: defaultIntervalMs,
-	intervalMs: defaultIntervalMs,
-
 	sessionsBuffer: { sessions: [], count: 0 },
 	isSessionsAtTop: true,
 
@@ -80,11 +63,6 @@ const initialState: AutoRefreshState = {
 
 const createAutoRefreshStore: StateCreator<AutoRefreshStore> = (set, get) => ({
 	...initialState,
-
-	setEnabled: (enabled) => set({ isEnabled: enabled }),
-	setPaused: (paused) => set({ isPaused: paused }),
-	setCountdownMs: (ms) => set({ countdownMs: ms }),
-	setIntervalMs: (ms) => set({ intervalMs: ms }),
 
 	setSessionsAtTop: (atTop) => set({ isSessionsAtTop: atTop }),
 

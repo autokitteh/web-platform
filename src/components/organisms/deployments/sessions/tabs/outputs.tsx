@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import {
 	AutoSizer,
@@ -59,8 +59,19 @@ export const SessionOutputs = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [newLogsCount, setNewLogsCount] = useState(0);
 	const prevOutputsLengthRef = useRef(0);
+	const countBeforeRefreshRef = useRef(0);
+	const scrollTimeoutsRef = useRef<NodeJS.Timeout[]>([]);
+	const pendingScrollToBottomRef = useRef(false);
 
-	const { setLogsAtBottom, getLogsAtBottom, logsBufferBySession, clearLogsBuffer } = useAutoRefreshStore();
+	useEffect(() => {
+		const scrollTimeouts = scrollTimeoutsRef.current;
+
+		return () => {
+			scrollTimeouts.forEach(clearTimeout);
+		};
+	}, [scrollTimeoutsRef]);
+
+	const { setLogsAtBottom, getLogsAtBottom, clearLogsBuffer } = useAutoRefreshStore();
 
 	const isAtBottom = sessionId ? getLogsAtBottom(sessionId) : true;
 
@@ -68,18 +79,12 @@ export const SessionOutputs = () => {
 		setIsInitialLoad(true);
 		setNewLogsCount(0);
 		prevOutputsLengthRef.current = 0;
+		countBeforeRefreshRef.current = 0;
 		cacheRef.current.clearAll();
 		if (sessionId) {
 			clearLogsBuffer(sessionId);
 		}
 	}, [sessionId, clearLogsBuffer]);
-
-	const bufferedLogsCount = useMemo(() => {
-		if (!sessionId) return 0;
-		return logsBufferBySession[sessionId]?.count || 0;
-	}, [sessionId, logsBufferBySession]);
-
-	const totalNewLogsCount = newLogsCount + bufferedLogsCount;
 
 	const cacheRef = useRef(
 		new CellMeasurerCache({
@@ -98,29 +103,45 @@ export const SessionOutputs = () => {
 
 		const scrollToEnd = () => listRef.current?.scrollToRow(outputs.length - 1);
 
-		if (isInitialLoad && outputs.length > 0) {
-			setIsInitialLoad(false);
+		if (pendingScrollToBottomRef.current && outputs.length > 0) {
+			pendingScrollToBottomRef.current = false;
+
 			scrollToEnd();
-			setTimeout(scrollToEnd, 50);
-			setTimeout(scrollToEnd, 150);
+			scrollToEnd();
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 50));
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 150));
 			prevOutputsLengthRef.current = outputs.length;
+			countBeforeRefreshRef.current = outputs.length;
+			setNewLogsCount(0);
 
 			return;
 		}
 
-		const newCount = outputs.length - prevOutputsLengthRef.current;
-		if (newCount > 0) {
-			if (isAtBottom) {
-				scrollToEnd();
-				setTimeout(scrollToEnd, 50);
-				setTimeout(scrollToEnd, 150);
-			} else {
-				setNewLogsCount((prev) => prev + newCount);
-			}
+		if (isInitialLoad && outputs.length > 0) {
+			setIsInitialLoad(false);
+
+			scrollToEnd();
+			scrollToEnd();
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 50));
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 150));
+			prevOutputsLengthRef.current = outputs.length;
+			countBeforeRefreshRef.current = outputs.length;
+
+			return;
+		}
+
+		if (isAtBottom && outputs.length > 0) {
+			scrollToEnd();
+			scrollToEnd();
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 50));
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 150));
+
+			countBeforeRefreshRef.current = outputs.length;
+			setNewLogsCount(0);
 		}
 		prevOutputsLengthRef.current = outputs.length;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [outputs]);
+	}, [outputs, sessionId]);
 
 	const handleScroll = useCallback(
 		({ scrollHeight, scrollTop, clientHeight }: ScrollParams) => {
@@ -131,35 +152,43 @@ export const SessionOutputs = () => {
 
 			setLogsAtBottom(sessionId, newIsAtBottom);
 
-			if (newIsAtBottom && newLogsCount > 0) {
+			if (newIsAtBottom) {
+				countBeforeRefreshRef.current = outputs.length;
 				setNewLogsCount(0);
 			}
 		},
-		[sessionId, setLogsAtBottom, newLogsCount]
+		[sessionId, setLogsAtBottom, outputs.length]
 	);
 
 	const scrollToBottom = useCallback(async () => {
 		if (!sessionId) return;
 
-		if (bufferedLogsCount > 0) {
+		setLogsAtBottom(sessionId, true);
+		setNewLogsCount(0);
+
+		if (newLogsCount > 0) {
+			countBeforeRefreshRef.current = outputs.length;
+			pendingScrollToBottomRef.current = true;
 			await reloadLogs();
 			clearLogsBuffer(sessionId);
+		} else {
+			const scrollToEnd = () => listRef.current?.scrollToRow(outputs.length - 1);
+			scrollToEnd();
+			scrollToEnd();
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 50));
+			scrollTimeoutsRef.current.push(setTimeout(scrollToEnd, 150));
 		}
-		const scrollToEnd = () => {
-			listRef.current?.scrollToRow(outputs.length - 1);
-		};
-		scrollToEnd();
-		setTimeout(scrollToEnd, 50);
-		setTimeout(scrollToEnd, 150);
-		setNewLogsCount(0);
-		setLogsAtBottom(sessionId, true);
-	}, [listRef, outputs.length, setLogsAtBottom, sessionId, bufferedLogsCount, reloadLogs, clearLogsBuffer]);
+	}, [sessionId, newLogsCount, reloadLogs, clearLogsBuffer, setLogsAtBottom, listRef, outputs.length]);
 
 	useEventListener(
 		EventListenerName.logsNewItemsAvailable,
 		(event: CustomEvent<{ count: number; sessionId: string }>) => {
-			if (event.detail?.sessionId === sessionId) {
-				setNewLogsCount((prev) => prev + (event.detail?.count || 1));
+			const currentIsAtBottom = sessionId ? getLogsAtBottom(sessionId) : true;
+
+			if (event.detail?.sessionId === sessionId && !currentIsAtBottom) {
+				setNewLogsCount(event.detail.count);
+			} else {
+				reloadLogs();
 			}
 		}
 	);
@@ -197,12 +226,14 @@ export const SessionOutputs = () => {
 
 	useEventListener(EventListenerName.sessionLogViewerScrollToTop, () => listRef.current?.scrollToRow(0));
 
+	useEventListener(EventListenerName.sessionReload, () => reloadLogs());
+
 	return (
 		<div className="scrollbar relative size-full">
 			<NewItemsIndicator
-				count={totalNewLogsCount}
+				count={newLogsCount}
 				direction="bottom"
-				isVisible={Boolean(!isAtBottom && totalNewLogsCount > 0)}
+				isVisible={Boolean(!isAtBottom && newLogsCount > 0)}
 				onJump={scrollToBottom}
 			/>
 			<AutoSizer>

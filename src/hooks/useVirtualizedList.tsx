@@ -133,8 +133,12 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 
 	const reloadLogs = useCallback(async () => {
 		if (!sessionId) return;
-		await fetchLogs(sessionId, pageSize, true);
-	}, [sessionId, fetchLogs, pageSize]);
+		if (type === SessionLogType.Output) {
+			await fetchAllOutputLogs(sessionId);
+		} else {
+			await fetchLogs(sessionId, pageSize, true);
+		}
+	}, [sessionId, fetchAllOutputLogs, fetchLogs, pageSize, type]);
 
 	return {
 		items,

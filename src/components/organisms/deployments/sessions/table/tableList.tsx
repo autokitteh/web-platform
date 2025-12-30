@@ -11,8 +11,8 @@ import { useModalStore } from "@store";
 import { TBody } from "@components/atoms";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 
-const TOP_THRESHOLD = 48;
-const ROW_HEIGHT = 40;
+const topThreshold = 48;
+const rowHeight = 40;
 
 export const SessionsTableList = ({
 	onItemsRendered,
@@ -71,15 +71,14 @@ export const SessionsTableList = ({
 	const handleScroll = useCallback(
 		({ scrollTop }: ScrollParams) => {
 			lastScrollTopRef.current = scrollTop;
-			const isAtTop = scrollTop <= TOP_THRESHOLD;
+			const isAtTop = scrollTop <= topThreshold;
 			onScrollPositionChange?.(isAtTop);
 		},
 		[onScrollPositionChange]
 	);
 
 	useEffect(() => {
-		onScrollPositionChange?.(lastScrollTopRef.current <= TOP_THRESHOLD);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		onScrollPositionChange?.(lastScrollTopRef.current <= topThreshold);
 	}, [onScrollPositionChange]);
 
 	return (
@@ -100,7 +99,7 @@ export const SessionsTableList = ({
 						onScroll={handleScroll}
 						ref={internalListRef}
 						rowCount={sessions.length}
-						rowHeight={ROW_HEIGHT}
+						rowHeight={rowHeight}
 						rowRenderer={rowRenderer}
 						width={width}
 					/>

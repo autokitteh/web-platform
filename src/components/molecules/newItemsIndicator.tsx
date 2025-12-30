@@ -57,7 +57,7 @@ export const NewItemsIndicator = ({
 					transition={{ duration: 0.2 }}
 				>
 					<span>
-						{displayCount} {count === 1 ? t("newItem") : t("newItems")}
+						{displayCount} {count === 1 ? t("moreItem") : t("moreItems")}
 					</span>
 					{onShow ? (
 						<Button

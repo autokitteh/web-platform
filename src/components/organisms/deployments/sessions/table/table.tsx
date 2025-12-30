@@ -12,7 +12,7 @@ import { LoggerService, SessionsService } from "@services";
 import { EventListenerName, SessionLogType, SessionStateType } from "@src/enums";
 import { triggerEvent, useAutoRefresh, useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
-import { Session, SessionStateKeyType } from "@src/interfaces/models";
+import { Session, SessionOutputLog, SessionStateKeyType } from "@src/interfaces/models";
 import {
 	useActivitiesCacheStore,
 	useAutoRefreshStore,
@@ -41,7 +41,7 @@ import { FilterSessionsByEntityPopoverItem } from "@components/organisms/deploym
 import { CatImage } from "@assets/image";
 import { FilterIcon } from "@assets/image/icons";
 
-const autoRefreshIntervalMs = 30000;
+const autoRefreshIntervalMs = 60000;
 
 export const SessionsTable = () => {
 	const resizeId = useId();
@@ -71,8 +71,6 @@ export const SessionsTable = () => {
 		sessionsBuffer,
 		addToSessionsBuffer,
 		clearSessionsBuffer,
-		addToLogsBuffer,
-		getLogsAtBottom,
 		addToActivitiesBuffer,
 		getActivitiesAtBottom,
 	} = useAutoRefreshStore();
@@ -326,7 +324,116 @@ export const SessionsTable = () => {
 				addedCount: newSessions.length,
 			};
 		},
+
 		[]
+	);
+
+	const handleSessionsUpdate = useCallback(
+		(newSessionsData: Session[]) => {
+			const { merged, addedCount } = mergeSessions(sessions, newSessionsData);
+
+			const updateExistingSessions = (prev: Session[]) => {
+				const incomingMap = new Map(newSessionsData.map((s: Session) => [s.sessionId, s]));
+				return prev.map((existingSession) => {
+					const updated = incomingMap.get(existingSession.sessionId);
+					return updated ? { ...existingSession, ...updated } : existingSession;
+				});
+			};
+
+			if (addedCount === 0) {
+				setSessions(updateExistingSessions);
+				return;
+			}
+
+			if (isSessionsAtTop) {
+				setSessions(merged);
+				clearSessionsBuffer();
+			} else {
+				const newSessions = newSessionsData.filter(
+					(s: Session) => !sessions.some((existing) => existing.sessionId === s.sessionId)
+				);
+				if (newSessions.length > 0) {
+					addToSessionsBuffer(newSessions);
+				}
+				setSessions(updateExistingSessions);
+			}
+		},
+		[sessions, mergeSessions, isSessionsAtTop, addToSessionsBuffer, clearSessionsBuffer]
+	);
+
+	const refreshSessionOutputs = useCallback(
+		async (sessionId: string) => {
+			const currentOutputs = outputsSessions[sessionId]?.outputs || [];
+			const currentCount = currentOutputs.length;
+
+			const { data: checkData } = await SessionsService.getOutputsBySessionId(sessionId, undefined);
+
+			if (checkData?.logs?.length) {
+				const latestLog = checkData.logs[checkData.logs.length - 1];
+				const latestCurrentLog = currentOutputs[currentOutputs.length - 1];
+
+				if (latestLog && latestCurrentLog && latestLog.time !== latestCurrentLog.time) {
+					let allNewOutputs: SessionOutputLog[] = [];
+					let pageToken: string | undefined = undefined;
+
+					do {
+						const { data } = await SessionsService.getOutputsBySessionId(sessionId, pageToken, 100);
+						if (data?.logs) {
+							allNewOutputs = [...allNewOutputs, ...data.logs];
+						}
+						pageToken = data?.nextPageToken || undefined;
+					} while (pageToken);
+
+					const actualNewCount = allNewOutputs.length - currentCount;
+
+					if (actualNewCount > 0) {
+						triggerEvent(EventListenerName.logsNewItemsAvailable, {
+							count: actualNewCount,
+							sessionId: sessionId,
+						});
+					}
+				} else if (currentOutputs.length === 0 && checkData.logs.length > 0) {
+					triggerEvent(EventListenerName.sessionReload);
+				}
+			}
+		},
+		[outputsSessions]
+	);
+
+	const refreshSessionActivities = useCallback(
+		async (sessionId: string) => {
+			const currentActivities = activitiesSessions[sessionId]?.activities || [];
+			const currentActivitiesCount = currentActivities.length;
+
+			const { data: newActivitiesData } = await SessionsService.getLogRecordsBySessionId(
+				sessionId,
+				undefined,
+				1,
+				SessionLogType.Activity
+			);
+
+			if (newActivitiesData?.records?.length) {
+				const latestCurrentActivity = currentActivities[0];
+				const newTotalCount = newActivitiesData.count;
+
+				if (latestCurrentActivity && newTotalCount > currentActivitiesCount) {
+					const estimatedNewCount = newTotalCount - currentActivitiesCount;
+					const isActivitiesAtBottom = getActivitiesAtBottom(sessionId);
+					if (!isActivitiesAtBottom) {
+						addToActivitiesBuffer(sessionId, estimatedNewCount, newActivitiesData.nextPageToken || null);
+						triggerEvent(EventListenerName.activitiesNewItemsAvailable, {
+							count: estimatedNewCount,
+							sessionId: sessionId,
+						});
+					} else {
+						triggerEvent(EventListenerName.sessionReloadActivity);
+					}
+				} else if (currentActivitiesCount === 0 && newActivitiesData.records.length > 0) {
+					triggerEvent(EventListenerName.sessionReloadActivity);
+				}
+			}
+		},
+		[activitiesSessions, getActivitiesAtBottom, addToActivitiesBuffer]
 	);
 
 	const handleAutoRefresh = useCallback(async () => {
@@ -344,104 +451,17 @@ export const SessionsTable = () => {
 		);
 
 		if (error || !data?.sessions) {
+			LoggerService.error(namespaces.sessionsService, "Auto-refresh failed");
 			return;
 		}
 
-		const { merged, addedCount } = mergeSessions(sessions, data.sessions);
-
-		const updateExistingSessions = (prev: Session[]) => {
-			const incomingMap = new Map(data.sessions.map((s: Session) => [s.sessionId, s]));
-			return prev.map((existingSession) => {
-				const updated = incomingMap.get(existingSession.sessionId);
-				return updated ? { ...existingSession, ...updated } : existingSession;
-			});
-		};
-
-		if (addedCount === 0) {
-			setSessions(updateExistingSessions);
-			return;
-		}
-
-		if (isSessionsAtTop) {
-			setSessions(merged);
-			clearSessionsBuffer();
-		} else {
-			const newSessions = data.sessions.filter(
-				(s: Session) => !sessions.some((existing) => existing.sessionId === s.sessionId)
-			);
-			if (newSessions.length > 0) {
-				addToSessionsBuffer(newSessions);
-			}
-			setSessions(updateExistingSessions);
-		}
+		handleSessionsUpdate(data.sessions);
 
 		fetchDeployments(false);
 
 		if (sessionIdFromParams) {
-			const currentOutputs = outputsSessions[sessionIdFromParams]?.outputs || [];
-			const currentOutputsCount = currentOutputs.length;
-
-			const { data: newOutputsData } = await SessionsService.getOutputsBySessionId(
-				sessionIdFromParams,
-				undefined,
-				1
-			);
-
-			if (newOutputsData?.logs?.length) {
-				const latestLog = newOutputsData.logs[0];
-				const latestCurrentLog = currentOutputs[currentOutputs.length - 1];
-
-				if (latestLog && latestCurrentLog && latestLog.time !== latestCurrentLog.time) {
-					const estimatedNewCount = Math.max(1, newOutputsData.logs.length);
-					const isLogsAtBottom = getLogsAtBottom(sessionIdFromParams);
-					if (!isLogsAtBottom) {
-						addToLogsBuffer(sessionIdFromParams, estimatedNewCount, newOutputsData.nextPageToken || null);
-						triggerEvent(EventListenerName.logsNewItemsAvailable, {
-							count: estimatedNewCount,
-							sessionId: sessionIdFromParams,
-						});
-					} else {
-						triggerEvent(EventListenerName.sessionReload);
-					}
-				} else if (currentOutputsCount === 0 && newOutputsData.logs.length > 0) {
-					triggerEvent(EventListenerName.sessionReload);
-				}
-			}
-
-			const currentActivities = activitiesSessions[sessionIdFromParams]?.activities || [];
-			const currentActivitiesCount = currentActivities.length;
-
-			const { data: newActivitiesData } = await SessionsService.getLogRecordsBySessionId(
-				sessionIdFromParams,
-				undefined,
-				1,
-				SessionLogType.Activity
-			);
-
-			if (newActivitiesData?.records?.length) {
-				const latestCurrentActivity = currentActivities[0];
-				const newTotalCount = newActivitiesData.count;
-
-				if (latestCurrentActivity && newTotalCount > currentActivitiesCount) {
-					const estimatedNewCount = newTotalCount - currentActivitiesCount;
-					const isActivitiesAtBottom = getActivitiesAtBottom(sessionIdFromParams);
-					if (!isActivitiesAtBottom) {
-						addToActivitiesBuffer(
-							sessionIdFromParams,
-							estimatedNewCount,
-							newActivitiesData.nextPageToken || null
-						);
-						triggerEvent(EventListenerName.activitiesNewItemsAvailable, {
-							count: estimatedNewCount,
-							sessionId: sessionIdFromParams,
-						});
-					} else {
-						triggerEvent(EventListenerName.sessionReloadActivity);
-					}
-				} else if (currentActivitiesCount === 0 && newActivitiesData.records.length > 0) {
-					triggerEvent(EventListenerName.sessionReloadActivity);
-				}
-			}
+			await refreshSessionOutputs(sessionIdFromParams);
+			await refreshSessionActivities(sessionIdFromParams);
 		} else {
 			triggerEvent(EventListenerName.sessionReload);
 		}
@@ -450,19 +470,11 @@ export const SessionsTable = () => {
 		deploymentId,
 		urlSessionStateFilter,
 		isLoading,
-		sessions,
-		isSessionsAtTop,
-		mergeSessions,
-		addToSessionsBuffer,
-		clearSessionsBuffer,
+		handleSessionsUpdate,
 		fetchDeployments,
 		sessionIdFromParams,
-		outputsSessions,
-		getLogsAtBottom,
-		addToLogsBuffer,
-		activitiesSessions,
-		getActivitiesAtBottom,
-		addToActivitiesBuffer,
+		refreshSessionOutputs,
+		refreshSessionActivities,
 	]);
 
 	const {
