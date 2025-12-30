@@ -3,10 +3,9 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-import { tours } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { TutorialProgressModalProps } from "@src/interfaces/store";
-import { useModalStore, useProjectStore, useTemplatesStore } from "@src/store";
+import { useModalStore, useProjectStore, useTemplatesStore, useTourStore } from "@src/store";
 
 import { Button, Loader, RadioButton, Typography } from "@components/atoms";
 import { LoadingOverlay, Modal } from "@components/molecules";
@@ -16,6 +15,7 @@ export const ToursProgressStepper = ({ onStepStart, isStarting }: TutorialProgre
 	const { isLoading } = useTemplatesStore();
 	const { pathname } = useLocation();
 	const { closeModal } = useModalStore();
+	const { tours, isToursReady } = useTourStore();
 
 	useEffect(() => {
 		if (!pathname.includes("/intro")) {
@@ -40,7 +40,7 @@ export const ToursProgressStepper = ({ onStepStart, isStarting }: TutorialProgre
 			name={ModalName.toursProgress}
 			wrapperClass="absolute left-20 bottom-6 w-auto h-fit top-auto"
 		>
-			{isLoading ? <LoadingOverlay isLoading={isLoading} /> : null}
+			{isLoading || !isToursReady ? <LoadingOverlay isLoading={isLoading || !isToursReady} /> : null}
 			<div className="flex h-full flex-col">
 				<Typography className="mb-4 text-xl font-semibold text-gray-1200" element="h1">
 					{t("title")}

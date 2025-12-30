@@ -48,8 +48,11 @@ export interface TourStore {
 	canceledTours: string[];
 	tourProjectId?: string;
 	isPopoverVisible: boolean;
+	isToursReady: boolean;
+	tours: Record<string, Tour>;
 	getLastStepUrl: () => string | undefined;
 	setPopoverVisible: (visible: boolean) => void;
+	setToursReady: (tours: Record<string, Tour>) => void;
 	endTour: (action: "skip" | "complete") => void;
 	startTour: (TourId: TourId) => Promise<StoreResponse<{ defaultFile: string; projectId: string }>>;
 	nextStep: (currentStepUrl: string) => void;

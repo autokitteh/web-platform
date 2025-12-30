@@ -1,4 +1,4 @@
-import { t } from "i18next";
+import i18n, { t } from "i18next";
 import { dump } from "js-yaml";
 import randomatic from "randomatic";
 import { StateCreator } from "zustand";
@@ -9,10 +9,10 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 import { StoreName, EventListenerName, TourId } from "@enums";
 import { tourStorage } from "@services/indexedDB";
 import { LoggerService } from "@services/logger.service";
-import { defaultOpenedProjectFile, defaultProjectName, namespaces, tours } from "@src/constants";
+import { defaultOpenedProjectFile, defaultProjectName, namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
-import { TourStore, TourProgress } from "@src/interfaces/store";
+import { TourStore, TourProgress, Tour } from "@src/interfaces/store";
 import { cleanupAllHighlights, parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { triggerEvent } from "@hooks";
@@ -27,13 +27,21 @@ const defaultState = {
 	lastStepUrls: [] as string[],
 	lastStepIndex: undefined,
 	tourProjectId: undefined,
+	isToursReady: false,
+	tours: {} as Record<string, Tour>,
 } as TourStore;
 
 const store: StateCreator<TourStore> = (set, get) => ({
 	...defaultState,
 	startTour: async (tourId) => {
-		const { activeTour, reset } = get();
+		const { activeTour, reset, tours: storeTours } = get();
 		const { createProjectFromManifest, getProjectsList, isProjectNameTaken } = useProjectStore.getState();
+
+		const tourConfig = storeTours[tourId];
+		if (!tourConfig) {
+			LoggerService.error(namespaces.tourStore, t("tours.tourConfigNotFound", { tourId, ns: "dashboard" }));
+			return { data: undefined, error: true };
+		}
 
 		if (activeTour && activeTour.tourId === tourId) reset();
 
@@ -111,28 +119,30 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				tourId,
 				currentStepIndex: 0,
 			},
-			activeStep: tours[tourId].steps[0],
+			activeStep: tourConfig.steps[0],
 		}));
 
 		return {
-			data: { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile },
+			data: { projectId: newProjectId, defaultFile: tourConfig.defaultFile || defaultOpenedProjectFile },
 			error: false,
 		};
 	},
 
 	setPopoverVisible: (visible) => set({ isPopoverVisible: visible }),
 
+	setToursReady: (toursData) => set({ isToursReady: true, tours: toursData }),
+
 	getLastStepUrl: () => get().lastStepUrls[get().lastStepUrls.length - 1],
 
 	reset: () => set(defaultState),
 
 	nextStep: (currentStepUrl: string) => {
-		const { activeTour } = get();
+		const { activeTour, tours: storeTours } = get();
 		if (!activeTour) return;
 
 		const { tourId } = activeTour;
 
-		const tourConfig = tours[tourId];
+		const tourConfig = storeTours[tourId];
 		if (!tourConfig) return;
 
 		const totalSteps = tourConfig.steps.length;
@@ -157,9 +167,9 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 
 	prevStep: () => {
-		const { activeTour } = get();
+		const { activeTour, tours: storeTours } = get();
 		if (!activeTour) return;
-		const tourConfig = tours[activeTour.tourId];
+		const tourConfig = storeTours[activeTour.tourId];
 
 		const prevStep = Math.max(0, activeTour.currentStepIndex - 1);
 
@@ -225,12 +235,12 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 });
 
-const customStateHydration = (persistedState: any): any => {
+const customStateHydration = (persistedState: any, storeTours: Record<string, Tour>): any => {
 	const state = persistedState;
 	if (state.activeTour && state.activeTour.tourId && state.activeTour.currentStepIndex !== undefined) {
 		const tourId = state.activeTour.tourId;
 		const stepIndex = state.activeTour.currentStepIndex;
-		const tourConfig = tours[tourId];
+		const tourConfig = storeTours[tourId];
 
 		if (tourConfig && tourConfig.steps && tourConfig.steps[stepIndex]) {
 			state.activeStep = tourConfig.steps[stepIndex];
@@ -253,8 +263,8 @@ export const useTourStore = create(
 			lastStepIndex: state.lastStepIndex,
 		}),
 		onRehydrateStorage: () => (state) => {
-			if (state) {
-				const hydratedState = customStateHydration(state);
+			if (state && state.tours && Object.keys(state.tours).length > 0) {
+				const hydratedState = customStateHydration(state, state.tours);
 				Object.assign(state, hydratedState);
 			}
 		},
@@ -269,3 +279,38 @@ export const useTourStore = create(
 		},
 	})
 );
+
+const waitForTours = async (maxRetries = 10, delayMs = 50): Promise<Record<string, Tour>> => {
+	const module = await import("@src/constants/tour.constants");
+	for (let i = 0; i < maxRetries; i++) {
+		if (Object.keys(module.tours).length > 0) {
+			return module.tours;
+		}
+		await new Promise((resolve) => setTimeout(resolve, delayMs));
+	}
+	return module.tours;
+};
+
+const initializeTours = async () => {
+	const tours = await waitForTours();
+	const state = useTourStore.getState();
+	const toursCount = Object.keys(tours).length;
+	state.setToursReady(toursCount ? tours : {});
+
+	if (toursCount === 0) {
+		LoggerService.error(namespaces.tourStore, "No tours found", true);
+	}
+
+	if (state.activeTour?.tourId && state.activeTour?.currentStepIndex !== undefined) {
+		const tourConfig = tours[state.activeTour.tourId];
+		if (tourConfig?.steps?.[state.activeTour.currentStepIndex]) {
+			useTourStore.setState({ activeStep: tourConfig.steps[state.activeTour.currentStepIndex] });
+		}
+	}
+};
+
+if (i18n.isInitialized) {
+	initializeTours();
+} else {
+	i18n.on("initialized", initializeTours);
+}

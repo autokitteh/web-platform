@@ -81,7 +81,7 @@ export const tourStepsHTMLIds = {
 	slackOAuth: "tourSlackOAuth",
 };
 
-i18n.on("initialized", () => {
+const initializeToursConfig = () => {
 	tours = {
 		[TourId.quickstart]: {
 			id: TourId.quickstart,
@@ -328,7 +328,7 @@ i18n.on("initialized", () => {
 		[TourId.sendSlack]: {
 			id: TourId.sendSlack,
 			description: t("sendSlack.description", { ns: "tour" }),
-			assetDirectory: "send_slack",
+			assetDirectory: "send_slack_message",
 			defaultFile: "program.py",
 			name: t("sendSlack.name", { ns: "tour" }),
 			entrypointFunction: "on_manual_run",
@@ -474,7 +474,13 @@ i18n.on("initialized", () => {
 	};
 
 	verifyTourStepIdsUniqueness();
-});
+};
+
+if (i18n.isInitialized) {
+	initializeToursConfig();
+} else {
+	i18n.on("initialized", initializeToursConfig);
+}
 
 export const emptyTourStep: TourPopoverProps = {
 	htmlElementId: "",

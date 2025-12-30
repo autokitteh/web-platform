@@ -94,6 +94,7 @@
 	"tours": {
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
+		"tourConfigNotFound": "Tour configuration not found for: {{tourId}}. Please try again.",
 		"unknownError": "Unknown error",
 		"errorOccurred": "An error occurred"
 	},
