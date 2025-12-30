@@ -1,386 +1,378 @@
 [
-	{
-		"testName": "Linear - OAuth v2 - Default app",
-		"integration": "linear",
-		"label": "Linear",
-		"authType": "oauthDefault",
-		"authLabel": "OAuth v2 - Default app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Linear - OAuth v2 - Private app",
-		"integration": "linear",
-		"label": "Linear",
-		"authType": "oauthPrivate",
-		"authLabel": "OAuth v2 - Private app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Linear - API Key",
-		"integration": "linear",
-		"label": "Linear",
-		"authType": "apiKey",
-		"authLabel": "API Key",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Auth0 (no auth types)",
-		"integration": "auth0",
-		"label": "Auth0",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Asana (no auth types)",
-		"integration": "asana",
-		"label": "Asana",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Anthropic (no auth types)",
-		"integration": "anthropic",
-		"label": "Anthropic",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "AWS (no auth types)",
-		"integration": "aws",
-		"label": "AWS",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Google Calendar - User (OAuth 2.0)",
-		"integration": "calendar",
-		"label": "Google Calendar",
-		"authType": "oauth",
-		"authLabel": "User (OAuth 2.0)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Google Calendar - Service Account (JSON Key)",
-		"integration": "calendar",
-		"label": "Google Calendar",
-		"authType": "json",
-		"authLabel": "Service Account (JSON Key)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "OpenAI ChatGPT (no auth types)",
-		"integration": "chatgpt",
-		"label": "OpenAI ChatGPT",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Atlassian Confluence - OAuth 2.0 App",
-		"integration": "confluence",
-		"label": "Atlassian Confluence",
-		"authType": "oauth",
-		"authLabel": "OAuth 2.0 App",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Atlassian Confluence - User API Token / PAT",
-		"integration": "confluence",
-		"label": "Atlassian Confluence",
-		"authType": "apiToken",
-		"authLabel": "User API Token / PAT",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Discord (no auth types)",
-		"integration": "discord",
-		"label": "Discord",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Google Drive - User (OAuth 2.0)",
-		"integration": "drive",
-		"label": "Google Drive",
-		"authType": "oauth",
-		"authLabel": "User (OAuth 2.0)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Google Drive - Service Account (JSON Key)",
-		"integration": "drive",
-		"label": "Google Drive",
-		"authType": "json",
-		"authLabel": "Service Account (JSON Key)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Google Forms - User (OAuth 2.0)",
-		"integration": "forms",
-		"label": "Google Forms",
-		"authType": "oauth",
-		"authLabel": "User (OAuth 2.0)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Google Forms - Service Account (JSON Key)",
-		"integration": "forms",
-		"label": "Google Forms",
-		"authType": "json",
-		"authLabel": "Service Account (JSON Key)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "GitHub - OAuth v2 - Default app",
-		"integration": "github",
-		"label": "GitHub",
-		"authType": "oauth",
-		"authLabel": "OAuth v2 - Default app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "GitHub - OAuth v2 - Private app",
-		"integration": "github",
-		"label": "GitHub",
-		"authType": "oauthPrivate",
-		"authLabel": "OAuth v2 - Private app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "GitHub - PAT + Webhook",
-		"integration": "github",
-		"label": "GitHub",
-		"authType": "pat",
-		"authLabel": "PAT + Webhook",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Gmail - User (OAuth 2.0)",
-		"integration": "gmail",
-		"label": "Gmail",
-		"authType": "oauth",
-		"authLabel": "User (OAuth 2.0)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Gmail - Service Account (JSON Key)",
-		"integration": "gmail",
-		"label": "Gmail",
-		"authType": "json",
-		"authLabel": "Service Account (JSON Key)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "YouTube - User (OAuth 2.0)",
-		"integration": "youtube",
-		"label": "YouTube",
-		"authType": "oauth",
-		"authLabel": "User (OAuth 2.0)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "YouTube - Service Account (JSON Key)",
-		"integration": "youtube",
-		"label": "YouTube",
-		"authType": "json",
-		"authLabel": "Service Account (JSON Key)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Google Gemini (no auth types)",
-		"integration": "googlegemini",
-		"label": "Google Gemini",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Atlassian Jira - OAuth 2.0 App",
-		"integration": "jira",
-		"label": "Atlassian Jira",
-		"authType": "oauth",
-		"authLabel": "OAuth 2.0 App",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Atlassian Jira - User API Token / PAT",
-		"integration": "jira",
-		"label": "Atlassian Jira",
-		"authType": "apiToken",
-		"authLabel": "User API Token / PAT",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Google Sheets - User (OAuth 2.0)",
-		"integration": "sheets",
-		"label": "Google Sheets",
-		"authType": "oauth",
-		"authLabel": "User (OAuth 2.0)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Google Sheets - Service Account (JSON Key)",
-		"integration": "sheets",
-		"label": "Google Sheets",
-		"authType": "json",
-		"authLabel": "Service Account (JSON Key)",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Slack - OAuth v2 - Default app",
-		"integration": "slack",
-		"label": "Slack",
-		"authType": "oauthDefault",
-		"authLabel": "OAuth v2 - Default app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Slack - OAuth v2 - Private app",
-		"integration": "slack",
-		"label": "Slack",
-		"authType": "oauthPrivate",
-		"authLabel": "OAuth v2 - Private app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Twilio - Auth Token",
-		"integration": "twilio",
-		"label": "Twilio",
-		"authType": "authToken",
-		"authLabel": "Auth Token",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Twilio - API Key",
-		"integration": "twilio",
-		"label": "Twilio",
-		"authType": "apiKey",
-		"authLabel": "API Key",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Telegram (no auth types)",
-		"integration": "telegram",
-		"label": "Telegram",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "HubSpot (no auth types)",
-		"integration": "hubspot",
-		"label": "HubSpot",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Zoom - OAuth v2 - Default app",
-		"integration": "zoom",
-		"label": "Zoom",
-		"authType": "oauthDefault",
-		"authLabel": "OAuth v2 - Default app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Zoom - OAuth v2 - Private app",
-		"integration": "zoom",
-		"label": "Zoom",
-		"authType": "oauthPrivate",
-		"authLabel": "OAuth v2 - Private app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Zoom - Private Server-to-Server",
-		"integration": "zoom",
-		"label": "Zoom",
-		"authType": "serverToServer",
-		"authLabel": "Private Server-to-Server",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Salesforce - OAuth v2 - Default app",
-		"integration": "salesforce",
-		"label": "Salesforce",
-		"authType": "oauthDefault",
-		"authLabel": "OAuth v2 - Default app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Salesforce - OAuth v2 - Private app",
-		"integration": "salesforce",
-		"label": "Salesforce",
-		"authType": "oauthPrivate",
-		"authLabel": "OAuth v2 - Private app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Microsoft Teams - Default user-delegated app",
-		"integration": "microsoft_teams",
-		"label": "Microsoft Teams",
-		"authType": "oauthDefault",
-		"authLabel": "Default user-delegated app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Microsoft Teams - Private user-delegated app",
-		"integration": "microsoft_teams",
-		"label": "Microsoft Teams",
-		"authType": "oauthPrivate",
-		"authLabel": "Private user-delegated app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Microsoft Teams - Private daemon application",
-		"integration": "microsoft_teams",
-		"label": "Microsoft Teams",
-		"authType": "daemonApp",
-		"authLabel": "Private daemon application",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Kubernetes (no auth types)",
-		"integration": "kubernetes",
-		"label": "Kubernetes",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Reddit (no auth types)",
-		"integration": "reddit",
-		"label": "Reddit",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Pipedrive (no auth types)",
-		"integration": "pipedrive",
-		"label": "Pipedrive",
-		"authType": null,
-		"authLabel": null,
-		"category": "single-type"
-	},
-	{
-		"testName": "Notion - OAuth v2 - Default app",
-		"integration": "notion",
-		"label": "Notion",
-		"authType": "oauthDefault",
-		"authLabel": "OAuth v2 - Default app",
-		"category": "multi-type"
-	},
-	{
-		"testName": "Notion - API Key",
-		"integration": "notion",
-		"label": "Notion",
-		"authType": "apiKey",
-		"authLabel": "API Key",
-		"category": "multi-type"
-	}
+  {
+    "testName": "Linear - OAuth v2 - Default app",
+    "integration": "linear",
+    "label": "Linear",
+    "authType": "oauthDefault",
+    "authLabel": "OAuth v2 - Default app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Linear - OAuth v2 - Private app",
+    "integration": "linear",
+    "label": "Linear",
+    "authType": "oauthPrivate",
+    "authLabel": "OAuth v2 - Private app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Linear - API Key",
+    "integration": "linear",
+    "label": "Linear",
+    "authType": "apiKey",
+    "authLabel": "API Key",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Auth0 (no auth types)",
+    "integration": "auth0",
+    "label": "Auth0",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Asana (no auth types)",
+    "integration": "asana",
+    "label": "Asana",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Anthropic (no auth types)",
+    "integration": "anthropic",
+    "label": "Anthropic",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "AWS (no auth types)",
+    "integration": "aws",
+    "label": "AWS",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Google Calendar - User (OAuth 2.0)",
+    "integration": "calendar",
+    "label": "Google Calendar",
+    "authType": "oauth",
+    "authLabel": "User (OAuth 2.0)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Google Calendar - Service Account (JSON Key)",
+    "integration": "calendar",
+    "label": "Google Calendar",
+    "authType": "json",
+    "authLabel": "Service Account (JSON Key)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "OpenAI ChatGPT (no auth types)",
+    "integration": "chatgpt",
+    "label": "OpenAI ChatGPT",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Atlassian Confluence - OAuth 2.0 App",
+    "integration": "confluence",
+    "label": "Atlassian Confluence",
+    "authType": "oauth",
+    "authLabel": "OAuth 2.0 App",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Atlassian Confluence - User API Token / PAT",
+    "integration": "confluence",
+    "label": "Atlassian Confluence",
+    "authType": "apiToken",
+    "authLabel": "User API Token / PAT",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Discord (no auth types)",
+    "integration": "discord",
+    "label": "Discord",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Google Drive - User (OAuth 2.0)",
+    "integration": "drive",
+    "label": "Google Drive",
+    "authType": "oauth",
+    "authLabel": "User (OAuth 2.0)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Google Drive - Service Account (JSON Key)",
+    "integration": "drive",
+    "label": "Google Drive",
+    "authType": "json",
+    "authLabel": "Service Account (JSON Key)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Google Forms - User (OAuth 2.0)",
+    "integration": "forms",
+    "label": "Google Forms",
+    "authType": "oauth",
+    "authLabel": "User (OAuth 2.0)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Google Forms - Service Account (JSON Key)",
+    "integration": "forms",
+    "label": "Google Forms",
+    "authType": "json",
+    "authLabel": "Service Account (JSON Key)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "GitHub - OAuth v2 - Default app",
+    "integration": "github",
+    "label": "GitHub",
+    "authType": "oauth",
+    "authLabel": "OAuth v2 - Default app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "GitHub - OAuth v2 - Private app",
+    "integration": "github",
+    "label": "GitHub",
+    "authType": "oauthPrivate",
+    "authLabel": "OAuth v2 - Private app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "GitHub - PAT + Webhook",
+    "integration": "github",
+    "label": "GitHub",
+    "authType": "pat",
+    "authLabel": "PAT + Webhook",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Gmail - User (OAuth 2.0)",
+    "integration": "gmail",
+    "label": "Gmail",
+    "authType": "oauth",
+    "authLabel": "User (OAuth 2.0)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Gmail - Service Account (JSON Key)",
+    "integration": "gmail",
+    "label": "Gmail",
+    "authType": "json",
+    "authLabel": "Service Account (JSON Key)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "YouTube - User (OAuth 2.0)",
+    "integration": "youtube",
+    "label": "YouTube",
+    "authType": "oauth",
+    "authLabel": "User (OAuth 2.0)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "YouTube - Service Account (JSON Key)",
+    "integration": "youtube",
+    "label": "YouTube",
+    "authType": "json",
+    "authLabel": "Service Account (JSON Key)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Google Gemini (no auth types)",
+    "integration": "googlegemini",
+    "label": "Google Gemini",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Atlassian Jira - OAuth 2.0 App",
+    "integration": "jira",
+    "label": "Atlassian Jira",
+    "authType": "oauth",
+    "authLabel": "OAuth 2.0 App",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Atlassian Jira - User API Token / PAT",
+    "integration": "jira",
+    "label": "Atlassian Jira",
+    "authType": "apiToken",
+    "authLabel": "User API Token / PAT",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Google Sheets - User (OAuth 2.0)",
+    "integration": "sheets",
+    "label": "Google Sheets",
+    "authType": "oauth",
+    "authLabel": "User (OAuth 2.0)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Google Sheets - Service Account (JSON Key)",
+    "integration": "sheets",
+    "label": "Google Sheets",
+    "authType": "json",
+    "authLabel": "Service Account (JSON Key)",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Slack - OAuth v2 - Default app",
+    "integration": "slack",
+    "label": "Slack",
+    "authType": "oauthDefault",
+    "authLabel": "OAuth v2 - Default app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Slack - OAuth v2 - Private app",
+    "integration": "slack",
+    "label": "Slack",
+    "authType": "oauthPrivate",
+    "authLabel": "OAuth v2 - Private app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Twilio - API Token",
+    "integration": "twilio",
+    "label": "Twilio",
+    "authType": "apiToken",
+    "authLabel": "API Token",
+    "category": "single-type"
+  },
+  {
+    "testName": "Telegram (no auth types)",
+    "integration": "telegram",
+    "label": "Telegram",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "HubSpot (no auth types)",
+    "integration": "hubspot",
+    "label": "HubSpot",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Zoom - OAuth v2 - Default app",
+    "integration": "zoom",
+    "label": "Zoom",
+    "authType": "oauthDefault",
+    "authLabel": "OAuth v2 - Default app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Zoom - OAuth v2 - Private app",
+    "integration": "zoom",
+    "label": "Zoom",
+    "authType": "oauthPrivate",
+    "authLabel": "OAuth v2 - Private app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Zoom - Private Server-to-Server",
+    "integration": "zoom",
+    "label": "Zoom",
+    "authType": "serverToServer",
+    "authLabel": "Private Server-to-Server",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Salesforce - OAuth v2 - Default app",
+    "integration": "salesforce",
+    "label": "Salesforce",
+    "authType": "oauthDefault",
+    "authLabel": "OAuth v2 - Default app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Salesforce - OAuth v2 - Private app",
+    "integration": "salesforce",
+    "label": "Salesforce",
+    "authType": "oauthPrivate",
+    "authLabel": "OAuth v2 - Private app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Microsoft Teams - Default user-delegated app",
+    "integration": "microsoft_teams",
+    "label": "Microsoft Teams",
+    "authType": "oauthDefault",
+    "authLabel": "Default user-delegated app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Microsoft Teams - Private user-delegated app",
+    "integration": "microsoft_teams",
+    "label": "Microsoft Teams",
+    "authType": "oauthPrivate",
+    "authLabel": "Private user-delegated app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Microsoft Teams - Private daemon application",
+    "integration": "microsoft_teams",
+    "label": "Microsoft Teams",
+    "authType": "daemonApp",
+    "authLabel": "Private daemon application",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Kubernetes (no auth types)",
+    "integration": "kubernetes",
+    "label": "Kubernetes",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Reddit (no auth types)",
+    "integration": "reddit",
+    "label": "Reddit",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Pipedrive (no auth types)",
+    "integration": "pipedrive",
+    "label": "Pipedrive",
+    "authType": null,
+    "authLabel": null,
+    "category": "single-type"
+  },
+  {
+    "testName": "Notion - OAuth v2 - Default app",
+    "integration": "notion",
+    "label": "Notion",
+    "authType": "oauthDefault",
+    "authLabel": "OAuth v2 - Default app",
+    "category": "multi-type"
+  },
+  {
+    "testName": "Notion - API Key",
+    "integration": "notion",
+    "label": "Notion",
+    "authType": "apiKey",
+    "authLabel": "API Key",
+    "category": "multi-type"
+  }
 ]
