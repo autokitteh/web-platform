@@ -70,9 +70,47 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
+  test-build:
+    name: 🏗️ Build for Tests
+    needs: setup
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Restore cached node_modules
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies (fallback)
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build for tests
+        env:
+          VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
+          VITE_DISPLAY_CHATBOT: true
+        run: npm run build
+
+      - name: Upload test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-built-files
+          path: dist
+          retention-days: 1
+
   test:
     name: 🧪 ${{ matrix.browser }} (shard ${{ matrix.shard }}/4)
-    needs: [setup, build]
+    needs: [setup, test-build]
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main'
     timeout-minutes: 30
@@ -110,10 +148,10 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
-      - name: Download built files
+      - name: Download test build
         uses: actions/download-artifact@v4
         with:
-          name: built-files
+          name: test-built-files
           path: ./dist
 
       - name: Cache Docker images
