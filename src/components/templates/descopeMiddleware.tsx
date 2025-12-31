@@ -34,7 +34,8 @@ const routes = [
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
-	const { login, setLogoutFunction, setTrackUserLoginFunction, user, refreshCookie } = useOrganizationStore();
+	const { login, setLogoutFunction, setTrackUserLoginFunction, user, refreshCookie, setIsLoggingOut } =
+		useOrganizationStore();
 	const { t } = useTranslation("login");
 	const { attemptLogin, isLoggingIn } = useLoginAttempt({ login, t });
 
@@ -103,6 +104,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		}
 
 		if (apiTokenFromURL && !user && !isLoggingIn) {
+			setIsLoggingOut(false);
 			setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
 			setApiToken(apiTokenFromURL);
 
@@ -119,6 +121,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
+			setIsLoggingOut(false);
 			justLoggedIn.current = true;
 			attemptLogin();
 		}
@@ -154,6 +157,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
+			setIsLoggingOut(false);
 			try {
 				const token = event.detail.sessionJwt;
 
@@ -225,25 +229,28 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[apiBaseUrl, searchParams]
+		[apiBaseUrl, searchParams, setIsLoggingOut]
 	);
 
 	const handleLogout = useCallback(
 		async (redirectToLogin: boolean = false) => {
-			logout();
-			clearAuthCookies();
-			try {
-				await logoutBackend(apiBaseUrl);
-			} catch (error) {
-				LoggerService.warn(namespaces.ui.loginPage, t("errors.logoutError", { error }), true);
-			}
-			revokeCookieConsent();
-			window.localStorage.clear();
-			if (redirectToLogin) window.location.href = "/";
-			else window.location.reload();
+			setIsLoggingOut(true);
+			setTimeout(async () => {
+				logout();
+				clearAuthCookies();
+				try {
+					await logoutBackend(apiBaseUrl);
+				} catch (error) {
+					LoggerService.warn(namespaces.ui.loginPage, t("errors.logoutError", { error }), true);
+				}
+				revokeCookieConsent();
+				window.localStorage.clear();
+				if (redirectToLogin) window.location.href = "/";
+				else window.location.reload();
+			}, 1600);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[apiBaseUrl, logout, revokeCookieConsent]
+		[apiBaseUrl, logout, revokeCookieConsent, setIsLoggingOut]
 	);
 
 	useEffect(() => {

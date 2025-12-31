@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
@@ -25,6 +25,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		logoutFunction,
 		enrichedOrganizations,
 		isLoading,
+		isLoggingOut,
 		currentOrganization,
 		user,
 		updateMemberStatus,
@@ -55,6 +56,11 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		close();
 		navigate(`/switch-organization/${id}`);
 	};
+
+	useEffect(() => {
+		if (!isLoggingOut) return;
+		close();
+	}, [isLoggingOut]);
 
 	const onUserInvintationAction = async (status: MemberStatusType, organizationId: string) => {
 		if (!organizationId || !user?.id) return;
@@ -142,6 +148,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 
 					<Button
 						className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+						disabled={isLoggingOut}
 						onClick={() => logoutFunction(true)}
 					>
 						<LogoutIcon className="size-4" fill="black" />

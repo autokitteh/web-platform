@@ -11,7 +11,7 @@ import { getPageTitleFromPath } from "@utilities";
 
 import { useCacheStore, useFileStore, useOrganizationStore } from "@store";
 
-import { PageTitle } from "@components/atoms";
+import { Loader, PageTitle } from "@components/atoms";
 
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
@@ -24,7 +24,7 @@ export const App = () => {
 		sessionId?: string;
 		triggerId?: string;
 	}>();
-	const { user, currentOrganization: organization } = useOrganizationStore();
+	const { user, currentOrganization: organization, isLoggingOut } = useOrganizationStore();
 	const { openFiles } = useFileStore();
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { setPathPageView } = useHubspot();
@@ -75,6 +75,11 @@ export const App = () => {
 		<>
 			<PageTitle title={pageTitle} />
 			{mainElement}
+			{isLoggingOut ? (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+					<Loader size="xl" />
+				</div>
+			) : null}
 		</>
 	);
 };
