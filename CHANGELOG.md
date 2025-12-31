@@ -1,3 +1,7 @@
+## <small>2.249.6 (2025-12-31)</small>
+
+* revert: add auto-refresh system for sessions table and output-logs (#1534) ([dfcaf53](https://github.com/autokitteh/web-platform/commit/dfcaf53)), closes [#1534](https://github.com/autokitteh/web-platform/issues/1534)
+
 ## <small>2.249.5 (2025-12-31)</small>
 
 * fix(triggers): handle empty event type in edit form  (#1532) ([927afc5](https://github.com/autokitteh/web-platform/commit/927afc5)), closes [#1532](https://github.com/autokitteh/web-platform/issues/1532)
