@@ -1,3 +1,7 @@
+## <small>2.251.1 (2025-12-31)</small>
+
+* fix: resolve React state update during render warning on dashboard (#1529) ([79159c8](https://github.com/autokitteh/web-platform/commit/79159c8)), closes [#1529](https://github.com/autokitteh/web-platform/issues/1529)
+
 ## 2.251.0 (2025-12-31)
 
 * feat: add a global loading state and UI for the logout process (#1527) ([e3a0945](https://github.com/autokitteh/web-platform/commit/e3a0945)), closes [#1527](https://github.com/autokitteh/web-platform/issues/1527)
