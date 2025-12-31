@@ -9,7 +9,9 @@ import { ColumnVisibilityMenu } from "./columnVisibilityMenu";
 import { ProjectsTableBody, ProjectsTableHeader, ProjectsTableModals } from "./components";
 import { useProjectsStats, useProjectsTableColumns, useProjectsTableActions } from "./hooks";
 
-import { TableSkeleton } from "@components/atoms";
+import { TableSkeleton, IconButton } from "@components/atoms";
+
+import { PlusIcon } from "@assets/image/icons";
 
 const rowHeight = 38;
 
@@ -73,7 +75,7 @@ export const DashboardProjectsTable = () => {
 	const columnIds = visibleColumns.map((col) => col.id);
 
 	return (
-		<div className="z-10 flex h-full select-none flex-col overflow-hidden">
+		<div className="z-10 flex h-full select-none flex-col overflow-hidden h-full">
 			<div className="sticky top-0 z-20 flex items-center justify-between bg-gray-1100 pb-2">
 				<div className="flex flex-1 items-center gap-x-2">
 					<h2 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500">
@@ -81,7 +83,12 @@ export const DashboardProjectsTable = () => {
 					</h2>
 					<div className="h-px flex-1 bg-gradient-to-r from-gray-1050 to-transparent" />
 				</div>
-				<ColumnVisibilityMenu table={table} />
+				<div className="flex items-center gap-x-0">
+					<ColumnVisibilityMenu table={table} />
+					<IconButton href="/ai" ariaLabel="AI" className="group">
+						<PlusIcon className="size-4 fill-white transition group-hover:fill-green-800" />
+					</IconButton>
+				</div>
 			</div>
 
 			{isLoadingStats && rows.length === 0 ? (
