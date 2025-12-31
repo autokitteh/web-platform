@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, startTransition } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { unstable_batchedUpdates } from "react-dom";
 import { useTranslation } from "react-i18next";
@@ -223,7 +223,8 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 				const shouldUpdateState = isFirstBatch || isLastBatch;
 
 				if (shouldUpdateState && !signal.aborted) {
-					startTransition(() => {
+					queueMicrotask(() => {
+						if (signal.aborted) return;
 						setProjectsStats({ ...statsAccumulatorRef.current });
 						if (failedAccumulatorRef.current.size > 0) {
 							setFailedProjects(new Set(failedAccumulatorRef.current));
