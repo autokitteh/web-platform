@@ -9,7 +9,16 @@ export const useToastStore = create<ToastStore>(
 			const id = Date.now().toString();
 
 			return set((state) => ({
-				toasts: [...state.toasts, { ...toast, id }],
+				toasts: [
+					...state.toasts,
+					{
+						...toast,
+						id,
+						position: toast.position,
+						offset: toast.offset,
+						className: toast.className,
+					},
+				],
 			}));
 		},
 		removeToast: (id) =>
