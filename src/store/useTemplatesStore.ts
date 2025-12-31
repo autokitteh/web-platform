@@ -5,7 +5,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import {
-	isCiCd,
 	localTemplatesArchiveFallback,
 	namespaces,
 	remoteTemplatesArchiveURL,
@@ -16,7 +15,6 @@ import {
 import { LoggerService, templateStorage } from "@services";
 import { StoreName } from "@src/enums";
 import { GitHubCommit, TemplateCategory, TemplateState } from "@src/interfaces/store";
-import { isE2E } from "@src/utilities";
 import { processTemplates } from "@src/utilities/templateProcess";
 
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {
@@ -51,11 +49,6 @@ const store = (set: any, get: any): TemplateState => ({
 		const couldntFetchTemplates = t("templates.failedToFetch", { ns: "stores" });
 		const { isLoading, templateMap, cachedCommitDate, lastCheckDate } = get();
 		if (isLoading) return;
-
-		const isE2Etest = isE2E() || isCiCd;
-		if (isE2Etest) {
-			return;
-		}
 
 		set({ isLoading: true, error: null });
 
