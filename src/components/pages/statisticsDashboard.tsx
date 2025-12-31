@@ -1,11 +1,11 @@
-import React, { useId, useMemo } from "react";
+import React, { useEffect, useId, useMemo } from "react";
 
 import { useShallow } from "zustand/react/shallow";
 
 import { TotalCountersData } from "@interfaces/components";
 
 import { useResize, useWindowDimensions } from "@hooks";
-import { useDashboardStatisticsStore, useSharedBetweenProjectsStore } from "@store";
+import { useDashboardStatisticsStore, useProjectStore, useSharedBetweenProjectsStore } from "@store";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { ActiveDeploymentsTable, SessionStatusDonutChart, TotalCountersGrid } from "@components/molecules/charts";
@@ -19,6 +19,11 @@ export const StatisticsDashboard = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", id: resizeId, initial: 70, max: 70, min: 30 });
 	const { isMobile } = useWindowDimensions();
 	const { fullScreenDashboard } = useSharedBetweenProjectsStore();
+	const { getProjectsList } = useProjectStore();
+
+	useEffect(() => {
+		getProjectsList();
+	}, [getProjectsList]);
 
 	const { statistics, activeDeploymentsList, sessionStatusData, isLoading, triggerRefresh } =
 		useDashboardStatisticsStore(
