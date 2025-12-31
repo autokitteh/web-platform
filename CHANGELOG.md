@@ -1,3 +1,7 @@
+## <small>2.249.2 (2025-12-31)</small>
+
+* fix: enhance error handling for invalid tour configurations  (#1525) ([8ece181](https://github.com/autokitteh/web-platform/commit/8ece181)), closes [#1525](https://github.com/autokitteh/web-platform/issues/1525)
+
 ## <small>2.249.1 (2025-12-31)</small>
 
 * fix: move dynamic API token and credentials handling into Axios (#1526) ([5f21b37](https://github.com/autokitteh/web-platform/commit/5f21b37)), closes [#1526](https://github.com/autokitteh/web-platform/issues/1526)
