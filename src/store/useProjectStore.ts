@@ -2,10 +2,9 @@ import { t } from "i18next";
 import { load } from "js-yaml";
 import isEqual from "lodash/isEqual";
 import { StateCreator, create } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { EventListenerName, StoreName } from "@enums";
+import { EventListenerName } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
@@ -237,4 +236,4 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	isProjectNameTaken: (projectName: string) => get().projectsList.some((project) => project.name === projectName),
 });
 
-export const useProjectStore = create(persist(immer(store), { name: StoreName.project }));
+export const useProjectStore = create(immer(store));
