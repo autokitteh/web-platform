@@ -35,6 +35,7 @@ const defaultState: OrganizationStoreState = {
 		plans: false,
 		usage: false,
 	},
+	isLoggingOut: false,
 	billing: {
 		plans: [],
 		usage: undefined,
@@ -771,6 +772,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => ({
 			...state,
 			isLoading: { ...state.isLoading, [key]: loading },
+		}));
+	},
+	setIsLoggingOut: (isLoggingOut) => {
+		set((state) => ({
+			...state,
+			isLoggingOut,
 		}));
 	},
 });

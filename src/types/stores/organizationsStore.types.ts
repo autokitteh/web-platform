@@ -27,6 +27,7 @@ export type OrganizationStoreState = Readonly<{
 		updatingUser: boolean;
 		usage: boolean;
 	};
+	isLoggingOut: boolean;
 	lastCookieRefreshDate: string;
 	logoutFunction: (redirectToLogin: boolean) => void;
 	members: Record<string, Record<string, OrganizationMember>>;
@@ -61,6 +62,7 @@ export type OrganizationStoreActions = {
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
 	setIsLoading: (loading: boolean, key: keyof OrganizationStoreState["isLoading"]) => void;
+	setIsLoggingOut: (isLoggingOut: boolean) => void;
 	setLogoutFunction: (logoutFn: (redirectToLogin: boolean) => void) => void;
 	setTrackUserLoginFunction: (trackFn: (user?: { email?: string; name?: string }) => Promise<void>) => void;
 	updateMemberStatus: (organizationId: string, status: MemberStatusType) => ServiceResponse<void>;
