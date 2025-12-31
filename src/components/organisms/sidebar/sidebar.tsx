@@ -21,7 +21,7 @@ import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { EventsFlag } from "@assets/image/icons";
-import { CircleQuestionIcon, FileIcon, StatsBlackIcon } from "@assets/image/icons/sidebar";
+import { CircleQuestionIcon, FileIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -79,17 +79,21 @@ export const Sidebar = () => {
 	if (isMobile) {
 		return (
 			<Suspense fallback={<Loader isCenter size="lg" />}>
-				<div className="fixed left-0 top-0 z-40 flex h-12 w-full items-center justify-between bg-white px-3">
-					<Button className="flex items-center justify-start gap-2" onClick={handleLogoClick} variant="ghost">
-						<IconLogo className="size-7" />
+				<div className="fixed left-0 top-0 z-40 flex h-11 w-full items-center justify-between bg-white px-2 shadow-sm">
+					<Button
+						className="flex items-center justify-start gap-1.5 p-1"
+						onClick={handleLogoClick}
+						variant="ghost"
+					>
+						<IconLogo className="size-6" />
 					</Button>
 					<Button
 						ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-						className="p-1 hover:bg-green-200"
+						className="p-1.5 hover:bg-green-200"
 						onClick={() => setIsOpen(!isOpen)}
 						title={isOpen ? t("closeSidebar") : t("openSidebar")}
 					>
-						<MenuToggle className="flex w-8 items-center justify-center" isOpen={isOpen} />
+						<MenuToggle className="flex w-7 items-center justify-center" isOpen={isOpen} />
 					</Button>
 				</div>
 
@@ -105,47 +109,39 @@ export const Sidebar = () => {
 							/>
 							<motion.div
 								animate={{ x: 0 }}
-								className="fixed left-0 top-12 z-50 h-[calc(100vh-3rem)] w-64 overflow-y-auto bg-white shadow-xl"
+								className="fixed left-0 top-11 z-50 h-[calc(100vh-2.75rem)] w-56 overflow-y-auto bg-white shadow-xl"
 								exit={{ x: "-100%" }}
 								initial={{ x: "-100%" }}
 								transition={{ type: "spring", damping: 25, stiffness: 300 }}
 							>
-								<div className="flex h-full flex-col justify-between p-3">
-									<div>
-										<ProjectsMenu className="mt-2" isOpen={true} />
+								<div className="flex h-full flex-col justify-between p-2">
+									<div className="space-y-1">
+										<ProjectsMenu className="mb-1" isOpen={true} />
 
 										{featureFlags.hideOrgConnections ? null : (
 											<Button
 												ariaLabel={t("connections")}
-												className="mt-3 w-full justify-start gap-3 p-2 hover:bg-green-200"
+												className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
 												href="/connections"
 											>
-												<LuUnplug className="size-5 fill-gray-1100" strokeWidth={2} />
+												<LuUnplug className="size-4 fill-gray-1100" strokeWidth={2} />
 												<span>{t("connections")}</span>
 											</Button>
 										)}
 									</div>
 
-									<div className="flex flex-col gap-1">
-										<Button
-											ariaLabel={t("stats")}
-											className="w-full justify-start gap-3 p-2 hover:bg-green-200"
-											href="/stats"
-										>
-											<IconSvg className="size-5 fill-gray-1100" src={StatsBlackIcon} />
-											<span>{t("stats")}</span>
-										</Button>
+									<div className="space-y-0.5">
 										<Button
 											ariaLabel={t("events")}
-											className="w-full justify-start gap-3 p-2 hover:bg-green-200"
+											className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
 											href="/events"
 										>
-											<IconSvg className="size-5 fill-gray-1100" src={EventsFlag} />
+											<IconSvg className="size-4 fill-gray-1100" src={EventsFlag} />
 											<span>{t("events")}</span>
 										</Button>
 										<Button
 											ariaLabel={t("systemLog")}
-											className="w-full justify-start gap-3 p-2 hover:bg-green-200"
+											className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
 											onClick={() => {
 												toggleSystemLogHeight();
 												setIsOpen(false);
@@ -158,21 +154,21 @@ export const Sidebar = () => {
 												lastLogType={lastLogType}
 												variant="dot"
 											>
-												<IconSvg className="size-5 fill-gray-1100" src={FileIcon} />
+												<IconSvg className="size-4 fill-gray-1100" src={FileIcon} />
 											</Badge>
 											<span>{t("systemLog")}</span>
 										</Button>
 										<Button
-											className="w-full justify-start gap-3 p-2 hover:bg-green-200"
+											className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
 											href="/intro"
 										>
-											<IconSvg className="size-5" src={CircleQuestionIcon} />
+											<IconSvg className="size-4" src={CircleQuestionIcon} />
 											<span>{t("intro")}</span>
 										</Button>
 										{descopeProjectId ? (
-											<div className="mt-2 flex items-center gap-3 border-t border-gray-200 pt-3">
-												<Avatar color="black" name={user?.name} round={true} size="30" />
-												<span className="text-sm text-black">{user?.name}</span>
+											<div className="mt-1.5 flex items-center gap-2.5 border-t border-gray-200 pt-2">
+												<Avatar color="black" name={user?.name} round={true} size="26" />
+												<span className="truncate text-sm text-black">{user?.name}</span>
 											</div>
 										) : null}
 									</div>
@@ -265,27 +261,6 @@ export const Sidebar = () => {
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<Tooltip content={t("stats")} hide={isOpen} position="right">
-							<Button ariaLabel={t("stats")} className="p-0 hover:bg-green-200" href="/stats">
-								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-									<IconSvg className="size-5 fill-gray-1100 transition" src={StatsBlackIcon} />
-								</div>
-
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											{t("stats")}
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
-						</Tooltip>
 						<Tooltip content={t("events")} hide={isOpen} position="right">
 							<Button ariaLabel={t("events")} className="p-0 hover:bg-green-200" href="/events">
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
