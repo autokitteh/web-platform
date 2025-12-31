@@ -75,7 +75,7 @@ export const ApiTokenTwilioForm = ({
 					<SecretInput
 						type="password"
 						{...register("api_key")}
-						aria-label={t("twilio.placeholders.key")}
+						aria-label={t("twilio.placeholders.token")}
 						disabled={isLoading}
 						handleInputChange={(newKeyValue) => setValue("api_key", newKeyValue)}
 						handleLockAction={(newLockState: boolean) =>
@@ -84,18 +84,18 @@ export const ApiTokenTwilioForm = ({
 						isError={!!errors.api_key}
 						isLocked={lockState.api_key}
 						isRequired
-						label={t("twilio.placeholders.key")}
+						label={t("twilio.placeholders.token")}
 						value={apiKey}
 					/>
 				) : (
 					<Input
 						{...register("api_key")}
-						aria-label={t("twilio.placeholders.key")}
+						aria-label={t("twilio.placeholders.token")}
 						disabled={isLoading}
 						isError={!!errors.api_key}
 						isRequired
 						isSensitive
-						label={t("twilio.placeholders.key")}
+						label={t("twilio.placeholders.token")}
 					/>
 				)}
 				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>

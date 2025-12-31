@@ -131,8 +131,7 @@
 	"twilio": {
 		"placeholders": {
 			"sid": "Account SID",
-			"token": "Auth Token",
-			"key": "API Key",
+			"token": "API Token",
 			"secret": "API Secret"
 		},
 		"information": {
