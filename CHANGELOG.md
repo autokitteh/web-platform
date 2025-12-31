@@ -1,3 +1,7 @@
+## <small>2.249.1 (2025-12-31)</small>
+
+* fix: move dynamic API token and credentials handling into Axios (#1526) ([5f21b37](https://github.com/autokitteh/web-platform/commit/5f21b37)), closes [#1526](https://github.com/autokitteh/web-platform/issues/1526)
+
 ## 2.249.0 (2025-12-31)
 
 * feat: enable vertical scrolling for AI landing page content (#1523) ([22d68ec](https://github.com/autokitteh/web-platform/commit/22d68ec)), closes [#1523](https://github.com/autokitteh/web-platform/issues/1523)
