@@ -111,6 +111,18 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 		getProjectsList();
 
+		// Re-fetch tourConfig to ensure we have the latest version (tours might be loaded asynchronously)
+		const currentTourConfig = get().tours[tourId];
+		if (!currentTourConfig || !currentTourConfig.steps || currentTourConfig.steps.length === 0) {
+			LoggerService.error(
+				namespaces.tourStore,
+				t("tours.tourConfigInvalid", { tourId, ns: "dashboard" }) ||
+					`Tour config for ${tourId} is invalid or has no steps`,
+				true
+			);
+			return { data: undefined, error: true };
+		}
+
 		set((state) => ({
 			...state,
 			isPopoverVisible: true,
@@ -119,11 +131,11 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				tourId,
 				currentStepIndex: 0,
 			},
-			activeStep: tourConfig.steps[0],
+			activeStep: currentTourConfig.steps[0],
 		}));
 
 		return {
-			data: { projectId: newProjectId, defaultFile: tourConfig.defaultFile || defaultOpenedProjectFile },
+			data: { projectId: newProjectId, defaultFile: currentTourConfig.defaultFile || defaultOpenedProjectFile },
 			error: false,
 		};
 	},
@@ -134,7 +146,15 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 	getLastStepUrl: () => get().lastStepUrls[get().lastStepUrls.length - 1],
 
-	reset: () => set(defaultState),
+	reset: () => {
+		const { isToursReady, tours } = get();
+		set({
+			...defaultState,
+			// Preserve tours initialization state - these should not be reset
+			isToursReady,
+			tours,
+		});
+	},
 
 	nextStep: (currentStepUrl: string) => {
 		const { activeTour, tours: storeTours } = get();
@@ -143,7 +163,14 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const { tourId } = activeTour;
 
 		const tourConfig = storeTours[tourId];
-		if (!tourConfig) return;
+		if (!tourConfig || !tourConfig.steps || tourConfig.steps.length === 0) {
+			LoggerService.error(
+				namespaces.tourStore,
+				`Tour config for ${tourId} is invalid or has no steps in nextStep`,
+				true
+			);
+			return;
+		}
 
 		const totalSteps = tourConfig.steps.length;
 		const nextStepIndex = activeTour.currentStepIndex + 1;
@@ -170,6 +197,15 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const { activeTour, tours: storeTours } = get();
 		if (!activeTour) return;
 		const tourConfig = storeTours[activeTour.tourId];
+
+		if (!tourConfig || !tourConfig.steps || tourConfig.steps.length === 0) {
+			LoggerService.error(
+				namespaces.tourStore,
+				`Tour config for ${activeTour.tourId} is invalid or has no steps in prevStep`,
+				true
+			);
+			return;
+		}
 
 		const prevStep = Math.max(0, activeTour.currentStepIndex - 1);
 
@@ -261,6 +297,8 @@ export const useTourStore = create(
 			lastStepUrls: state.lastStepUrls,
 			tourProjectId: state.tourProjectId,
 			lastStepIndex: state.lastStepIndex,
+			isToursReady: state.isToursReady,
+			tours: state.tours,
 		}),
 		onRehydrateStorage: () => (state) => {
 			if (state && state.tours && Object.keys(state.tours).length > 0) {
@@ -280,7 +318,7 @@ export const useTourStore = create(
 	})
 );
 
-const waitForTours = async (maxRetries = 10, delayMs = 50): Promise<Record<string, Tour>> => {
+const waitForTours = async (maxRetries = 20, delayMs = 100): Promise<Record<string, Tour>> => {
 	const module = await import("@src/constants/tour.constants");
 	for (let i = 0; i < maxRetries; i++) {
 		if (Object.keys(module.tours).length > 0) {
@@ -288,24 +326,52 @@ const waitForTours = async (maxRetries = 10, delayMs = 50): Promise<Record<strin
 		}
 		await new Promise((resolve) => setTimeout(resolve, delayMs));
 	}
+	// Return whatever we have, even if empty - initializeTours will handle it
 	return module.tours;
 };
 
 const initializeTours = async () => {
-	const tours = await waitForTours();
-	const state = useTourStore.getState();
-	const toursCount = Object.keys(tours).length;
-	state.setToursReady(toursCount ? tours : {});
-
-	if (toursCount === 0) {
-		LoggerService.error(namespaces.tourStore, "No tours found", true);
-	}
-
-	if (state.activeTour?.tourId && state.activeTour?.currentStepIndex !== undefined) {
-		const tourConfig = tours[state.activeTour.tourId];
-		if (tourConfig?.steps?.[state.activeTour.currentStepIndex]) {
-			useTourStore.setState({ activeStep: tourConfig.steps[state.activeTour.currentStepIndex] });
+	try {
+		const state = useTourStore.getState();
+		// If tours are already loaded and not empty, skip re-initialization
+		if (state.isToursReady && Object.keys(state.tours).length > 0) {
+			LoggerService.info(namespaces.tourStore, "Tours already initialized, skipping", true);
+			return;
 		}
+
+		const tours = await waitForTours();
+		const toursCount = Object.keys(tours).length;
+
+		// Always set isToursReady to true, even if tours is empty, to prevent infinite loading
+		// The component can check tours.length if needed
+		state.setToursReady(toursCount > 0 ? tours : {});
+
+		if (toursCount === 0) {
+			LoggerService.warn(
+				namespaces.tourStore,
+				"No tours found after initialization - tours may still be loading",
+				true
+			);
+		} else {
+			LoggerService.info(namespaces.tourStore, `Successfully initialized ${toursCount} tour(s)`, true);
+		}
+
+		const updatedState = useTourStore.getState();
+		if (updatedState.activeTour?.tourId && updatedState.activeTour?.currentStepIndex !== undefined) {
+			const tourConfig = tours[updatedState.activeTour.tourId];
+			if (tourConfig?.steps?.[updatedState.activeTour.currentStepIndex]) {
+				useTourStore.setState({ activeStep: tourConfig.steps[updatedState.activeTour.currentStepIndex] });
+			}
+		}
+	} catch (error) {
+		LoggerService.error(
+			namespaces.tourStore,
+			`Failed to initialize tours: ${error instanceof Error ? error.message : String(error)}`,
+			true
+		);
+		// Set isToursReady to true anyway to prevent infinite loading
+		const state = useTourStore.getState();
+		state.setToursReady({});
 	}
 };
 
