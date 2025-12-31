@@ -14,77 +14,6 @@ const initialSessionState = { outputs: [], nextPageToken: "", hasLastSessionStat
 const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
-	loadAllLogs: async (sessionId, pageSize) => {
-		try {
-			set({ loading: true });
-
-			const { data: sessionInfo, error: sessionInfoError } = await SessionsService.getSessionInfo(sessionId);
-			if (sessionInfoError || !sessionInfo) {
-				throw sessionInfoError || new Error(t("session.viewer.sessionNotFound", { ns: "deployments" }));
-			}
-
-			let allOutputs: SessionOutputData["outputs"] = [];
-			let pageToken: string | undefined;
-
-			do {
-				const { data, error } = await SessionsService.getOutputsBySessionId(sessionId, pageToken, pageSize);
-
-				if (error || !data) {
-					set({ loading: false });
-					return { error: true };
-				}
-
-				const reversedLogs = [...data.logs].reverse();
-				allOutputs = [...reversedLogs, ...allOutputs];
-				pageToken = data.nextPageToken || undefined;
-			} while (pageToken);
-
-			const finishedStates = new Set([
-				SessionStateType.error,
-				SessionStateType.completed,
-				SessionStateType.stopped,
-			]);
-			const isSessionFinished = finishedStates.has(sessionStateConverter(sessionInfo.state) as SessionStateType);
-
-			if (isSessionFinished) {
-				const { data: sessionStateRecords } = await SessionsService.getLogRecordsBySessionId(
-					sessionId,
-					undefined,
-					1,
-					SessionLogType.State
-				);
-
-				if (sessionStateRecords?.records?.length) {
-					const [lastStateRecord] = sessionStateRecords.records;
-					const lastSessionState = convertSessionLogProtoToViewerOutput(lastStateRecord);
-					if (lastSessionState) {
-						allOutputs = [...allOutputs, lastSessionState];
-					}
-				}
-			}
-
-			set((state) => ({
-				sessions: {
-					...state.sessions,
-					[sessionId]: {
-						outputs: allOutputs,
-						nextPageToken: "",
-						hasLastSessionState: isSessionFinished,
-					},
-				},
-				loading: false,
-			}));
-
-			return { error: false };
-		} catch (error: unknown) {
-			LoggerService.error(
-				namespaces.stores.outputStore,
-				t("outputLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
-			);
-			set({ loading: false });
-			return { error: true };
-		}
-	},
 	loadLogs: async (sessionId, pageSize, force) => {
 		try {
 			set({ loading: true });
@@ -116,8 +45,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 			const { logs, nextPageToken } = data;
 
-			const reversedLogs = [...logs].reverse();
-			const outputs = force ? reversedLogs : [...reversedLogs, ...currentSession.outputs];
+			const outputs = force ? [...logs] : [...currentSession.outputs, ...logs];
 
 			const finishedStates = new Set([
 				SessionStateType.error,
@@ -153,7 +81,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				const lastSessionState = convertSessionLogProtoToViewerOutput(lastStateRecord);
 
 				if (lastSessionState) {
-					const finalOutputs = [...outputs, lastSessionState];
+					const finalOutputs = [lastSessionState, ...outputs];
 
 					updateSession({
 						outputs: finalOutputs,

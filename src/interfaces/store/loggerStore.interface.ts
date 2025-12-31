@@ -20,10 +20,4 @@ export interface LoggerStore {
 	logs: Log[];
 	isNewLogs: boolean;
 	lastLogType: LogType;
-	systemLogNewItemsCount: number;
-	systemLogIsAtBottom: boolean;
-	setSystemLogNewItemsCount: (count: number | ((prev: number) => number)) => void;
-	setSystemLogIsAtBottom: (isAtBottom: boolean) => void;
-	scrollToSystemLogBottom: (() => void) | null;
-	setScrollToSystemLogBottom: (fn: (() => void) | null) => void;
 }

@@ -50,20 +50,6 @@ export const SessionViewer = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [isCopyingLogs, setIsCopyingLogs] = useState(false);
 	const [isDownloadingLogs, setIsDownloadingLogs] = useState(false);
-	const [openAccordions, setOpenAccordions] = useState<Record<string, boolean>>({
-		inputs: false,
-		memo: false,
-		executionChart: false,
-	});
-
-	const isAnyAccordionOpen = Object.values(openAccordions).some(Boolean);
-
-	const handleAccordionToggle = useCallback(
-		(key: string) => (isOpen: boolean) => {
-			setOpenAccordions((prev) => ({ ...prev, [key]: isOpen }));
-		},
-		[]
-	);
 
 	const { loading: loadingOutputs, loadLogs: loadOutputs, sessions: outputsSessions } = useOutputsCacheStore();
 	const { loading: loadingActivities, loadLogs: loadActivities, sessions } = useActivitiesCacheStore();
@@ -232,9 +218,7 @@ export const SessionViewer = () => {
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
-		<Frame
-			className={`${isAnyAccordionOpen ? "overflow-y-auto overflow-x-hidden" : "overflow-hidden"} rounded-l-none pb-3 font-fira-code`}
-		>
+		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-0.5 leading-6">
 					<div className="flex items-center gap-4">
@@ -302,8 +286,6 @@ export const SessionViewer = () => {
 				classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
 				className="mt-3 max-w-[80%] pb-3.5"
 				closeIcon={CircleMinusIcon}
-				isOpen={openAccordions.inputs}
-				onToggle={handleAccordionToggle("inputs")}
 				openIcon={CirclePlusIcon}
 				title={t("inputs")}
 			>
@@ -315,8 +297,6 @@ export const SessionViewer = () => {
 				classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
 				className="max-w-[80%] pb-3"
 				closeIcon={CircleMinusIcon}
-				isOpen={openAccordions.memo}
-				onToggle={handleAccordionToggle("memo")}
 				openIcon={CirclePlusIcon}
 				title={t("memo")}
 			>
@@ -327,8 +307,6 @@ export const SessionViewer = () => {
 				classChildren="border-none pb-0"
 				classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
 				closeIcon={CircleMinusIcon}
-				isOpen={openAccordions.executionChart}
-				onToggle={handleAccordionToggle("executionChart")}
 				openIcon={CirclePlusIcon}
 				title={t("executionChart")}
 			>

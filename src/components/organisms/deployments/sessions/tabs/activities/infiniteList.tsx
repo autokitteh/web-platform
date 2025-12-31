@@ -7,11 +7,10 @@ import { defaultSessionsActivitiesPageSize } from "@src/constants";
 import { SessionLogType, EventListenerName } from "@src/enums";
 import { useVirtualizedList, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
-import { useAutoRefreshStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
-import { LoadingOverlay, NewItemsIndicator } from "@components/molecules";
+import { LoadingOverlay } from "@components/molecules";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
@@ -26,22 +25,7 @@ export const ActivityList = () => {
 		loadMoreRows,
 		nextPageToken,
 		loading: loadingActivities,
-		reloadLogs,
-		sessionId,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
-
-	const { setActivitiesAtBottom, getActivitiesAtBottom, activitiesBufferBySession, clearActivitiesBuffer } =
-		useAutoRefreshStore();
-	const [newActivitiesCount, setNewActivitiesCount] = useState(0);
-
-	const isAtBottom = sessionId ? getActivitiesAtBottom(sessionId) : true;
-
-	useEffect(() => {
-		setNewActivitiesCount(0);
-		if (sessionId) {
-			clearActivitiesBuffer(sessionId);
-		}
-	}, [sessionId, clearActivitiesBuffer]);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -55,75 +39,10 @@ export const ActivityList = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	const bufferedActivitiesCount = useMemo(() => {
-		if (!sessionId) return 0;
-		return activitiesBufferBySession[sessionId]?.count || 0;
-	}, [sessionId, activitiesBufferBySession]);
-
-	const totalNewActivitiesCount = newActivitiesCount + bufferedActivitiesCount;
-
 	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity?: SessionActivity }>) => {
 		const activity = event.detail?.activity;
 		setSelectedActivity(activity);
 	});
-
-	useEventListener(
-		EventListenerName.activitiesNewItemsAvailable,
-		(event: CustomEvent<{ count: number; sessionId: string }>) => {
-			if (event.detail?.sessionId === sessionId) {
-				setNewActivitiesCount((prev) => prev + event.detail.count);
-			}
-		}
-	);
-
-	useEventListener(EventListenerName.sessionReloadActivity, () => {
-		reloadLogs();
-	});
-
-	const scrollToBottom = useCallback(async () => {
-		if (!sessionId) return;
-
-		if (bufferedActivitiesCount > 0) {
-			await reloadLogs();
-			clearActivitiesBuffer(sessionId);
-		}
-		setNewActivitiesCount(0);
-		listRef.current?.scrollToRow(activities.length - 1);
-		setActivitiesAtBottom(sessionId, true);
-	}, [
-		sessionId,
-		bufferedActivitiesCount,
-		reloadLogs,
-		clearActivitiesBuffer,
-		setActivitiesAtBottom,
-		listRef,
-		activities.length,
-	]);
-
-	const handleScroll = useCallback(
-		({
-			scrollTop,
-			scrollHeight,
-			clientHeight,
-		}: {
-			clientHeight: number;
-			scrollHeight: number;
-			scrollTop: number;
-		}) => {
-			if (!sessionId) return;
-
-			const distanceFromBottom = scrollHeight - clientHeight - scrollTop;
-			const bottomThreshold = 96;
-			const newIsAtBottom = distanceFromBottom <= bottomThreshold;
-
-			setActivitiesAtBottom(sessionId, newIsAtBottom);
-
-			if (newIsAtBottom && newActivitiesCount > 0) {
-				setNewActivitiesCount(0);
-			}
-		},
-		[sessionId, setActivitiesAtBottom, newActivitiesCount]
-	);
 
 	const customRowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => (
@@ -146,19 +65,12 @@ export const ActivityList = () => {
 	);
 
 	return (
-		<Frame className="relative mr-3 size-full rounded-b-none pb-0 transition md:py-0">
+		<Frame className="mr-3 size-full rounded-b-none pb-0 transition md:py-0">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
 
 			<LoadingOverlay isLoading={loadingActivities} />
-
-			<NewItemsIndicator
-				count={totalNewActivitiesCount}
-				direction="bottom"
-				isVisible={Boolean(!isAtBottom && totalNewActivitiesCount > 0)}
-				onJump={scrollToBottom}
-			/>
 
 			<AutoSizer className={autoSizerClass}>
 				{({ height, width }) => (
@@ -173,7 +85,6 @@ export const ActivityList = () => {
 								className="scrollbar"
 								height={height}
 								onRowsRendered={onRowsRendered}
-								onScroll={handleScroll}
 								overscanRowCount={5}
 								ref={(ref) => {
 									if (ref) {
@@ -184,7 +95,7 @@ export const ActivityList = () => {
 								rowCount={activities.length}
 								rowHeight={rowHeight}
 								rowRenderer={customRowRenderer}
-								scrollToAlignment="end"
+								scrollToAlignment="start"
 								width={width}
 							/>
 						)}

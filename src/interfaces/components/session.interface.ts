@@ -22,18 +22,12 @@ export interface SessionsTableRowProps {
 	hideActionsColumn?: boolean;
 }
 
-export interface SessionsTableListRef {
-	scrollToTop: () => void;
-}
-
 export interface SessionsTableListProps {
 	onItemsRendered: (props: ListOnItemsRenderedProps) => void;
 	onSelectedSessionId: (id: string) => void;
 	onSessionRemoved: () => void;
-	onScrollPositionChange?: (isAtTop: boolean) => void;
 	sessions: Session[];
 	openSession: (sessionId: string) => void;
 	hideSourceColumn?: boolean;
 	hideActionsColumn?: boolean;
-	listRef?: React.MutableRefObject<SessionsTableListRef | null>;
 }
