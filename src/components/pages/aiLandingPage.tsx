@@ -125,7 +125,7 @@ export const AiLandingPage = () => {
 
 	return (
 		<div className="my-1.5 flex size-full overflow-hidden rounded-none md:rounded-2xl">
-			<div className="flex flex-1 flex-col bg-[#1B1C1A] text-white">
+			<div className="flex flex-1 flex-col overflow-y-auto bg-[#1B1C1A] text-white">
 				<header className="relative z-10 border-b border-gray-900/50 p-4 md:px-6">
 					<div className="mx-auto flex w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
 						<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3 md:gap-4">
