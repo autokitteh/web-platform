@@ -1,3 +1,7 @@
+## <small>2.249.3 (2025-12-31)</small>
+
+* fix(connections): reset connection state when adding new connection (#1530) ([ebfb556](https://github.com/autokitteh/web-platform/commit/ebfb556)), closes [#1530](https://github.com/autokitteh/web-platform/issues/1530)
+
 ## <small>2.249.2 (2025-12-31)</small>
 
 * fix: enhance error handling for invalid tour configurations  (#1525) ([8ece181](https://github.com/autokitteh/web-platform/commit/8ece181)), closes [#1525](https://github.com/autokitteh/web-platform/issues/1525)
