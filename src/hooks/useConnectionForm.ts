@@ -101,6 +101,7 @@ export const useConnectionForm = (
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
+	const [isCreating, setIsCreating] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
 
@@ -191,6 +192,7 @@ export const useConnectionForm = (
 	const handleConnectionSuccess = (connId: string) => {
 		startCheckingStatus(connId);
 		if (isOrgConnection) {
+			setConnectionId(undefined);
 			navigate(`/connections/${connId}/edit`);
 
 			return;
@@ -200,10 +202,12 @@ export const useConnectionForm = (
 			return;
 		}
 		if (projectId) {
+			setConnectionId(undefined);
 			navigate(`/projects/${projectId}/explorer/settings/connections/${connId}/edit`);
 
 			return;
 		}
+		setConnectionId(undefined);
 		navigate("..");
 	};
 
@@ -213,6 +217,7 @@ export const useConnectionForm = (
 		integrationName?: string
 	): Promise<void> => {
 		try {
+			setIsCreating(true);
 			setConnectionInProgress(true);
 			const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 				name: "auth_type",
@@ -265,6 +270,7 @@ export const useConnectionForm = (
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
+			setIsCreating(false);
 			setConnectionInProgress(false);
 		}
 	};
@@ -367,6 +373,7 @@ export const useConnectionForm = (
 
 	const createNewConnection = async () => {
 		try {
+			setIsCreating(true);
 			setConnectionInProgress(true);
 			const {
 				connectionName,
@@ -425,6 +432,8 @@ export const useConnectionForm = (
 				type: "error",
 			});
 			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
+		} finally {
+			setIsCreating(false);
 		}
 	};
 
@@ -450,6 +459,7 @@ export const useConnectionForm = (
 		const oauthType = ConnectionAuthType.OauthDefault;
 		const connectionData = getValues();
 		try {
+			setIsCreating(true);
 			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
@@ -482,6 +492,7 @@ export const useConnectionForm = (
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
+			setIsCreating(false);
 			setConnectionInProgress(false);
 		}
 	};
@@ -489,6 +500,7 @@ export const useConnectionForm = (
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.Oauth;
 		try {
+			setIsCreating(true);
 			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
@@ -512,6 +524,7 @@ export const useConnectionForm = (
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
+			setIsCreating(false);
 			setConnectionInProgress(false);
 		}
 	};
@@ -526,6 +539,7 @@ export const useConnectionForm = (
 			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
 	) => {
 		try {
+			setIsCreating(true);
 			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
@@ -562,6 +576,7 @@ export const useConnectionForm = (
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
+			setIsCreating(false);
 			setConnectionInProgress(false);
 		}
 	};
@@ -622,5 +637,7 @@ export const useConnectionForm = (
 		handleCustomOauth,
 		setConnectionType,
 		trigger,
+		isCreating,
+		setConnectionId,
 	};
 };
