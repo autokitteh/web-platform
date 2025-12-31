@@ -60,7 +60,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	useEffect(() => {
 		if (!isLoggingOut) return;
 		close();
-	}, [isLoggingOut]);
+	}, [isLoggingOut, close]);
 
 	const onUserInvintationAction = async (status: MemberStatusType, organizationId: string) => {
 		if (!organizationId || !user?.id) return;
