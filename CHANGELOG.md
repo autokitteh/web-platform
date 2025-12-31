@@ -1,3 +1,7 @@
+## 2.251.0 (2025-12-31)
+
+* feat: add a global loading state and UI for the logout process (#1527) ([e3a0945](https://github.com/autokitteh/web-platform/commit/e3a0945)), closes [#1527](https://github.com/autokitteh/web-platform/issues/1527)
+
 ## 2.250.0 (2025-12-31)
 
 * feat: add a project creation button in the dashboard projects table (#1533) ([8521864](https://github.com/autokitteh/web-platform/commit/8521864)), closes [#1533](https://github.com/autokitteh/web-platform/issues/1533)
