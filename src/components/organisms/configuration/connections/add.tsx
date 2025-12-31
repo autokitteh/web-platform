@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -33,13 +33,12 @@ export const AddConnection = (
 	const { basePath } = extractSettingsPath(location.pathname);
 	const handleBack = onBackProp || (() => navigate(isOrgConnection ? "/connections" : `${basePath}/settings`));
 	const { t } = useTranslation("integrations");
-	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
-		connectionSchema,
-		"create",
-		undefined,
-		handleBack,
-		isOrgConnection
-	);
+	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading, setConnectionId } =
+		useConnectionForm(connectionSchema, "create", undefined, handleBack, isOrgConnection);
+
+	useEffect(() => {
+		setConnectionId(undefined);
+	}, [setConnectionId]);
 
 	const hasActiveDeployments = useHasActiveDeployments();
 
