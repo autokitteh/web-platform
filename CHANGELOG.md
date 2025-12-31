@@ -1,3 +1,7 @@
+## 2.249.0 (2025-12-31)
+
+* feat: enable vertical scrolling for AI landing page content (#1523) ([22d68ec](https://github.com/autokitteh/web-platform/commit/22d68ec)), closes [#1523](https://github.com/autokitteh/web-platform/issues/1523)
+
 ## 2.248.0 (2025-12-30)
 
 * feat(sessions): add auto-refresh system for sessions list and logs (#1514) ([2bf15fa](https://github.com/autokitteh/web-platform/commit/2bf15fa)), closes [#1514](https://github.com/autokitteh/web-platform/issues/1514)
