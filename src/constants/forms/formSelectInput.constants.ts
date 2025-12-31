@@ -137,7 +137,7 @@ const getSelectStyles = (
 			borderTopRightRadius: "0px",
 			marginTop: "0px",
 			padding: "0px 7px 9px 0px",
-			zIndex: 20,
+			zIndex: 70,
 		}),
 		menuList: (provided) => ({
 			...provided,
