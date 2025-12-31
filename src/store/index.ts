@@ -18,4 +18,3 @@ export { useSharedBetweenProjectsStore } from "@store/useSharedBetweenProjectsSt
 export { useTablePreferencesStore } from "@store/useTablePreferencesStore";
 export { useToastStore } from "@store/useToastStore";
 export { useTourStore } from "@store/useTourStore";
-export { useAutoRefreshStore } from "@store/useAutoRefreshStore";

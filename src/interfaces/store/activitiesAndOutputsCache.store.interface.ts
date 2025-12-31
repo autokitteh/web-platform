@@ -24,5 +24,4 @@ export interface OutputsStore {
 	sessions: Record<string, SessionOutputData>;
 	loading: boolean;
 	loadLogs: (sessionId: string, pageSize?: number, force?: boolean) => Promise<{ error?: boolean }>;
-	loadAllLogs: (sessionId: string, pageSize?: number) => Promise<{ error?: boolean }>;
 }

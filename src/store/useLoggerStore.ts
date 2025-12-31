@@ -12,9 +12,6 @@ const store: StateCreator<LoggerStore> = (set) => ({
 	isNewLogs: false,
 	lastLogType: "error" as LogType,
 	systemLogHeight: 0,
-	systemLogNewItemsCount: 0,
-	systemLogIsAtBottom: true,
-	scrollToSystemLogBottom: null,
 
 	addLog: (log) => {
 		const newLog = { ...log, id: randomatic("Aa0", 5) };
@@ -48,21 +45,6 @@ const store: StateCreator<LoggerStore> = (set) => ({
 	setNewLogs: (isNewLogs) =>
 		set(() => ({
 			isNewLogs,
-		})),
-
-	setSystemLogNewItemsCount: (count) =>
-		set((state) => ({
-			systemLogNewItemsCount: typeof count === "function" ? count(state.systemLogNewItemsCount) : count,
-		})),
-
-	setSystemLogIsAtBottom: (isAtBottom) =>
-		set(() => ({
-			systemLogIsAtBottom: isAtBottom,
-		})),
-
-	setScrollToSystemLogBottom: (fn) =>
-		set(() => ({
-			scrollToSystemLogBottom: fn,
 		})),
 });
 

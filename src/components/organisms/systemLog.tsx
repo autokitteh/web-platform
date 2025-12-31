@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -17,69 +17,11 @@ import { Close, ExternalLinkIcon, TrashIcon } from "@assets/image/icons";
 
 export const SystemLog = () => {
 	const { projectId } = useParams() as { projectId: string };
-	const {
-		clearLogs,
-		logs,
-		setSystemLogHeight,
-		systemLogIsAtBottom,
-		setSystemLogIsAtBottom,
-		setSystemLogNewItemsCount,
-		setScrollToSystemLogBottom,
-	} = useLoggerStore();
+	const { clearLogs, logs, setSystemLogHeight } = useLoggerStore();
 	const { openFileAsActive } = useFileStore();
 	const { setCursorPosition } = useSharedBetweenProjectsStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 	const navigateWithSettings = useNavigateWithSettings();
-
-	const scrollContainerRef = useRef<HTMLDivElement>(null);
-	const lastLogIdRef = useRef<string | null>(logs[0]?.id ?? null);
-	const isAtBottomRef = useRef(true);
-
-	useEffect(() => {
-		isAtBottomRef.current = systemLogIsAtBottom;
-	}, [systemLogIsAtBottom]);
-
-	useEffect(() => {
-		const currentFirstId = logs[0]?.id ?? null;
-		const hasNewLog = currentFirstId !== null && currentFirstId !== lastLogIdRef.current;
-
-		if (hasNewLog) {
-			if (isAtBottomRef.current) {
-				scrollContainerRef.current?.scrollTo({ top: 0 });
-			} else {
-				setSystemLogNewItemsCount((prev) => prev + 1);
-			}
-		}
-		lastLogIdRef.current = currentFirstId;
-	}, [logs, setSystemLogNewItemsCount]);
-
-	const handleScroll = useCallback(() => {
-		const container = scrollContainerRef.current;
-		if (!container) return;
-
-		const { scrollTop } = container;
-		const newIsAtBottom = scrollTop >= -50;
-
-		setSystemLogIsAtBottom(newIsAtBottom);
-		isAtBottomRef.current = newIsAtBottom;
-
-		if (newIsAtBottom) {
-			setSystemLogNewItemsCount(0);
-		}
-	}, [setSystemLogIsAtBottom, setSystemLogNewItemsCount]);
-
-	const scrollToBottom = useCallback(() => {
-		scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-		setSystemLogNewItemsCount(0);
-		setSystemLogIsAtBottom(true);
-		isAtBottomRef.current = true;
-	}, [setSystemLogNewItemsCount, setSystemLogIsAtBottom]);
-
-	useEffect(() => {
-		setScrollToSystemLogBottom(scrollToBottom);
-
-		return () => setScrollToSystemLogBottom(null);
-	}, [scrollToBottom, setScrollToSystemLogBottom]);
 
 	const outputTextStyle = {
 		[LoggerLevel.debug]: "",
@@ -176,11 +118,7 @@ export const SystemLog = () => {
 					</IconButton>
 				</div>
 			</div>
-			<div
-				className="scrollbar flex h-full flex-col-reverse overflow-auto pt-5"
-				onScroll={handleScroll}
-				ref={scrollContainerRef}
-			>
+			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
 				{logs.map(({ id, message, status, timestamp, location, ruleId }) => (
 					<div className="mb-3 font-mono" key={id}>
 						<span className="text-gray-250">{timestamp}</span>

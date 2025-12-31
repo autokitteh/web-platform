@@ -5,7 +5,6 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 import { OperationType } from "@type/global";
 
 export type EventRegistry = {
-	[EventListenerName.activitiesNewItemsAvailable]: { count: number; sessionId: string };
 	[EventListenerName.codeFixSuggestion]: {
 		changeType?: OperationType;
 		fileName?: string;
@@ -41,8 +40,6 @@ export type EventRegistry = {
 	[EventListenerName.hideProjectConfigSidebar]: void;
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.iframeError]: IframeError;
-	[EventListenerName.logsNewItemsAvailable]: { count: number; sessionId: string };
-	[EventListenerName.logsScrollToBottom]: { sessionId: string };
 	[EventListenerName.navigateToTourUrl]: { url: string };
 	[EventListenerName.revealFileInTree]: { fileName: string };
 	[EventListenerName.searchElementByTourStep]: {
@@ -54,9 +51,6 @@ export type EventRegistry = {
 	[EventListenerName.selectSessionActivity]: { activity?: SessionActivity };
 	[EventListenerName.sessionLogViewerScrollToTop]: void;
 	[EventListenerName.sessionReload]: void;
-	[EventListenerName.sessionsAutoRefreshTick]: { countdownMs: number; isRefreshing: boolean };
-	[EventListenerName.sessionsNewItemsAvailable]: { count: number };
-	[EventListenerName.sessionsScrollToTop]: void;
 	[EventListenerName.showToursProgress]: void;
 	[EventListenerName.tourElementFound]: SetupListenerResult;
 	[EventListenerName.tourPopoverReady]: void;
