@@ -129,6 +129,10 @@ export const EditTrigger = ({
 			);
 		}
 
+		const eventTypeSelectItem = trigger?.eventType
+			? { eventTypeSelect: { label: trigger.eventType, value: trigger.eventType } }
+			: {};
+
 		reset({
 			name: trigger?.name,
 			connection: selectedConnection || emptySelectItem,
@@ -138,7 +142,7 @@ export const EditTrigger = ({
 				: undefined,
 			cron: trigger?.schedule,
 			timezone: trigger?.timezone || defaultTimezoneValue,
-			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
+			...eventTypeSelectItem,
 			filter: trigger?.filter,
 			isDurable: trigger?.isDurable || false,
 			isSync: trigger?.isSync || false,

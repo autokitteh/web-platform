@@ -27,7 +27,7 @@ export const TabFormHeader = ({
 }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
-	const baseStyle = cn("flex justify-between py-2.5", className);
+	const baseStyle = cn("flex justify-between bg-gray-1100 py-2.5", className);
 	const navigateBack = onBack || (customBackRoute ? () => navigate(customBackRoute) : () => navigate(-1));
 	const handleCancel = onCancel || navigateBack;
 
