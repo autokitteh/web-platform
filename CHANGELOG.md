@@ -1,3 +1,7 @@
+## 2.250.0 (2025-12-31)
+
+* feat: add a project creation button in the dashboard projects table (#1533) ([8521864](https://github.com/autokitteh/web-platform/commit/8521864)), closes [#1533](https://github.com/autokitteh/web-platform/issues/1533)
+
 ## <small>2.249.6 (2025-12-31)</small>
 
 * revert: add auto-refresh system for sessions table and output-logs (#1534) ([dfcaf53](https://github.com/autokitteh/web-platform/commit/dfcaf53)), closes [#1534](https://github.com/autokitteh/web-platform/issues/1534)
