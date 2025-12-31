@@ -11,70 +11,98 @@ inputs:
     autokitteh-image:
         description: "AutoKitteh Docker image"
         required: true
+    workers:
+        description: "Number of Playwright workers (each worker gets its own backend container)"
+        required: false
+        default: "4"
+
+outputs:
+    backend-base-port:
+        description: "The base port for backend containers (worker 0 uses this port, worker 1 uses port+1, etc.)"
+        value: "9980"
 
 runs:
     using: "composite"
     steps:
-        - name: Start AutoKitteh container
+        - name: Start AutoKitteh containers (one per worker)
           shell: bash
           env:
               DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
+              WORKERS: ${{ inputs.workers }}
           run: |
-              echo "Starting AutoKitteh container..."
-              
-              # Start docker command in background and get its PID
-              CONTAINER_ID=$(timeout 900 docker run -d \
-                -p 9980:9980 \
-                -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
-                -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
-                -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
-                -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE="true" \
-                -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="$DESCOPE_PROJECT_ID" \
-                -e AK_AUTHSESSIONS__COOKIE_KEYS="78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5" \
-                -e AK_AUTHJWTTOKENS__HMAC__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
-                -e AK_AUTHJWTTOKENS__ALGORITHM="hmac" \
-                ${{ inputs.autokitteh-image }} up --mode=dev --config db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', 'tests_personal_org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');insert into users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at,status) values('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00',1);insert into org_members(created_by, created_at, org_id, user_id, status, roles) values('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929', 1, '[\"admin\"]');") || {
-                echo "Container startup failed or timed out after 900 seconds (15 minutes)"
-                exit 1
-              }
-              echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
-              echo "AutoKitteh container started successfully with ID: $CONTAINER_ID"
+              BASE_PORT=9980
+              CONTAINER_IDS=""
 
-        - name: Setup logging
+              echo "🚀 Starting $WORKERS AutoKitteh containers (one per Playwright worker)..."
+
+              for ((w=0; w<WORKERS; w++)); do
+                PORT=$((BASE_PORT + w))
+                echo "Starting container for worker $w on port $PORT..."
+
+                CONTAINER_ID=$(timeout 900 docker run -d \
+                  --name "ak-worker-$w" \
+                  -p ${PORT}:9980 \
+                  -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
+                  -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
+                  -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
+                  -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE="true" \
+                  -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="$DESCOPE_PROJECT_ID" \
+                  -e AK_AUTHSESSIONS__COOKIE_KEYS="78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5" \
+                  -e AK_AUTHJWTTOKENS__HMAC__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
+                  -e AK_AUTHJWTTOKENS__ALGORITHM="hmac" \
+                  ${{ inputs.autokitteh-image }} up --mode=dev --config db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', 'tests_personal_org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');insert into users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at,status) values('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00',1);insert into org_members(created_by, created_at, org_id, user_id, status, roles) values('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929', 1, '[\"admin\"]');") || {
+                  echo "Container startup failed for worker $w"
+                  exit 1
+                }
+
+                CONTAINER_IDS="${CONTAINER_IDS}${CONTAINER_ID},"
+                echo "✓ Container for worker $w started: $CONTAINER_ID"
+              done
+
+              echo "CONTAINER_IDS=${CONTAINER_IDS%,}" >> $GITHUB_ENV
+              echo "WORKERS=$WORKERS" >> $GITHUB_ENV
+              echo "BASE_PORT=$BASE_PORT" >> $GITHUB_ENV
+              echo "✅ All $WORKERS containers started successfully"
+
+        - name: Setup logging for all containers
           shell: bash
           run: |
-              docker logs -f ${{ env.CONTAINER_ID }} > docker-logs.txt &
-              echo "LOGS_PID=$!" >> $GITHUB_ENV
+              for ((w=0; w<${{ env.WORKERS }}; w++)); do
+                docker logs -f "ak-worker-$w" > "docker-logs-worker-$w.txt" 2>&1 &
+              done
+              echo "📋 Logging enabled for all containers"
 
-        - name: Wait for Backend
+        - name: Wait for all backends
           shell: bash
           run: |
               source "${{ github.action_path }}/scripts/progress-bar.sh"
 
-              URL=http://localhost:9980
-              echo "Waiting for AutoKitteh backend to start..."
-              TIMEOUT=300  # 5 minutes timeout
+              TIMEOUT=300
               ITERATIONS=$((TIMEOUT / 2))
 
-              for ((i=1; i<=ITERATIONS; i++)); do
-                if curl --output /dev/null --silent --head --fail -X POST $URL; then
-                  printf "\r✅ AutoKitteh backend ready in $((i * 2)) seconds!                                          \n"
-                  break
-                fi
+              echo "⏳ Waiting for ${{ env.WORKERS }} backends to be ready..."
 
-                if [[ -t 1 ]]; then
-                  ProgressBar ${i} ${ITERATIONS} "AutoKitteh"
-                else
-                  echo "Waiting for AutoKitteh... ($((i * 2))s elapsed)"
-                fi
+              for ((w=0; w<${{ env.WORKERS }}; w++)); do
+                PORT=$((${{ env.BASE_PORT }} + w))
+                URL="http://localhost:${PORT}"
+                echo "Waiting for backend on port $PORT (worker $w)..."
 
-                if [ $i -eq $ITERATIONS ]; then
-                  printf "\n❌ Timeout waiting for backend after $TIMEOUT seconds\n"
-                  exit 1
-                fi
+                for ((i=1; i<=ITERATIONS; i++)); do
+                  if curl --output /dev/null --silent --head --fail -X POST $URL; then
+                    echo "✅ Backend for worker $w ready on port $PORT"
+                    break
+                  fi
 
-                sleep 2
+                  if [ $i -eq $ITERATIONS ]; then
+                    echo "❌ Timeout waiting for backend on port $PORT"
+                    exit 1
+                  fi
+
+                  sleep 2
+                done
               done
+
+              echo "🎉 All ${{ env.WORKERS }} backends are ready!"
 
         # - name: Install browser-specific dependencies
         #   if: inputs.browser == 'Safari'
