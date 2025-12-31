@@ -1,3 +1,7 @@
+## <small>2.249.4 (2025-12-31)</small>
+
+* fix: resolve z-index conflict between info popover and select menu (#1531) ([9613990](https://github.com/autokitteh/web-platform/commit/9613990)), closes [#1531](https://github.com/autokitteh/web-platform/issues/1531)
+
 ## <small>2.249.3 (2025-12-31)</small>
 
 * fix(connections): reset connection state when adding new connection (#1530) ([ebfb556](https://github.com/autokitteh/web-platform/commit/ebfb556)), closes [#1530](https://github.com/autokitteh/web-platform/issues/1530)
