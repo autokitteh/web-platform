@@ -5,7 +5,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import {
-	isCiCd,
 	localTemplatesArchiveFallback,
 	namespaces,
 	remoteTemplatesArchiveURL,
@@ -50,10 +49,6 @@ const store = (set: any, get: any): TemplateState => ({
 		const couldntFetchTemplates = t("templates.failedToFetch", { ns: "stores" });
 		const { isLoading, templateMap, cachedCommitDate, lastCheckDate } = get();
 		if (isLoading) return;
-
-		if (isCiCd) {
-			return;
-		}
 
 		set({ isLoading: true, error: null });
 
