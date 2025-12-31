@@ -1,3 +1,7 @@
+## <small>2.249.5 (2025-12-31)</small>
+
+* fix(triggers): handle empty event type in edit form  (#1532) ([927afc5](https://github.com/autokitteh/web-platform/commit/927afc5)), closes [#1532](https://github.com/autokitteh/web-platform/issues/1532)
+
 ## <small>2.249.4 (2025-12-31)</small>
 
 * fix: resolve z-index conflict between info popover and select menu (#1531) ([9613990](https://github.com/autokitteh/web-platform/commit/9613990)), closes [#1531](https://github.com/autokitteh/web-platform/issues/1531)
