@@ -3,7 +3,7 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { maxLogs } from "@constants";
-import { StoreName, LoggerLevel } from "@enums";
+import { LoggerLevel, StoreName } from "@enums";
 import { LoggerStore } from "@interfaces/store";
 import { LogType } from "@src/types/components";
 

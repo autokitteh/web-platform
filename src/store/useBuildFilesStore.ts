@@ -1,10 +1,8 @@
 import { StateCreator } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
-import { StoreName } from "@enums";
 import { BuildsService } from "@services";
 import { BuildFilesStore } from "@src/interfaces/store";
 import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
@@ -56,11 +54,4 @@ const store: StateCreator<BuildFilesStore> = (set, get) => ({
 	},
 });
 
-export const useBuildFilesStore = create(
-	persist(immer(store), {
-		name: StoreName.buildFiles,
-		version: 1,
-		migrate: () => ({}),
-	}),
-	shallow
-);
+export const useBuildFilesStore = create(immer(store), shallow);

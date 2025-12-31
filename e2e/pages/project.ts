@@ -10,13 +10,23 @@ export class ProjectPage {
 		this.page = page;
 	}
 
-	async deleteProject(projectName: string, withActiveDeployment: boolean = false) {
-		if (!projectName?.trim()?.length) {
+	async deleteProject(incomingProjectName: string, withActiveDeployment: boolean = false) {
+		if (!incomingProjectName?.trim()?.length) {
 			throw new Error("Project name is required to delete a project");
 		}
 
-		if ((await this.page.getByRole("button", { name: "Edit project title" }).textContent()) !== projectName) {
-			throw new Error("Project name is not the same as the one in the page");
+		const currentPageProjectName = await this.page.getByTestId("project-name").textContent();
+
+		if (currentPageProjectName !== incomingProjectName) {
+			// eslint-disable-next-line no-console
+			console.error(
+				"Project name is not the same as the one in the page",
+				incomingProjectName,
+				currentPageProjectName
+			);
+			throw new Error(
+				`Project name is not the same as the one in the page: ${incomingProjectName} !== ${currentPageProjectName}`
+			);
 		}
 
 		const additionalActionsButton = this.page.locator('button[aria-label="Project additional actions"]');
@@ -39,20 +49,24 @@ export class ProjectPage {
 				this.page.waitForURL("/", { waitUntil: "domcontentloaded" }),
 			]);
 		} catch {
-			throw new Error('Neither "/welcome" nor "/" URL was reached after project deletion');
+			// eslint-disable-next-line no-console
+			console.error(`Neither "/welcome" nor "/" URL was reached after project deletion: ${incomingProjectName}`);
+			throw new Error(
+				`Neither "/welcome" nor "/" URL was reached after project deletion: ${incomingProjectName}`
+			);
 		}
 
 		const loaders = this.page.locator(".loader-cycle-disks").all();
 		const loadersArray = await loaders;
 		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "detached" })));
 
-		const deletedProjectNameCell = this.page.getByRole("cell", { name: projectName });
+		const deletedProjectNameCell = this.page.getByRole("cell", { name: incomingProjectName });
 
 		await expect(deletedProjectNameCell).toHaveCount(0);
 
 		await this.page.locator('button[aria-label="System Log"]').click();
 
-		const deletedProjectLogText = `Project deletion completed successfully, project name: ${projectName}`;
+		const deletedProjectLogText = `Project deletion completed successfully, project name: ${incomingProjectName}`;
 
 		const deletedProjectLog = this.page.getByText(deletedProjectLogText);
 		await expect(deletedProjectLog).toBeVisible();

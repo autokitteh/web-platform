@@ -26,6 +26,7 @@ const routes = [
 	{ path: "/intro" },
 	{ path: "/projects/*" },
 	{ path: "/settings/*" },
+	{ path: "/connections/*" },
 	{ path: "/events/*" },
 	{ path: "/template/*" },
 	{ path: "/chat" },
@@ -260,8 +261,17 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		}
 	}, [trackUserLogin, setTrackUserLoginFunction]);
 
+	const matches = matchRoutes(routes, location);
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
-	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
+	const shouldShowApp = (playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn;
+
+	useEffect(() => {
+		if (!shouldShowApp && !matches && location.pathname !== "/404") {
+			navigate("/404");
+		}
+	}, [matches, navigate, shouldShowApp, location.pathname]);
+
+	if (shouldShowApp) {
 		const isCliLogin = handleCliLoginRedirect();
 		if (isCliLogin) {
 			return <Loader isCenter />;
@@ -273,9 +283,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		return <External404 />;
 	}
 
-	const matches = matchRoutes(routes, location);
-	if (!matches) {
-		navigate("/404");
+	if (!matches && !shouldShowApp) {
 		return null;
 	}
 

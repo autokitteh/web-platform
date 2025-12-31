@@ -144,10 +144,7 @@ const microsoftTeamsIntegrationAuthMethods: SelectOption[] = [
 	{ label: "Private daemon application", value: ConnectionAuthType.DaemonApp },
 ];
 
-const selectIntegrationTwilio: SelectOption[] = [
-	{ label: "Auth Token", value: ConnectionAuthType.AuthToken },
-	{ label: "API Key", value: ConnectionAuthType.ApiKey },
-];
+const selectIntegrationTwilio: SelectOption[] = [{ label: "API Token", value: ConnectionAuthType.ApiToken }];
 
 const selectIntegrationJira: SelectOption[] = [
 	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },

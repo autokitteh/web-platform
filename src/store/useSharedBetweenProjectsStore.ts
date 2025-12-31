@@ -9,10 +9,7 @@ const defaultState: Omit<
 	SharedBetweenProjectsStore,
 	| "setCursorPosition"
 	| "setSelection"
-	| "setFullScreenEditor"
-	| "setProjectSplitScreenWidth"
 	| "setFullScreenDashboard"
-	| "setIsChatbotFullScreen"
 	| "setChatbotWidth"
 	| "setProjectSettingsWidth"
 	| "setEventsDrawerWidth"
@@ -23,40 +20,28 @@ const defaultState: Omit<
 	| "closeDrawer"
 	| "isDrawerOpen"
 	| "setDrawerAnimated"
-	| "setLastVisitedUrl"
 	| "setLastSeenSession"
 	| "setSessionsTableWidth"
 	| "setSettingsPath"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
-	fullScreenEditor: {},
-	expandedProjectNavigation: {},
 	fullScreenDashboard: false,
-	projectSplitScreenWidth: {},
 	sessionsTableSplit: {},
 	chatbotWidth: {},
 	projectSettingsWidth: {},
 	eventsDrawerWidth: {},
 	projectFilesWidth: {},
-	isChatbotFullScreen: {},
 	isProjectFilesVisible: {},
 	projectSettingsAccordionState: {},
 	drawers: {},
 	drawerAnimated: {},
-	lastVisitedUrl: {},
 	lastSeenSession: {},
 	settingsPath: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	...defaultState,
-	setIsChatbotFullScreen: (projectId: string, value: boolean) =>
-		set((state) => {
-			state.isChatbotFullScreen[projectId] = value;
-			return state;
-		}),
-
 	setCursorPosition: (projectId: string, fileName: string, cursorPosition: EditorSelection) =>
 		set((state) => {
 			state.cursorPositionPerProject[projectId] = {
@@ -74,19 +59,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 				[fileName]: selection,
 			};
 
-			return state;
-		}),
-
-	setFullScreenEditor: (projectId, value) =>
-		set((state) => {
-			state.fullScreenEditor[projectId] = value;
-
-			return state;
-		}),
-
-	setProjectSplitScreenWidth: (projectId: string, width: number) =>
-		set((state) => {
-			state.projectSplitScreenWidth[projectId] = width;
 			return state;
 		}),
 
@@ -189,12 +161,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 				state.drawerAnimated[projectId] = {};
 			}
 			state.drawerAnimated[projectId][drawerName] = hasAnimated;
-			return state;
-		}),
-
-	setLastVisitedUrl: (projectId: string, url: string) =>
-		set((state) => {
-			state.lastVisitedUrl[projectId] = url;
 			return state;
 		}),
 

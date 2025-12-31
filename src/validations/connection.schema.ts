@@ -100,16 +100,11 @@ export const openAiIntegrationSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.Key).default(ConnectionAuthType.Key),
 });
 
-export const twilioTokenIntegrationSchema = z.object({
-	account_sid: z.string().min(1, "Account SID is required"),
-	auth_token: z.string().min(1, "Auth Token is required"),
-	auth_type: z.literal(ConnectionAuthType.AuthToken).default(ConnectionAuthType.AuthToken),
-});
-export const twilioApiKeyIntegrationSchema = z.object({
+export const twilioApiTokenIntegrationSchema = z.object({
 	account_sid: z.string().min(1, "Account SID is required"),
 	api_key: z.string().min(1, "API Key is required"),
 	api_secret: z.string().min(1, "API Secret is required"),
-	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
+	auth_type: z.literal(ConnectionAuthType.ApiToken).default(ConnectionAuthType.ApiToken),
 });
 
 export const telegramBotTokenIntegrationSchema = z.object({
