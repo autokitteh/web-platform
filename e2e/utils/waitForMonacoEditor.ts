@@ -1,8 +1,8 @@
 import type { Page } from "@playwright/test";
 
-export const waitForMonacoEditorToLoad = async (page: Page, timeout = 5000) => {
+export const waitForMonacoEditorToLoad = async (page: Page, timeout: number) => {
 	await page.waitForSelector(".monaco-editor .view-lines", { timeout });
-	await page.getByText('print("Meow, World!")').waitFor({ timeout: 8000 });
+	await page.getByText('print("Meow, World!")').waitFor({ timeout });
 };
 
 export const waitForMonacoEditorContent = async (page: Page, expectedContent: string, timeout = 10000) => {
