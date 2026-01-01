@@ -38,7 +38,7 @@ export const SettingsLayout = () => {
 
 	return (
 		<div className="h-screen">
-			<div className="flex size-full">
+			<div className="mt-1 flex size-full">
 				<Sidebar />
 				<SystemLogLayout>
 					<div className="flex h-full flex-1 flex-col">

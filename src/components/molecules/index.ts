@@ -12,7 +12,6 @@ export { Drawer } from "@components/molecules/drawer";
 export { EmptyTableAddButton } from "@components/molecules/emptyTableAddButton";
 export { IdCopyButton } from "@components/molecules/idCopyButton";
 export { ImageMotion } from "@components/molecules/imageMotion";
-export { ProjectsMenu } from "@components/molecules/projectsMenu";
 export { Modal } from "@components/molecules/modal";
 export { NavigationButton } from "@components/molecules/navigationButton";
 export { PopoverTrigger } from "@components/molecules/popover";
