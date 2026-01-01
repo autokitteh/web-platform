@@ -5,13 +5,7 @@ import { Outlet, useParams, useLocation } from "react-router-dom";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
-import {
-	useCacheStore,
-	useManualRunStore,
-	useProjectStore,
-	useSharedBetweenProjectsStore,
-	useTourStore,
-} from "@src/store";
+import { useManualRunStore, useProjectStore, useSharedBetweenProjectsStore, useTourStore } from "@src/store";
 import { UserTrackingUtils, cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
@@ -19,7 +13,6 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { EditorTabs } from "@components/organisms";
 
 export const Project = () => {
-	const initCache = useCacheStore((state) => state.initCache);
 	const fetchManualRunConfiguration = useManualRunStore((state) => state.fetchManualRunConfiguration);
 	const { projectId } = useParams();
 	const getProject = useProjectStore((state) => state.getProject);
@@ -39,7 +32,6 @@ export const Project = () => {
 		if (!projectId) return;
 
 		const loadProject = async () => {
-			await initCache(projectId, true);
 			fetchManualRunConfiguration(projectId);
 			const { data: project } = await getProject(projectId);
 			if (project) {
@@ -48,7 +40,8 @@ export const Project = () => {
 		};
 
 		loadProject();
-	}, [projectId, initCache, fetchManualRunConfiguration, getProject]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const isProjectFilesVisibleForProject = useSharedBetweenProjectsStore(
 		useCallback((state) => (projectId ? state.isProjectFilesVisible[projectId] : false), [projectId])

@@ -20,7 +20,7 @@ import {
 } from "@services";
 import { getTriggersWithBadConnections } from "@utilities";
 
-import { useFileStore, useToastStore, useOrganizationStore } from "@store";
+import { useFileStore, useToastStore, useOrganizationStore, useOrgConnectionsStore } from "@store";
 
 export const defaultSectionValidationState = {
 	message: "",
@@ -41,9 +41,9 @@ const initialState: Omit<
 	| "fetchVariables"
 	| "fetchEvents"
 	| "fetchConnections"
+	| "fetchAllConnections"
 	| "fetchResources"
 	| "fetchIntegrations"
-	| "initCache"
 	| "checkState"
 	| "reset"
 	| "setLoading"
@@ -77,17 +77,6 @@ const store = (
 	...initialState,
 
 	setLoading: (key, value) => set((state) => ({ ...state, loading: { ...state.loading, [key]: value } })),
-
-	initCache: async (projectId, force = false) => {
-		set((state) => ({ ...state, currentProjectId: projectId }));
-		return await Promise.all([
-			get().fetchResources(projectId, force),
-			get().fetchDeployments(projectId, force),
-			get().fetchTriggers(projectId, force),
-			get().fetchVariables(projectId, force),
-			get().fetchConnections(projectId, force),
-		]);
-	},
 
 	fetchIntegrations: async (force?: boolean) => {
 		const { integrations } = get();
@@ -496,6 +485,13 @@ const store = (
 
 			set((state) => ({ ...state, loading: { ...state.loading, connections: false } }));
 		}
+	},
+
+	fetchAllConnections: async (projectId, orgId, force) => {
+		await Promise.all([
+			orgId ? useOrgConnectionsStore.getState().fetchOrgConnections(orgId, force) : Promise.resolve(),
+			get().fetchConnections(projectId, force),
+		]);
 	},
 
 	getLatestValidationState: async (projectId, section) => {

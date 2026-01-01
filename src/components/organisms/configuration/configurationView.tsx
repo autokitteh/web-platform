@@ -7,7 +7,7 @@ import { Triggers } from "./triggers";
 import { Variables } from "./variables";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { useCacheStore, useOrgConnectionsStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useCacheStore, useOrgConnectionsStore, useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
 import { getProjectSettingsSectionFromPath } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -15,17 +15,17 @@ import { Button, IconSvg } from "@components/atoms";
 import { Close } from "@assets/image/icons";
 
 export const ConfigurationView = () => {
-	const { loading } = useCacheStore();
-	const { orgConnections } = useOrgConnectionsStore();
+	const { loading, connections, triggers, fetchTriggers, fetchVariables, fetchAllConnections } = useCacheStore();
+	const orgConnections = useOrgConnectionsStore((state) => state.orgConnections);
 	const { projectId } = useParams();
+	const orgId = useOrganizationStore.getState().currentOrganization?.id;
 	const location = useLocation();
 	const { setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
-	const { fetchTriggers, fetchVariables, fetchConnections, connections, triggers } = useCacheStore();
 
 	useEffect(() => {
 		if (!projectId) return;
 		fetchVariables(projectId, true);
-		fetchConnections(projectId, true);
+		fetchAllConnections(projectId, orgId, true);
 		fetchTriggers(projectId, true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
