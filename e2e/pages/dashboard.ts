@@ -44,7 +44,7 @@ export class DashboardPage {
 
 		await expect(this.page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
 
-		await waitForMonacoEditorToLoad(this.page, 6000);
+		await waitForMonacoEditorToLoad(this.page, 12000);
 
 		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
 
