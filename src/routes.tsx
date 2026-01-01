@@ -87,7 +87,6 @@ export const mainRoutes = [
 			{ index: true, element: <StatisticsDashboard /> },
 			{ path: "ai", element: noProjectHome },
 			{ path: "welcome", element: noProjectHome },
-			{ path: "stats", element: <StatisticsDashboard /> },
 			{ path: "intro", element: <Intro /> },
 			{ path: "templates-library", element: <TemplatesCatalog fullScreen /> },
 			{ path: "404", element: <Internal404 /> },
