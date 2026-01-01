@@ -6,6 +6,7 @@ export { DashboardProjectsTable } from "@components/organisms/dashboard";
 export { SessionsTable } from "@components/organisms/deployments";
 export { DeploymentsTable } from "@components/organisms/deployments/table";
 export { EditorTabs } from "@components/organisms/editorTabs";
+export { ScrollableTabs } from "@components/organisms/scrollableTabs";
 export { EventsTable, EventViewer } from "@components/organisms/events";
 export { IntroMainBlock } from "@components/organisms/introMainBlock";
 export { NewProjectModal, ImportProjectModal } from "@components/organisms/modals";

@@ -34,19 +34,13 @@ import {
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { navigateToProject } from "@src/utilities/navigation";
-import {
-	cn,
-	getPreference,
-	processBulkCodeFixSuggestions,
-	generateBulkCodeFixSummary,
-	abbreviateFilePath,
-} from "@utilities";
+import { getPreference, processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities";
 
-import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
-import { CodeFixDiffEditorModal, FileTabMenu, RenameFileModal } from "@components/organisms";
+import { Button, IconSvg, Loader, MermaidDiagram, Spinner, Typography } from "@components/atoms";
+import { CodeFixDiffEditorModal, FileTabMenu, RenameFileModal, ScrollableTabs } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
-import { Close, SaveIcon } from "@assets/image/icons";
+import { SaveIcon } from "@assets/image/icons";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -86,7 +80,7 @@ export const EditorTabs = () => {
 	}, [projectId]);
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
+	const { openFiles, openFileAsActive } = useFileStore();
 	const { closeModal } = useModalStore();
 	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
@@ -813,23 +807,6 @@ export const EditorTabs = () => {
 		handleCloseCodeFixModal,
 	]);
 
-	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);
-
-		return cn("size-4 p-0.5 opacity-50 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": isActiveFile,
-		});
-	};
-
-	const handleCloseButtonClick = (
-		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
-		name: string
-	): void => {
-		event.stopPropagation();
-
-		closeOpenedFile(name);
-	};
-
 	const handleTabContextMenu = (event: React.MouseEvent<HTMLDivElement>, fileName: string) => {
 		event.preventDefault();
 		event.stopPropagation();
@@ -845,40 +822,7 @@ export const EditorTabs = () => {
 			{projectId ? (
 				<>
 					<div className="absolute left-0 top-0 flex w-full justify-between" id="editor-tabs">
-						<div
-							className={
-								`flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
-								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
-							}
-						>
-							{projectId
-								? openFiles[projectId]?.map(({ name }) => {
-										return (
-											<div key={name} onContextMenu={(e) => handleTabContextMenu(e, name)}>
-												<Tab
-													activeTab={activeEditorFileName}
-													className="group flex items-center gap-1 normal-case"
-													onClick={() => openFileAsActive(name)}
-													title={name}
-													value={name}
-												>
-													{abbreviateFilePath(name)}
-
-													<IconButton
-														ariaLabel={t("buttons.ariaCloseFile")}
-														className={activeCloseIcon(name)}
-														onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
-															handleCloseButtonClick(event, name)
-														}
-													>
-														<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
-													</IconButton>
-												</Tab>
-											</div>
-										);
-									})
-								: null}
-						</div>
+						<ScrollableTabs onTabContextMenu={handleTabContextMenu} />
 
 						{openFiles[projectId]?.length ? (
 							<div
