@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -33,11 +32,6 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 		setSortedProjectsList(sortedProjects);
 	}, [projectsList]);
 
-	const animateVariant = {
-		hidden: { opacity: 0, width: 0 },
-		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" as const }, width: "auto" },
-	};
-
 	const fetchProjects = async () => {
 		const { error } = await getProjectsList();
 		if (error) {
@@ -66,33 +60,25 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const mobileButtonClass =
+		"w-full !justify-start gap-4 rounded-xl px-4 py-3.5 text-lg text-left hover:bg-green-200 active:bg-green-400 min-h-[52px]";
+	const desktopButtonClass = "gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100";
+
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
-			<ul className="ml-0 flex flex-col gap-2">
+			<ul className={cn("ml-0 flex flex-col", isOpen ? "gap-2" : "gap-2")}>
 				<li>
 					<Tooltip content={t("newProject")} hide={isOpen} position="right">
 						<Button
 							ariaLabel={t("newProject")}
-							className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
+							className={isOpen ? mobileButtonClass : desktopButtonClass}
 							onClick={() => navigate("/ai")}
 						>
-							<div className="flex size-9 items-center justify-center">
+							<div className={cn("flex", isOpen ? "size-10" : "size-9")}>
 								<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
 							</div>
 
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										{t("newProject")}
-									</motion.span>
-								) : null}
-							</AnimatePresence>
+							{isOpen ? <span className="whitespace-nowrap">{t("newProject")}</span> : null}
 						</Button>
 					</Tooltip>
 				</li>
@@ -100,8 +86,15 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 					<PopoverListTrigger>
 						<li className="group">
 							<Tooltip content={t("myProjects")} hide={isOpen} position="right">
-								<div className="relative z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
-									<div className="flex size-9 items-center justify-center">
+								<div
+									className={cn(
+										"relative z-10 flex text-gray-1100",
+										isOpen
+											? "active:bg-green-400 min-h-[52px] w-full items-center gap-4 rounded-xl px-4 py-3.5 text-lg hover:bg-green-200"
+											: "gap-1.5 rounded-full p-0.5 group-hover:bg-green-200"
+									)}
+								>
+									<div className={cn("flex", isOpen ? "size-10" : "size-9")}>
 										<IconSvg
 											alt={t("myProjects")}
 											className="fill-gray-1100"
@@ -110,19 +103,7 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 										/>
 									</div>
 
-									<AnimatePresence>
-										{isOpen ? (
-											<motion.span
-												animate="visible"
-												className="overflow-hidden whitespace-nowrap"
-												exit="hidden"
-												initial="hidden"
-												variants={animateVariant}
-											>
-												{t("myProjects")}
-											</motion.span>
-										) : null}
-									</AnimatePresence>
+									{isOpen ? <span className="whitespace-nowrap">{t("myProjects")}</span> : null}
 								</div>
 							</Tooltip>
 						</li>
@@ -135,8 +116,8 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 						)}
 						emptyListMessage={t("noProjectsFound")}
 						itemClassName={cn(
-							"hover:text-current flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
-							"whitespace-nowrap px-4 text-center text-gray-1100 duration-300 hover:bg-green-200",
+							"hover:text-current flex cursor-pointer gap-2.5 rounded-3xl p-2 transition",
+							"whitespace-nowrap px-4 text-gray-1100 duration-300 hover:bg-green-200",
 							"overflow-hidden"
 						)}
 						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}

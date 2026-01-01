@@ -3,7 +3,7 @@ import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
-import { LuUnplug } from "react-icons/lu";
+import { LuUnplug, LuX } from "react-icons/lu";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { descopeProjectId, featureFlags } from "@constants";
@@ -76,105 +76,113 @@ export const Sidebar = () => {
 		[isFeedbackOpen]
 	);
 
+	const mobileMenuItemClass =
+		"w-full !justify-start gap-4 rounded-xl px-4 py-3.5 text-lg text-left hover:bg-green-200 active:bg-green-400 min-h-[52px]";
+
 	if (isMobile) {
 		return (
 			<Suspense fallback={<Loader isCenter size="lg" />}>
-				<div className="fixed left-0 top-0 z-40 flex h-11 w-full items-center justify-between bg-white px-2 shadow-sm">
-					<Button
-						className="flex items-center justify-start gap-1.5 p-1"
-						onClick={handleLogoClick}
-						variant="ghost"
-					>
-						<IconLogo className="size-6" />
+				<div className="fixed left-0 top-0 z-40 flex h-12 w-full items-center justify-between bg-white px-3 shadow-sm">
+					<Button className="flex items-center gap-2 p-1" onClick={handleLogoClick} variant="ghost">
+						<IconLogo className="size-7" />
 					</Button>
 					<Button
 						ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-						className="p-1.5 hover:bg-green-200"
+						className="p-2 hover:bg-green-200"
 						onClick={() => setIsOpen(!isOpen)}
 						title={isOpen ? t("closeSidebar") : t("openSidebar")}
 					>
-						<MenuToggle className="flex w-7 items-center justify-center" isOpen={isOpen} />
+						<MenuToggle className="flex w-6 items-center justify-center" isOpen={isOpen} />
 					</Button>
 				</div>
 
 				<AnimatePresence>
 					{isOpen ? (
-						<>
-							<motion.div
-								animate={{ opacity: 0.5 }}
-								className="fixed inset-0 z-40 bg-black"
-								exit={{ opacity: 0 }}
-								initial={{ opacity: 0 }}
-								onClick={() => setIsOpen(false)}
-							/>
-							<motion.div
-								animate={{ x: 0 }}
-								className="fixed left-0 top-11 z-50 h-[calc(100vh-2.75rem)] w-56 overflow-y-auto bg-white shadow-xl"
-								exit={{ x: "-100%" }}
-								initial={{ x: "-100%" }}
-								transition={{ type: "spring", damping: 25, stiffness: 300 }}
-							>
-								<div className="flex h-full flex-col justify-between p-2">
-									<div className="space-y-1">
-										<ProjectsMenu className="mb-1" isOpen={true} />
+						<motion.div
+							animate={{ opacity: 1 }}
+							className="fixed inset-0 z-50 flex flex-col bg-white"
+							exit={{ opacity: 0 }}
+							initial={{ opacity: 0 }}
+							transition={{ duration: 0.2 }}
+						>
+							<div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
+								<Button
+									className="flex items-center gap-2.5 p-0"
+									onClick={handleLogoClick}
+									variant="ghost"
+								>
+									<IconLogo className="size-8" />
+									<IconLogoName className="h-4 w-24" />
+								</Button>
+								<motion.button
+									aria-label={t("closeSidebar")}
+									className="rounded-lg p-2 hover:bg-green-200"
+									onClick={() => setIsOpen(false)}
+									whileHover={{ scale: 1.05 }}
+									whileTap={{ scale: 0.95 }}
+								>
+									<LuX className="size-6 text-gray-700" />
+								</motion.button>
+							</div>
 
-										{featureFlags.hideOrgConnections ? null : (
-											<Button
-												ariaLabel={t("connections")}
-												className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
-												href="/connections"
-											>
-												<LuUnplug className="size-4 fill-gray-1100" strokeWidth={2} />
-												<span>{t("connections")}</span>
-											</Button>
-										)}
-									</div>
+							<div className="flex flex-1 flex-col overflow-y-auto p-4">
+								<div className="flex flex-col gap-2">
+									<ProjectsMenu className="mb-3" isOpen={true} />
 
-									<div className="space-y-0.5">
+									{featureFlags.hideOrgConnections ? null : (
 										<Button
-											ariaLabel={t("events")}
-											className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
-											href="/events"
+											ariaLabel={t("connections")}
+											className={mobileMenuItemClass}
+											href="/connections"
 										>
-											<IconSvg className="size-4 fill-gray-1100" src={EventsFlag} />
-											<span>{t("events")}</span>
+											<LuUnplug className="size-6 fill-gray-1100" strokeWidth={2} />
+											<span>{t("connections")}</span>
 										</Button>
-										<Button
-											ariaLabel={t("systemLog")}
-											className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
-											onClick={() => {
-												toggleSystemLogHeight();
-												setIsOpen(false);
-											}}
+									)}
+
+									<Button ariaLabel={t("events")} className={mobileMenuItemClass} href="/events">
+										<IconSvg className="size-6 fill-gray-1100" src={EventsFlag} />
+										<span>{t("events")}</span>
+									</Button>
+
+									<Button
+										ariaLabel={t("systemLog")}
+										className={mobileMenuItemClass}
+										onClick={() => {
+											toggleSystemLogHeight();
+											setIsOpen(false);
+										}}
+									>
+										<Badge
+											anchorOrigin={{ vertical: "top", horizontal: "left" }}
+											ariaLabel={t("logToReview")}
+											isVisible={isNewLogs}
+											lastLogType={lastLogType}
+											variant="dot"
 										>
-											<Badge
-												anchorOrigin={{ vertical: "top", horizontal: "left" }}
-												ariaLabel={t("logToReview")}
-												isVisible={isNewLogs}
-												lastLogType={lastLogType}
-												variant="dot"
-											>
-												<IconSvg className="size-4 fill-gray-1100" src={FileIcon} />
-											</Badge>
-											<span>{t("systemLog")}</span>
-										</Button>
-										<Button
-											className="w-full justify-start gap-2.5 px-2 py-1.5 text-sm hover:bg-green-200"
-											href="/intro"
-										>
-											<IconSvg className="size-4" src={CircleQuestionIcon} />
-											<span>{t("intro")}</span>
-										</Button>
-										{descopeProjectId ? (
-											<div className="mt-1.5 flex items-center gap-2.5 border-t border-gray-200 pt-2">
-												<Avatar color="black" name={user?.name} round={true} size="26" />
-												<span className="truncate text-sm text-black">{user?.name}</span>
-											</div>
-										) : null}
-									</div>
+											<IconSvg className="size-6 fill-gray-1100" src={FileIcon} />
+										</Badge>
+										<span>{t("systemLog")}</span>
+									</Button>
+
+									<Button className={mobileMenuItemClass} href="/intro">
+										<IconSvg className="size-6" src={CircleQuestionIcon} />
+										<span>{t("intro")}</span>
+									</Button>
 								</div>
-							</motion.div>
-						</>
+
+								{descopeProjectId ? (
+									<div className="mt-auto border-t border-gray-200 pt-4">
+										<div className="flex items-center gap-3 px-3">
+											<Avatar color="black" name={user?.name} round={true} size="36" />
+											<span className="truncate text-base font-medium text-black">
+												{user?.name}
+											</span>
+										</div>
+									</div>
+								) : null}
+							</div>
+						</motion.div>
 					) : null}
 				</AnimatePresence>
 			</Suspense>
@@ -184,7 +192,12 @@ export const Sidebar = () => {
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className={rootClassName}>
-				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
+				<div
+					className={cn(
+						"z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6",
+						isOpen && "pr-6"
+					)}
+				>
 					<div>
 						<Button
 							className="ml-1 flex items-center justify-start gap-2.5"
@@ -208,11 +221,13 @@ export const Sidebar = () => {
 						</Button>
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-							className="mt-7 w-full justify-center gap-2 p-0.5 hover:bg-green-200"
+							className="mt-7 w-full p-0 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
-							<MenuToggle className="flex w-9 items-center justify-center pb-1 pt-2" isOpen={isOpen} />
+							<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+								<MenuToggle className="flex w-6 items-center justify-center" isOpen={isOpen} />
+							</div>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -235,11 +250,11 @@ export const Sidebar = () => {
 							<Tooltip content={t("connections")} hide={isOpen} position="right">
 								<Button
 									ariaLabel={t("connections")}
-									className="mt-3 p-0 hover:bg-green-200"
+									className="mt-3 gap-1.5 p-0.5 hover:bg-green-200"
 									href="/connections"
 								>
-									<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-										<LuUnplug className="size-5 fill-gray-1100 transition" strokeWidth={2} />
+									<div className="flex size-9 items-center justify-center">
+										<LuUnplug className="size-5 fill-gray-1100" strokeWidth={2} />
 									</div>
 
 									<AnimatePresence>
@@ -262,9 +277,9 @@ export const Sidebar = () => {
 
 					<div className="flex flex-col gap-2">
 						<Tooltip content={t("events")} hide={isOpen} position="right">
-							<Button ariaLabel={t("events")} className="p-0 hover:bg-green-200" href="/events">
-								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-									<IconSvg className="size-5 fill-gray-1100 transition" src={EventsFlag} />
+							<Button ariaLabel={t("events")} className="gap-1.5 p-0.5 hover:bg-green-200" href="/events">
+								<div className="flex size-9">
+									<IconSvg className="fill-gray-1100" size="xl" src={EventsFlag} />
 								</div>
 
 								<AnimatePresence>
@@ -285,10 +300,10 @@ export const Sidebar = () => {
 						<Tooltip content={t("systemLog")} hide={isOpen} position="right">
 							<Button
 								ariaLabel={t("systemLog")}
-								className="w-full p-0 hover:bg-green-200"
+								className="gap-1.5 p-0.5 hover:bg-green-200"
 								onClick={() => toggleSystemLogHeight()}
 							>
-								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+								<div className="flex size-9 items-center justify-center">
 									<Badge
 										anchorOrigin={{ vertical: "top", horizontal: "left" }}
 										ariaLabel={t("logToReview")}
@@ -297,7 +312,7 @@ export const Sidebar = () => {
 										lastLogType={lastLogType}
 										variant="dot"
 									>
-										<IconSvg className="size-5.5 fill-gray-1100 transition" src={FileIcon} />
+										<IconSvg className="fill-gray-1100" size="xl" src={FileIcon} />
 									</Badge>
 								</div>
 
@@ -317,9 +332,9 @@ export const Sidebar = () => {
 							</Button>
 						</Tooltip>
 						<Tooltip content={t("intro")} hide={isOpen} position="right">
-							<Button className="w-full p-0 hover:bg-green-200" href="/intro">
-								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-									<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
+							<Button className="gap-1.5 p-0.5 hover:bg-green-200" href="/intro">
+								<div className="flex size-9">
+									<IconSvg size="xl" src={CircleQuestionIcon} />
 								</div>
 
 								<AnimatePresence>

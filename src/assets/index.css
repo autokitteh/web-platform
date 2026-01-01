@@ -2,7 +2,6 @@
 @import url("https://fonts.googleapis.com/css?family=Fira+Code:wght@300,400,500,600,700");
 @import url("mermaid.css");
 @import url("loader.css");
-@import url("newChatDesign.css");
 @import url("remark-github-blockquote-alert/alert.css");
 @import "github-markdown-css/github-markdown-light.css";
 
@@ -144,6 +143,7 @@ a {
 		opacity: 0;
 		transform: translateY(-10px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -379,8 +379,8 @@ ul li::before {
 }
 
 /* Override dark Tremor background and border for tooltips/popovers only */
-[data-radix-popper-content-wrapper] > div,
-.recharts-tooltip-wrapper > div {
+[data-radix-popper-content-wrapper]>div,
+.recharts-tooltip-wrapper>div {
 	background-color: #1c1c1c !important;
 	border-color: #454343 !important;
 	color: white !important;
@@ -412,11 +412,12 @@ ul li::before {
 .tremor-DonutChart-label {
 	@apply fill-white !important;
 }
+
 .text-right.whitespace-nowrap.text-tremor-content.dark\:text-dark-tremor-content {
 	@apply text-white !important;
 }
 
-.dark\:bg-dark-tremor-background{
+.dark\:bg-dark-tremor-background {
 	@apply bg-gray-1400 !important;
 	@apply border-gray-700 !important;
 }
@@ -425,6 +426,6 @@ ul li::before {
 	@apply text-gray-300 !important;
 }
 
-.dark\:data-[selected]:bg-dark-tremor-background-muted{
+.dark\:data-[selected]:bg-dark-tremor-background-muted {
 	@apply bg-gray-1250 !important;
 }
