@@ -90,7 +90,7 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 									className={cn(
 										"relative z-10 flex text-gray-1100",
 										isOpen
-											? "active:bg-green-400 min-h-[52px] w-full items-center gap-4 rounded-xl px-4 py-3.5 text-lg hover:bg-green-200"
+											? "min-h-[52px] w-full items-center gap-4 rounded-xl px-4 py-3.5 text-lg hover:bg-green-200 active:bg-green-400"
 											: "gap-1.5 rounded-full p-0.5 group-hover:bg-green-200"
 									)}
 								>
