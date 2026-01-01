@@ -45,24 +45,13 @@ export interface CacheStore {
 	) => Promise<CacheStore["projectValidationState"]>;
 	isValid: boolean;
 	isProjectEvents: boolean;
-	initCache: (
-		projectId: string,
-		force?: boolean
-	) => Promise<
-		[
-			void | Record<string, Uint8Array>,
-			void | Deployment[],
-			void | Trigger[],
-			void | Variable[],
-			void | Connection[],
-		]
-	>;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
 	fetchResources: (projectId: string, force?: boolean) => Promise<void | Record<string, Uint8Array>>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;
 	fetchEvents: ({ projectId, sourceId }: { projectId?: string; sourceId?: string }) => Promise<void>;
 	fetchConnections: (projectId: string, force?: boolean) => Promise<void | Connection[]>;
+	fetchAllConnections: (projectId: string, orgId?: string, force?: boolean) => Promise<void>;
 	fetchIntegrations: (force?: boolean) => Promise<void | Integration[]>;
 	reset: (type: "resources" | "connections" | "deployments" | "triggers" | "variables") => void;
 }
