@@ -28,7 +28,7 @@ export const SystemLogLayout = ({
 	sidebar?: ReactNode;
 	topbar?: ReactNode;
 }) => {
-	const layoutClasses = cn("flex h-screen flex-1 overflow-hidden", className);
+	const layoutClasses = cn("mr-1 mt-1 flex h-screen flex-1 overflow-hidden", className);
 	const location = useLocation();
 	const { pathname } = location;
 	const { projectId } = useParams();
@@ -82,7 +82,7 @@ export const SystemLogLayout = ({
 	});
 
 	const buttonResizeClasses = cn("my-0.5", { "my-0": systemLogHeight === 100 });
-	const innerLayoutClasses = cn("mr-2 flex min-w-0 flex-1 flex-col md:mb-2", {
+	const innerLayoutClasses = cn("mr-1 flex min-w-0 flex-1 flex-col md:mb-2", {
 		"md:mb-0.5": systemLogHeight === 0,
 		"w-0": ["/", "/intro"].includes(pathname),
 		"mr-0": isMobile,

@@ -28,7 +28,7 @@ export const Dashboard = () => {
 	}
 
 	return (
-		<div className="my-1.5 flex size-full overflow-hidden rounded-none md:rounded-2xl">
+		<div className="flex size-full overflow-hidden rounded-none md:rounded-2xl">
 			<div
 				className="relative flex w-2/3 flex-col"
 				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}

@@ -25,7 +25,7 @@ export const Intro = () => {
 		<>
 			<LoadingOverlay isLoading={isLoading} />
 
-			<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
+			<div className="mb-1.5 flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 				<div
 					className="relative flex w-2/3 flex-col"
 					style={{ width: `${!(isIOS || isMobile) ? leftSideWidth : 100}%` }}
