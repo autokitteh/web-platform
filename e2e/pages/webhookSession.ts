@@ -125,13 +125,11 @@ export class WebhookSessionPage {
 		const configSidebar = this.page.getByTestId("project-sidebar-config");
 		await expect(configSidebar).toBeVisible();
 
-		const triggersButton = configSidebar.locator('button[aria-label="Open Triggers Section"]');
-		await triggersButton.scrollIntoViewIfNeeded();
-		await expect(triggersButton).toBeVisible();
-		await triggersButton.click();
 		const triggerInfoButton = configSidebar.locator(
 			`button[aria-label='Trigger information for "receive_http_get_or_head"']`
 		);
+		await triggerInfoButton.scrollIntoViewIfNeeded();
+
 		await expect(triggerInfoButton).toBeVisible();
 		await triggerInfoButton.hover();
 
