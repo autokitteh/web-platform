@@ -1,8 +1,8 @@
-import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useId, useMemo, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
 import { ModalName } from "@src/enums/components";
@@ -18,7 +18,6 @@ import { TableHeader } from "@components/organisms/events/table/header";
 import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
 import { RedispatchEventModal } from "@components/organisms/events/table/redispatchEventModal";
 import { EventRow } from "@components/organisms/events/table/row";
-import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
 const Title = ({
 	isDrawer,
@@ -57,6 +56,7 @@ export const EventsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const setSelectedEventId = useEventsDrawerStore((state) => state.setSelectedEventId);
 	const [selectedEventIdForModal, setSelectedEventIdForModal] = useState<string>();
+	const parentRef = useRef<HTMLDivElement>(null);
 
 	const {
 		eventInfo,
@@ -148,23 +148,12 @@ export const EventsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const rowRenderer = useCallback(
-		({ index, key, style }: ListRowProps) => {
-			const event = sortedEvents[index];
-
-			return (
-				<EventRow
-					event={event}
-					key={key}
-					onClick={() => calculateEventAddress(event.eventId)}
-					onRedispatch={async () => openRedispatchModal(event.eventId)}
-					style={style}
-				/>
-			);
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[sortedEvents]
-	);
+	const virtualizer = useVirtualizer({
+		count: sortedEvents.length,
+		getScrollElement: () => parentRef.current,
+		estimateSize: () => 58, // defaultEventsTableRowHeight
+		overscan: 5,
+	});
 
 	const tableContent = useMemo(() => {
 		if ((loadingEvents && isInitialLoad) || isSourceLoad) {
@@ -184,24 +173,42 @@ export const EventsTable = () => {
 				<Table className="relative w-full overflow-visible">
 					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
-						<div className="h-[calc(100vh-200px)]">
-							<AutoSizer>
-								{({ height, width }) => (
-									<VirtualizedList
-										height={height}
-										rowRenderer={rowRenderer}
-										sortedEvents={sortedEvents}
-										width={width}
-									/>
-								)}
-							</AutoSizer>
+						<div className="h-[calc(100vh-200px)] overflow-auto" ref={parentRef}>
+							<div
+								className="relative w-full"
+								style={{
+									height: `${virtualizer.getTotalSize()}px`,
+								}}
+							>
+								{virtualizer.getVirtualItems().map((virtualItem) => {
+									const event = sortedEvents[virtualItem.index];
+									return (
+										<div
+											className="absolute left-0 top-0 w-full"
+											key={virtualItem.key}
+											style={{
+												height: `${virtualItem.size}px`,
+												transform: `translateY(${virtualItem.start}px)`,
+											}}
+										>
+											<EventRow
+												event={event}
+												key={virtualItem.key}
+												onClick={() => calculateEventAddress(event.eventId)}
+												onRedispatch={async () => openRedispatchModal(event.eventId)}
+												style={{ height: "100%" }}
+											/>
+										</div>
+									);
+								})}
+							</div>
 						</div>
 					</TBody>
 				</Table>
 			</div>
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isInitialLoad, sortedEvents, isSourceLoad]);
+	}, [isInitialLoad, sortedEvents, isSourceLoad, virtualizer.getVirtualItems()]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const handleRefresh = useCallback(() => fetchEvents({ projectId, sourceId }), [projectId, sourceId]);
