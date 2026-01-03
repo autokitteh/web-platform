@@ -8,8 +8,6 @@ import mkcert from "vite-plugin-mkcert";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
-import { reactVirtualized } from "./fixReactVirtualized";
-
 dotenv.config();
 
 const packageJsonPath = new URL("package.json", import.meta.url).pathname;
@@ -144,7 +142,6 @@ export default defineConfig({
 				},
 			],
 		}),
-		reactVirtualized(),
 	],
 	resolve: {
 		alias: {
