@@ -1,113 +1,129 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { useTranslation } from "react-i18next";
-import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
-
-import { defaultSessionsActivitiesPageSize } from "@src/constants";
-import { SessionLogType, EventListenerName } from "@src/enums";
-import { useVirtualizedList, useEventListener } from "@src/hooks";
+import { SessionLogType } from "@src/enums";
+import { useEventSubscription, useVirtualizedSessionList } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
-import { LoadingOverlay } from "@components/molecules";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
-	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
-	const [rowHeight, setRowHeight] = useState(60);
 
 	const {
-		isRowLoaded,
 		items: activities,
-		listRef,
 		loadMoreRows,
 		nextPageToken,
-		loading: loadingActivities,
-	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
+		t,
+		loading,
+		parentRef,
+		virtualizer,
+	} = useVirtualizedSessionList<SessionActivity>(SessionLogType.Activity);
 
-	useEffect(() => {
-		const handleResize = () => {
-			setRowHeight(window.innerWidth < 1500 ? 80 : 60);
-		};
-
-		handleResize();
-
-		window.addEventListener("resize", handleResize);
-
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
-
-	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity?: SessionActivity }>) => {
-		const activity = event.detail?.activity;
-		setSelectedActivity(activity);
+	const scrollStateRef = useRef({
+		isLoading: false,
+		lastLoadTime: 0,
+		lastScrollTop: 0,
+		isInitialLoad: true,
 	});
 
-	const customRowRenderer = useCallback(
-		({ index, key, style }: ListRowProps) => (
-			<ActivityRow
-				data={activities[index]}
-				index={index}
-				key={key}
-				setActivity={setSelectedActivity}
-				style={style}
-			/>
-		),
-		[activities, setSelectedActivity]
-	);
+	useEffect(() => {
+		if (!activities.length || selectedActivity || !scrollStateRef.current.isInitialLoad) return;
 
-	const autoSizerClass = useMemo(() => cn({ hidden: selectedActivity }), [selectedActivity]);
+		if (parentRef.current && !loading) {
+			parentRef.current.scrollTop = parentRef.current.scrollHeight;
+			scrollStateRef.current.isInitialLoad = false;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activities, loading, selectedActivity]);
 
-	const rowCount = useMemo(
-		() => (nextPageToken ? activities.length + 1 : activities.length),
-		[activities.length, nextPageToken]
-	);
+	const loadMoreWithScroll = useCallback(async () => {
+		const now = Date.now();
+		const { isLoading, lastLoadTime } = scrollStateRef.current;
+
+		if (isLoading || loading || !nextPageToken || now - lastLoadTime < 1000) return;
+
+		scrollStateRef.current.isLoading = true;
+		scrollStateRef.current.lastLoadTime = now;
+
+		try {
+			if (parentRef.current) {
+				parentRef.current.style.overscrollBehavior = "none";
+			}
+
+			await loadMoreRows();
+		} catch {
+			if (parentRef.current) {
+				parentRef.current.style.overscrollBehavior = "auto";
+			}
+			scrollStateRef.current.isLoading = false;
+		} finally {
+			if (parentRef.current && !loading) {
+				parentRef.current.scrollTop = parentRef.current.scrollHeight;
+				scrollStateRef.current.isInitialLoad = false;
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading, nextPageToken, parentRef]);
+
+	const handleScroll = useCallback(() => {
+		if (!parentRef.current || !nextPageToken || scrollStateRef.current.isLoading || selectedActivity) return;
+
+		const scrollTop = parentRef.current.scrollTop;
+		const scrollingUp = scrollTop < scrollStateRef.current.lastScrollTop;
+		scrollStateRef.current.lastScrollTop = scrollTop;
+
+		if (scrollTop < parentRef.current.clientHeight * 0.1 && scrollingUp) {
+			loadMoreWithScroll();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [parentRef, nextPageToken, selectedActivity]);
+
+	useEventSubscription(parentRef, "scroll", handleScroll);
+
+	const autoSizerClass = cn({ hidden: selectedActivity });
 
 	return (
-		<Frame className="mr-3 size-full rounded-b-none pb-0 transition md:py-0">
+		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
 
-			<LoadingOverlay isLoading={loadingActivities} />
-
-			<AutoSizer className={autoSizerClass}>
-				{({ height, width }) => (
-					<InfiniteLoader
-						isRowLoaded={isRowLoaded}
-						loadMoreRows={loadMoreRows}
-						rowCount={rowCount}
-						threshold={15}
+			<div className={cn("h-full overflow-auto", autoSizerClass)} ref={parentRef}>
+				{activities.length > 0 ? (
+					<div
+						className="relative w-full"
+						style={{
+							height: `${virtualizer.getTotalSize()}px`,
+							paddingTop: "10px",
+							paddingBottom: "10px",
+						}}
 					>
-						{({ onRowsRendered, registerChild }) => (
-							<List
-								className="scrollbar"
-								height={height}
-								onRowsRendered={onRowsRendered}
-								overscanRowCount={5}
-								ref={(ref) => {
-									if (ref) {
-										registerChild(ref);
-										listRef.current = ref;
-									}
+						{virtualizer.getVirtualItems().map((virtualItem) => (
+							<div
+								className="absolute left-0 top-0 w-full"
+								key={virtualItem.key}
+								ref={virtualizer.measureElement}
+								style={{
+									transform: `translateY(${virtualItem.start}px)`,
 								}}
-								rowCount={activities.length}
-								rowHeight={rowHeight}
-								rowRenderer={customRowRenderer}
-								scrollToAlignment="start"
-								width={width}
-							/>
-						)}
-					</InfiniteLoader>
+							>
+								<ActivityRow
+									data={activities[virtualItem.index]}
+									index={virtualItem.index}
+									setActivity={setSelectedActivity}
+									style={{ width: "100%" }}
+								/>
+							</div>
+						))}
+					</div>
+				) : (
+					<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
+						{t("noActivitiesFound")}
+					</div>
 				)}
-			</AutoSizer>
-
-			{!activities.length ? (
-				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
-					{t("noActivitiesFound")}
-				</div>
-			) : null}
+			</div>
 		</Frame>
 	);
 };
