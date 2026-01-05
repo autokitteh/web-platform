@@ -1,3 +1,7 @@
+## <small>2.252.1 (2026-01-05)</small>
+
+* fix: make project store not persistent (#1536) ([e4d2931](https://github.com/autokitteh/web-platform/commit/e4d2931)), closes [#1536](https://github.com/autokitteh/web-platform/issues/1536)
+
 ## 2.252.0 (2026-01-05)
 
 * feat: remove stats button from sidebar (#1537) ([7af23d3](https://github.com/autokitteh/web-platform/commit/7af23d3)), closes [#1537](https://github.com/autokitteh/web-platform/issues/1537)
