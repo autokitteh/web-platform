@@ -1,3 +1,7 @@
+## 2.252.0 (2026-01-05)
+
+* feat: remove stats button from sidebar (#1537) ([7af23d3](https://github.com/autokitteh/web-platform/commit/7af23d3)), closes [#1537](https://github.com/autokitteh/web-platform/issues/1537)
+
 ## <small>2.251.1 (2025-12-31)</small>
 
 * fix: resolve React state update during render warning on dashboard (#1529) ([79159c8](https://github.com/autokitteh/web-platform/commit/79159c8)), closes [#1529](https://github.com/autokitteh/web-platform/issues/1529)
