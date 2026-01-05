@@ -75,7 +75,7 @@ export const DashboardProjectsTable = () => {
 	const columnIds = visibleColumns.map((col) => col.id);
 
 	return (
-		<div className="z-10 flex h-full select-none flex-col overflow-hidden h-full">
+		<div className="z-10 flex h-full select-none flex-col overflow-hidden">
 			<div className="sticky top-0 z-20 flex items-center justify-between bg-gray-1100 pb-2">
 				<div className="flex flex-1 items-center gap-x-2">
 					<h2 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500">
@@ -85,7 +85,7 @@ export const DashboardProjectsTable = () => {
 				</div>
 				<div className="flex items-center gap-x-0">
 					<ColumnVisibilityMenu table={table} />
-					<IconButton href="/ai" ariaLabel="AI" className="group">
+					<IconButton ariaLabel="AI" className="group" href="/ai">
 						<PlusIcon className="size-4 fill-white transition group-hover:fill-green-800" />
 					</IconButton>
 				</div>
