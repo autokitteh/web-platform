@@ -21,7 +21,7 @@ import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { EventsFlag } from "@assets/image/icons";
-import { CircleQuestionIcon, FileIcon, StatsBlackIcon } from "@assets/image/icons/sidebar";
+import { CircleQuestionIcon, FileIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -128,14 +128,6 @@ export const Sidebar = () => {
 
 									<div className="flex flex-col gap-1">
 										<Button
-											ariaLabel={t("stats")}
-											className="w-full justify-start gap-3 p-2 hover:bg-green-200"
-											href="/stats"
-										>
-											<IconSvg className="size-5 fill-gray-1100" src={StatsBlackIcon} />
-											<span>{t("stats")}</span>
-										</Button>
-										<Button
 											ariaLabel={t("events")}
 											className="w-full justify-start gap-3 p-2 hover:bg-green-200"
 											href="/events"
@@ -188,7 +180,7 @@ export const Sidebar = () => {
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className={rootClassName}>
-				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
+				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-4 pt-6">
 					<div>
 						<Button
 							className="ml-1 flex items-center justify-start gap-2.5"
@@ -265,27 +257,6 @@ export const Sidebar = () => {
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<Tooltip content={t("stats")} hide={isOpen} position="right">
-							<Button ariaLabel={t("stats")} className="p-0 hover:bg-green-200" href="/stats">
-								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-									<IconSvg className="size-5 fill-gray-1100 transition" src={StatsBlackIcon} />
-								</div>
-
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											{t("stats")}
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
-						</Tooltip>
 						<Tooltip content={t("events")} hide={isOpen} position="right">
 							<Button ariaLabel={t("events")} className="p-0 hover:bg-green-200" href="/events">
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
