@@ -198,7 +198,6 @@ test.describe("Trigger with Project Connection Suite", () => {
 
 		await returnToTriggersList(page);
 
-		await triggersHeader.click();
 		await page.waitForTimeout(500);
 
 		await expect(page.getByText(triggerName)).toBeVisible();
