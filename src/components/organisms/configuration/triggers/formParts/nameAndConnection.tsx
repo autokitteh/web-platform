@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { buildConnectionGroups } from "@src/constants/triggers.constants";
 import { SelectGroup } from "@src/interfaces/components";
-import { useCacheStore, useOrgConnectionsStore, useOrganizationStore } from "@src/store";
+import { useCacheStore, useOrgConnectionsStore } from "@src/store";
 import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
@@ -18,9 +18,8 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		formState: { errors },
 		register,
 	} = useFormContext<TriggerForm>();
-	const { connections } = useCacheStore();
-	const { orgConnections, fetchOrgConnections } = useOrgConnectionsStore();
-	const { currentOrganization } = useOrganizationStore();
+	const connections = useCacheStore((state) => state.connections);
+	const orgConnections = useOrgConnectionsStore((state) => state.orgConnections);
 
 	const watchedName = useWatch({ control, name: "name" });
 	const watchedType = useWatch({ control, name: "connection" });
@@ -36,13 +35,6 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		const ariaLabelofTypeSelect = `Selected type: ${watchedType.label}`;
 		setAriaLabel(ariaLabelofTypeSelect);
 	}, [watchedType]);
-
-	useEffect(() => {
-		if (currentOrganization?.id && orgConnections.length === 0) {
-			fetchOrgConnections(currentOrganization.id);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentOrganization?.id]);
 
 	useEffect(() => {
 		const groups = buildConnectionGroups(connections || [], orgConnections, t);

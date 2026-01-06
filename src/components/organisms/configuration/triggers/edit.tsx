@@ -18,7 +18,13 @@ import { extractSettingsPath } from "@src/utilities/navigation";
 import { triggerSchema } from "@validations";
 
 import { useFetchTrigger } from "@hooks";
-import { useBuildFilesStore, useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
+import {
+	useBuildFilesStore,
+	useCacheStore,
+	useHasActiveDeployments,
+	useOrgConnectionsStore,
+	useToastStore,
+} from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
 import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
@@ -47,6 +53,7 @@ export const EditTrigger = ({
 		fetchTriggers,
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
+	const orgConnections = useOrgConnectionsStore((state) => state.orgConnections);
 	const hasActiveDeployments = useHasActiveDeployments();
 	const { fetchBuildFiles } = useBuildFilesStore();
 
@@ -117,8 +124,12 @@ export const EditTrigger = ({
 				label: item.name,
 				value: item.connectionId,
 			})) || []),
+			...(orgConnections?.map((item) => ({
+				label: item.name,
+				value: item.connectionId,
+			})) || []),
 		],
-		[connections]
+		[connections, orgConnections]
 	);
 
 	useEffect(() => {
@@ -148,7 +159,7 @@ export const EditTrigger = ({
 			isSync: trigger?.isSync || false,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [trigger, connections]);
+	}, [trigger, formattedConnections]);
 
 	const isOptionalTriggerType = (connectionValue: string) =>
 		connectionValue === TriggerTypes.webhook || connectionValue === TriggerTypes.connection;
