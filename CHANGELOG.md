@@ -1,3 +1,7 @@
+## <small>2.252.2 (2026-01-06)</small>
+
+* refactor: fix triggers with org connections (#1540) ([f4a0149](https://github.com/autokitteh/web-platform/commit/f4a0149)), closes [#1540](https://github.com/autokitteh/web-platform/issues/1540)
+
 ## <small>2.252.1 (2026-01-05)</small>
 
 * fix: make project store not persistent (#1536) ([e4d2931](https://github.com/autokitteh/web-platform/commit/e4d2931)), closes [#1536](https://github.com/autokitteh/web-platform/issues/1536)
