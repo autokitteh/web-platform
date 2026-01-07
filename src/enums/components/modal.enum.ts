@@ -42,4 +42,10 @@ export enum ModalName {
 	diagramViewer = "diagramViewer",
 	codeFixDiffEditor = "codeFixDiffEditor",
 	documentationModal = "documentationModal",
+	connectionCodeEditor = "connectionCodeEditor",
+	deleteWorkflowEdge = "deleteWorkflowEdge",
+	deleteWorkflowNode = "deleteWorkflowNode",
+	triggerConfig = "triggerConfig",
+	connectionConfig = "connectionConfig",
+	codeEditor = "codeEditor",
 }

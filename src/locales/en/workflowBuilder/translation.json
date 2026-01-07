@@ -1,0 +1,164 @@
+{
+	"title": "Workflow Builder",
+	"description": "Build your automation workflow by connecting triggers, code, and integrations",
+	"clearCanvas": "Clear Canvas",
+	"stats": "{{nodes}} nodes, {{edges}} edges",
+	"unsavedChanges": "Unsaved changes",
+	"sidebar": {
+		"title": "Workflow Components",
+		"description": "Drag components to the canvas",
+		"search": "Search components...",
+		"triggers": {
+			"title": "Triggers",
+			"description": "Events that start your workflow",
+			"schedule": "Schedule",
+			"scheduleDesc": "Run on a time-based schedule",
+			"webhook": "Webhook",
+			"webhookDesc": "Triggered by HTTP requests",
+			"event": "Event",
+			"eventDesc": "Respond to external events"
+		},
+		"codeFiles": {
+			"title": "Code Files",
+			"description": "Your project's code files",
+			"empty": "No code files in project",
+			"entryPoints": "Entry points"
+		},
+		"connections": {
+			"title": "Connections",
+			"description": "Available integrations",
+			"projectConnections": "Project Connections",
+			"availableIntegrations": "Available Integrations",
+			"empty": "No connections configured"
+		},
+		"variables": {
+			"title": "Variables",
+			"description": "Global project variables",
+			"empty": "No variables defined",
+			"addVariable": "Add Variable",
+			"namePlaceholder": "Variable name",
+			"valuePlaceholder": "Value",
+			"secret": "Secret",
+			"notSecret": "Not secret"
+		}
+	},
+	"nodes": {
+		"trigger": {
+			"schedule": "Schedule Trigger",
+			"webhook": "Webhook Trigger",
+			"event": "Event Trigger",
+			"calls": "Calls",
+			"durable": "Durable",
+			"notDurable": "Not durable",
+			"draft": "Draft",
+			"configured": "Configured",
+			"active": "Active",
+			"error": "Error"
+		},
+		"code": {
+			"entryPoints": "Entry Points",
+			"connections": "Connections",
+			"noEntryPoints": "No entry points",
+			"noConnections": "No connections used"
+		},
+		"connection": {
+			"disconnected": "Disconnected",
+			"connected": "Connected",
+			"active": "Active",
+			"error": "Error",
+			"usedBy": "Used by"
+		}
+	},
+	"edges": {
+		"execution": {
+			"calls": "calls"
+		},
+		"data": {
+			"operations": "operations",
+			"read": "Read",
+			"write": "Write"
+		}
+	},
+	"modal": {
+		"title": "Connection Code Editor",
+		"description": "Define the logic that executes when data flows between these integrations",
+		"hint": "Use Python to transform data between integrations",
+		"save": "Save",
+		"cancel": "Cancel",
+		"eventType": "Event Type",
+		"selectEventType": "Select an event type",
+		"noEventTypes": "No event types available for this integration"
+	},
+	"triggerConfig": {
+		"title": "Configure Trigger",
+		"name": "Trigger Name",
+		"namePlaceholder": "my_trigger",
+		"type": "Trigger Type",
+		"schedule": {
+			"label": "Schedule",
+			"cronExpression": "Cron Expression",
+			"cronPlaceholder": "0 * * * *",
+			"presets": {
+				"everyMinute": "Every minute",
+				"everyHour": "Every hour",
+				"dailyMidnight": "Daily at midnight",
+				"weekly": "Weekly (Sunday)",
+				"biWeekly": "Bi-weekly",
+				"monthly": "Monthly"
+			}
+		},
+		"webhook": {
+			"label": "Webhook",
+			"httpMethod": "HTTP Method",
+			"path": "Webhook Path",
+			"pathPlaceholder": "/webhook/my-endpoint"
+		},
+		"event": {
+			"label": "Event",
+			"eventType": "Event Type",
+			"eventTypePlaceholder": "slack_message_received"
+		},
+		"entryPoint": "Entry Point (function to call)",
+		"selectEntryPoint": "Select an entry point...",
+		"entryPointPlaceholder": "program.py:main",
+		"durable": "Durable (survives restarts)",
+		"save": "Save Trigger",
+		"cancel": "Cancel"
+	},
+	"connectionConfig": {
+		"title": "Configure Connection",
+		"connectionName": "Connection Name",
+		"connectionNamePlaceholder": "my_connection",
+		"connectionNameHint": "Use this name to reference the connection in your code",
+		"status": "Status",
+		"disconnected": "Disconnected",
+		"connected": "Connected",
+		"active": "Active",
+		"error": "Error",
+		"testConnection": "Test Connection",
+		"testing": "Testing...",
+		"disconnect": "Disconnect",
+		"authRequired": "Authentication Required",
+		"authRequiredDesc": "This connection needs to be authenticated before it can be used. Click the button below to set up authentication.",
+		"setupAuth": "Set Up Authentication",
+		"usedInCode": "Used in Code",
+		"notUsed": "This connection is not used in any code files yet",
+		"save": "Save Connection",
+		"cancel": "Cancel"
+	},
+	"deleteModal": {
+		"title": "Delete Connection",
+		"content": "Are you sure you want to delete this connection?",
+		"warning": "This action cannot be undone.",
+		"cancel": "Cancel",
+		"delete": "Delete"
+	},
+	"deleteNodeModal": {
+		"title": "Delete Node",
+		"content": "Are you sure you want to delete \"{{name}}\"?",
+		"connectionWarning": "This node has {{count}} connection(s) that will also be deleted.",
+		"warning": "This action cannot be undone.",
+		"cancel": "Cancel",
+		"delete": "Delete"
+	}
+}

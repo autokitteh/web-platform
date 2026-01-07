@@ -5,6 +5,8 @@ const plugin = require("tailwindcss/plugin");
 module.exports = {
 	content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}"],
 	safelist: [
+		"nodrag",
+		"nopan",
 		{
 			pattern:
 				/^(bg-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
@@ -151,28 +153,43 @@ module.exports = {
 			white: "#ffffff",
 			black: "#000000",
 			blue: {
+				300: "#93c5fd",
 				400: "#60a5fa",
 				500: "#3b82f6",
 				600: "#2563eb",
+				900: "#1e3a8a",
 			},
 			yellow: {
 				500: "#eab308",
 			},
 			orange: {
+				300: "#fdba74",
+				400: "#fb923c",
 				500: "#f59e42",
 			},
 			amber: {
+				300: "#fcd34d",
 				400: "#fbbf24",
 				500: "#f59e0b",
 				600: "#d97706",
+				900: "#78350f",
 			},
 			green: {
 				200: "#E8FEBE",
+				300: "#86efac",
 				400: "#C8F46C",
 				500: "#86D13F",
 				600: "#7FAE3C",
 				700: "#22c55e",
 				800: "#BCF870",
+				900: "#14532d",
+			},
+			purple: {
+				300: "#d8b4fe",
+				400: "#c084fc",
+				500: "#a855f7",
+				600: "#9333ea",
+				900: "#581c87",
 			},
 			emerald: {
 				50: "#ecfdf5",

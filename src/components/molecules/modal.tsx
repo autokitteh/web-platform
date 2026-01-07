@@ -35,6 +35,7 @@ export const Modal = ({
 	forceOpen,
 	onCloseCallbackOverride,
 	clickOverlayToClose,
+	variant,
 }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => {
 		const onClose = state.closeModal;
@@ -47,9 +48,23 @@ export const Modal = ({
 	const modalRef = useRef<HTMLDivElement | null>(null);
 
 	const wrapperClassName = cn("fixed left-0 top-0 z-modal flex size-full items-center justify-center", wrapperClass);
-	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
+	const modalClasses = cn(
+		"w-500 rounded-2xl border p-3.5",
+		{
+			"border-gray-950 bg-white text-gray-1250": variant !== "dark",
+			"border-gray-700 bg-gray-950 text-white": variant === "dark",
+		},
+		className
+	);
 	const bgClass = cn("absolute left-0 top-0 z-modal-overlay size-full bg-black/70");
-	const closeButtonClasseName = cn("group ml-auto h-default-icon w-default-icon bg-gray-250 p-0", closeButtonClass);
+	const closeButtonClasseName = cn(
+		"group ml-auto h-default-icon w-default-icon p-0",
+		{
+			"bg-gray-250": variant !== "dark",
+			"bg-gray-800": variant === "dark",
+		},
+		closeButtonClass
+	);
 	useEffect(() => {
 		if (isOpen && modalRef.current) {
 			const buttons = modalRef.current.querySelectorAll("button");
@@ -124,7 +139,12 @@ export const Modal = ({
 						>
 							{hideCloseButton ? null : (
 								<IconButton className={closeButtonClasseName} onClick={() => onClose(name)}>
-									<Close className="size-3 fill-black transition group-hover:fill-white" />
+									<Close
+										className={cn("size-3 transition", {
+											"fill-black group-hover:fill-white": variant !== "dark",
+											"fill-gray-400 group-hover:fill-white": variant === "dark",
+										})}
+									/>
 								</IconButton>
 							)}
 
