@@ -31,8 +31,8 @@ export const ColumnVisibilityMenu = ({ table }: ColumnVisibilityMenuProps) => {
 	return (
 		<PopoverWrapper interactionType="click" placement="bottom-end">
 			<PopoverTrigger ariaLabel={t("buttons.columnSettings")}>
-				<IconButton className="hover:bg-gray-850" title={t("buttons.columnSettings")}>
-					<SettingsIcon className="size-4 fill-gray-500" />
+				<IconButton className="group hover:bg-gray-850" title={t("buttons.columnSettings")}>
+					<SettingsIcon className="size-4 fill-white group-hover:fill-green-800" />
 				</IconButton>
 			</PopoverTrigger>
 			<PopoverContent className="min-w-48 p-3">

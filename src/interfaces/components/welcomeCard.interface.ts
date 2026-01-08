@@ -1,4 +1,5 @@
 export interface WelcomeCardProps {
+	id: string;
 	title: string;
 	description: string;
 	buttonText: string;

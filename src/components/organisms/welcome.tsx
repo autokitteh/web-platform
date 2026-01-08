@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ImportProjectModal, NewProjectModal } from "./modals";
 import { welcomeCards } from "@src/constants";
 import { ModalName, TourId } from "@src/enums";
-import { useCreateProjectFromTemplate } from "@src/hooks";
+import { useCreateProjectFromTemplate, useProjectActions } from "@src/hooks";
 import { useModalStore, useTemplatesStore, useToastStore, useTourStore } from "@src/store";
 
 import { Button, Typography } from "@components/atoms";
@@ -22,6 +22,7 @@ export const WelcomePage = () => {
 	const { openModal } = useModalStore();
 	const { isLoading } = useTemplatesStore();
 	const { isCreating } = useCreateProjectFromTemplate();
+	const { triggerFileInput } = useProjectActions();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
 	const { startTour } = useTourStore();
 
@@ -59,6 +60,9 @@ export const WelcomePage = () => {
 			case "createFromScratch":
 				openModal(ModalName.newProject);
 				return;
+			case "importExisting":
+				triggerFileInput();
+				return;
 		}
 	};
 
@@ -85,19 +89,20 @@ export const WelcomePage = () => {
 				</header>
 				<main className="flex grow flex-col items-center justify-evenly px-6 py-8 md:px-16">
 					<div className="mb-[10%] mt-4 grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
-						{welcomeCards.map((option) => (
+						{welcomeCards.map(({ icon, id, translationKey }) => (
 							<WelcomeCard
-								buttonText={tWelcome(option.translationKey.buttonText)}
-								description={tWelcome(option.translationKey.description)}
-								icon={option.icon}
+								buttonText={tWelcome(translationKey.buttonText)}
+								description={tWelcome(translationKey.description)}
+								icon={icon}
+								id={id}
 								isHovered={isTemplateButtonHovered}
 								isLoading={isCreating}
-								key={option.id}
-								onClick={() => handleAction(option.id)}
-								onMouseEnter={() => handleMouseHover(option.id, "enter")}
-								onMouseLeave={() => handleMouseHover(option.id, "leave")}
-								title={tWelcome(option.translationKey.title)}
-								type={option.id as "demo" | "template"}
+								key={id}
+								onClick={() => handleAction(id)}
+								onMouseEnter={() => handleMouseHover(id, "enter")}
+								onMouseLeave={() => handleMouseHover(id, "leave")}
+								title={tWelcome(translationKey.title)}
+								type={id as "demo" | "template"}
 							/>
 						))}
 					</div>

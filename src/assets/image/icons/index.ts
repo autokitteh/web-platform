@@ -111,5 +111,3 @@ export { default as EnvIcon } from "@assets/image/icons/Env.svg?react";
 export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
 // Taken from: https://fontawesome.com/icons/info?f=classic&s=solid
 export { default as InfoIconNoCircle } from "@assets/image/icons/InfoNoCircle.svg?react";
-// Taken from: https://fontawesome.com/icons/file-zipper?f=classic&s=regular
-export { default as ZipFileIcon } from "@assets/image/icons/ZipFile.svg?react";

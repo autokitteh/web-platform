@@ -8,6 +8,7 @@ import { cn } from "@src/utilities";
 import { Button, IconSvg, Loader } from "@components/atoms";
 
 export const WelcomeCard = ({
+	id,
 	title,
 	description,
 	icon,
@@ -19,9 +20,17 @@ export const WelcomeCard = ({
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
 
 	const buttonClass = cn(
-		"group relative h-64 w-full flex-row items-center justify-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-3 px-6  text-xl text-white transition-all duration-500 ease-out hover:scale-[1.02] hover:border-green-800 hover:bg-gray-1100 hover:shadow-[0_0_30px_rgba(126,211,33,0.3)]",
+		"group relative h-64 w-full flex-row items-center",
+		"justify-center rounded-2xl border-2 border-green-800/50",
+		"bg-gray-800/20 p-3 px-6  text-xl text-white transition-all",
+		"duration-500 ease-out hover:scale-[1.02] hover:border-green-800",
+		"hover:bg-gray-1100 hover:shadow-[0_0_30px_rgba(126,211,33,0.3)]",
 		isLoading && "bg-green-800 text-gray-1100"
 	);
+
+	const iconClass = cn("relative z-10 mb-4 size-12 fill-white", {
+		"stroke-white fill-none": id === "importExisting",
+	});
 
 	return (
 		<Button
@@ -44,7 +53,7 @@ export const WelcomeCard = ({
 					<div className="absolute inset-0 animate-pulse rounded-2xl bg-[radial-gradient(circle_at_50%_50%,rgba(126,211,33,0.15),transparent_70%)]" />
 				</div>
 				<div className="flex flex-col items-center gap-2 pt-8">
-					<IconSvg className="relative z-10 mb-4 size-12 fill-white" src={icon} />
+					<IconSvg className={iconClass} src={icon} />
 					<div className="relative z-10 font-semibold">{title}</div>
 				</div>
 				<div className="relative z-10 min-h-12 text-center text-base text-white">{description}</div>

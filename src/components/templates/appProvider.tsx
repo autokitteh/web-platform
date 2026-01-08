@@ -8,7 +8,7 @@ import { supportEmail } from "@src/constants";
 import { tours } from "@src/constants/tour.constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { useEventListener, useRateLimitHandler } from "@src/hooks";
+import { useEventListener, useRateLimitHandler, useProjectActions } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useTemplatesStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath, validateAllRequiredToursExist, validateAllTemplatesExist } from "@src/utilities";
@@ -41,6 +41,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		fetchTemplates,
 	} = useTemplatesStore();
 	const { isRetrying, onRetryClick } = useRateLimitHandler();
+	const { FileInputElement } = useProjectActions();
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
@@ -139,6 +140,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	return (
 		<>
 			{children}
+			<FileInputElement />
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
