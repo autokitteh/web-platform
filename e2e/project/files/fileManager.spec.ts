@@ -157,7 +157,7 @@ test.describe("File Manager Suite", () => {
 		});
 
 		test("Import file", async ({ page }) => {
-			const fileInput = page.locator('input[type="file"]');
+			const fileInput = page.getByLabel("Import", { exact: true });
 			const testFilePath = "e2e/fixtures/test-file.txt";
 
 			await page.getByRole("button", { name: "Create new file" }).click();

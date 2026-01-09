@@ -345,6 +345,7 @@ export const useProjectActions = () => {
 		<input
 			accept=".zip"
 			className="hidden"
+			data-testid="import-project-file-input"
 			onChange={(event) => handleImportFile(event.target.files![0], "")}
 			ref={fileInputRef}
 			type="file"
@@ -361,6 +362,7 @@ export const useProjectActions = () => {
 		isDeleting,
 		downloadProjectExport,
 		handleCreateProject,
+		handleImportFile,
 		deactivateDeployment,
 		pendingFile,
 		duplicateProject,
