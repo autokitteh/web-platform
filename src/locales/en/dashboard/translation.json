@@ -25,6 +25,7 @@
 	"projects": {
 		"buttons": {
 			"columnSettings": "Column Settings",
+			"import": "Import",
 			"deactivate": "Deactivate",
 			"deleteProject": "Delete project",
 			"delete": "Delete",

@@ -1,5 +1,7 @@
+import { FiDownload } from "react-icons/fi";
+
 import { NewProject, ProjectsIcon } from "@assets/image";
-import { StartTemplateIcon, ZipFileIcon } from "@assets/image/icons";
+import { StartTemplateIcon } from "@assets/image/icons";
 
 export const welcomeCards = [
 	{
@@ -31,7 +33,7 @@ export const welcomeCards = [
 	},
 	{
 		id: "importExisting",
-		icon: ZipFileIcon,
+		icon: FiDownload,
 		translationKey: {
 			title: "importExisting",
 			description: "importExistingDesc",

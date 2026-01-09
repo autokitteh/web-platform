@@ -15,12 +15,9 @@ import MagicAiIcon from "@assets/image/icons/ai";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
-	const { fileInputRef, handleImportFile, loadingImportFile } = useProjectActions();
+	const { loadingImportFile, triggerFileInput } = useProjectActions();
 	const { currentOrganization } = useOrganizationStore();
 	const { fullScreenDashboard, setFullScreenDashboard } = useSharedBetweenProjectsStore();
-	const triggerFileInput = () => {
-		fileInputRef.current?.click();
-	};
 	const navigate = useNavigate();
 	const showTemplates = () => {
 		setFullScreenDashboard(false);
@@ -86,13 +83,6 @@ export const DashboardTopbar = () => {
 					>
 						{t("buttons.import")}
 					</Button>
-					<input
-						accept=".zip"
-						className="hidden"
-						onChange={(event) => handleImportFile(event.target.files![0], "")}
-						ref={fileInputRef}
-						type="file"
-					/>
 				</div>
 				{fullScreenDashboard ? (
 					<Tooltip content={t("buttons.openTemplates")} position="bottom">

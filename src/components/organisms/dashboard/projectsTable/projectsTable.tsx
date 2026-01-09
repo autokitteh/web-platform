@@ -3,11 +3,13 @@ import React, { useRef } from "react";
 import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useTranslation } from "react-i18next";
+import { FiDownload } from "react-icons/fi";
 
 import { columns } from "./columns";
 import { ColumnVisibilityMenu } from "./columnVisibilityMenu";
 import { ProjectsTableBody, ProjectsTableHeader, ProjectsTableModals } from "./components";
 import { useProjectsStats, useProjectsTableColumns, useProjectsTableActions } from "./hooks";
+import { useProjectActions } from "@src/hooks";
 
 import { TableSkeleton, IconButton } from "@components/atoms";
 
@@ -18,6 +20,7 @@ const rowHeight = 38;
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 	const tableContainerRef = useRef<HTMLDivElement>(null);
+	const { loadingImportFile, triggerFileInput } = useProjectActions();
 
 	const { projectsStats, isLoadingStats, failedProjects, updateProjectStatus, projectsWithStats } =
 		useProjectsStats();
@@ -85,7 +88,17 @@ export const DashboardProjectsTable = () => {
 				</div>
 				<div className="flex items-center gap-x-0">
 					<ColumnVisibilityMenu table={table} />
-					<IconButton ariaLabel="AI" className="group" href="/ai">
+					<IconButton
+						ariaLabel={t("buttons.import")}
+						className="group mt-0.5 h-full rotate-180 gap-2 whitespace-nowrap hover:bg-gray-1050 active:bg-black"
+						disabled={loadingImportFile}
+						onClick={triggerFileInput}
+						title={t("buttons.import")}
+						variant="light"
+					>
+						<FiDownload className="size-4 transition group-hover:stroke-green-800" />
+					</IconButton>
+					<IconButton ariaLabel="Create new project" className="group" href="/welcome">
 						<PlusIcon className="size-4 fill-white transition group-hover:fill-green-800" />
 					</IconButton>
 				</div>

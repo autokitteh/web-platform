@@ -8,6 +8,7 @@ import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { createAiLandingPagePrompts, initialPillsCount } from "@src/constants";
 import { TourId } from "@src/enums";
+import { useProjectActions } from "@src/hooks";
 import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn, navigateToProject } from "@src/utilities";
 
@@ -23,6 +24,7 @@ export const AiLandingPage = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectsList } = useProjectStore();
 	const { openModal } = useModalStore();
+	const { triggerFileInput } = useProjectActions();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const [visiblePillsCount, setVisiblePillsCount] = useState(initialPillsCount);
@@ -159,6 +161,14 @@ export const AiLandingPage = () => {
 								title="New Project From Scratch"
 							>
 								<Typography className="font-normal">New Project From Scratch</Typography>
+							</Button>
+							<Button
+								aria-label="Import project from archive"
+								className="w-full rounded-full border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
+								onClick={triggerFileInput}
+								title="Import project from archive"
+							>
+								<Typography className="font-normal">Import</Typography>
 							</Button>
 						</div>
 						<Button

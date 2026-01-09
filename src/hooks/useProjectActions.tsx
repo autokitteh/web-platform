@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { dump, load } from "js-yaml";
 import { useTranslation } from "react-i18next";
@@ -19,6 +19,9 @@ import { FileStructure } from "@src/interfaces/utilities";
 import { navigateToProject, unpackFileZip, UserTrackingUtils } from "@src/utilities";
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
+
+// Shared ref across all hook instances - singleton pattern
+const fileInputRef = { current: null as HTMLInputElement | null };
 
 export const useProjectActions = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "actions" });
@@ -46,7 +49,6 @@ export const useProjectActions = () => {
 	const [projectId, setProjectId] = useState<string>();
 	const { saveAllFiles } = fileOperations(projectId!);
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
-	const fileInputRef = useRef<HTMLInputElement>(null);
 	const { resetChecker } = useConnectionStore();
 
 	const handleCreateProject = async (name: string) => {
@@ -335,12 +337,26 @@ export const useProjectActions = () => {
 		}
 	};
 
+	const triggerFileInput = () => {
+		fileInputRef.current?.click();
+	};
+
+	const FileInputElement = () => (
+		<input
+			accept=".zip"
+			className="hidden"
+			data-testid="import-project-file-input"
+			onChange={(event) => handleImportFile(event.target.files![0], "")}
+			ref={fileInputRef}
+			type="file"
+		/>
+	);
+
 	return {
 		isCreatingNewProject,
 		loadingImportFile,
 		projectId,
 		templateFiles,
-		fileInputRef,
 		isExporting,
 		deleteProject,
 		isDeleting,
@@ -350,5 +366,7 @@ export const useProjectActions = () => {
 		deactivateDeployment,
 		pendingFile,
 		duplicateProject,
+		triggerFileInput,
+		FileInputElement, // Keep for global mounting
 	};
 };
