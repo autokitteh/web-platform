@@ -1,3 +1,7 @@
+## 2.253.0 (2026-01-09)
+
+* feat: align import UI and functionality (#1542) ([84ab0c5](https://github.com/autokitteh/web-platform/commit/84ab0c5)), closes [#1542](https://github.com/autokitteh/web-platform/issues/1542)
+
 ## <small>2.252.2 (2026-01-06)</small>
 
 * refactor: fix triggers with org connections (#1540) ([f4a0149](https://github.com/autokitteh/web-platform/commit/f4a0149)), closes [#1540](https://github.com/autokitteh/web-platform/issues/1540)
