@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -10,12 +10,11 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const AuthTokenTwilioForm = ({
+export const ApiTokenTwilioForm = ({
 	control,
 	errors,
 	isLoading,
 	mode,
-	patWebhookKey,
 	register,
 	setValue,
 }: {
@@ -23,25 +22,21 @@ export const AuthTokenTwilioForm = ({
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	patWebhookKey?: string;
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
+	register: UseFormRegister<{ [x: string]: any }>;
+	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState<{ account_sid: boolean; auth_token: boolean }>({
+	const [lockState, setLockState] = useState<{ account_sid: boolean; api_key: boolean; api_secret: boolean }>({
 		account_sid: true,
-		auth_token: true,
+		api_key: true,
+		api_secret: true,
 	});
+
 	const isEditMode = mode === "edit";
 
 	const accountSid = useWatch({ control, name: "account_sid" });
-	const authToken = useWatch({ control, name: "auth_token" });
-
-	useEffect(() => {
-		if (patWebhookKey) {
-			setValue("webhook", patWebhookKey);
-		}
-	}, [patWebhookKey, setValue]);
+	const apiKey = useWatch({ control, name: "api_key" });
+	const apiSecret = useWatch({ control, name: "api_secret" });
 
 	return (
 		<>
@@ -79,31 +74,61 @@ export const AuthTokenTwilioForm = ({
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("auth_token")}
+						{...register("api_key")}
 						aria-label={t("twilio.placeholders.token")}
 						disabled={isLoading}
-						handleInputChange={(newTokenValue) => setValue("auth_token", newTokenValue)}
+						handleInputChange={(newKeyValue) => setValue("api_key", newKeyValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, auth_token: newLockState }))
+							setLockState((prevState) => ({ ...prevState, api_key: newLockState }))
 						}
-						isError={!!errors.auth_token}
-						isLocked={lockState.auth_token}
+						isError={!!errors.api_key}
+						isLocked={lockState.api_key}
 						isRequired
 						label={t("twilio.placeholders.token")}
-						value={authToken}
+						value={apiKey}
 					/>
 				) : (
 					<Input
-						{...register("auth_token")}
+						{...register("api_key")}
 						aria-label={t("twilio.placeholders.token")}
 						disabled={isLoading}
-						isError={!!errors.auth_token}
+						isError={!!errors.api_key}
 						isRequired
 						isSensitive
 						label={t("twilio.placeholders.token")}
 					/>
 				)}
-				<ErrorMessage>{errors.auth_token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
+			</div>
+			<div className="relative">
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("api_secret")}
+						aria-label={t("twilio.placeholders.secret")}
+						disabled={isLoading}
+						handleInputChange={(newSecretValue) => setValue("api_secret", newSecretValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, api_secret: newLockState }))
+						}
+						isError={!!errors.api_secret}
+						isLocked={lockState.api_secret}
+						isRequired
+						label={t("twilio.placeholders.secret")}
+						value={apiSecret}
+					/>
+				) : (
+					<Input
+						{...register("api_secret")}
+						aria-label={t("twilio.placeholders.secret")}
+						disabled={isLoading}
+						isError={!!errors.api_secret}
+						isRequired
+						isSensitive
+						label={t("twilio.placeholders.secret")}
+					/>
+				)}
+				<ErrorMessage>{errors.api_secret?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

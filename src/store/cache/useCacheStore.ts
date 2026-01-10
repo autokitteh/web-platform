@@ -2,7 +2,6 @@ import { t } from "i18next";
 import isEqual from "lodash/isEqual";
 import { createSelector } from "reselect";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 import { maxResultsLimitToDisplay, namespaces } from "@constants";
 import { DeploymentStateVariant } from "@enums";
@@ -610,12 +609,5 @@ const selectHasActiveDeployments = createSelector(
 	(deployments) => deployments?.some(({ state }) => state === DeploymentStateVariant.active) || false
 );
 
-export const useCacheStore = create<CacheStore>()(
-	persist(store, {
-		name: "cache-storage",
-		partialize: (state) => ({
-			integrations: state.integrations,
-		}),
-	})
-);
+export const useCacheStore = create<CacheStore>()(store);
 export const useHasActiveDeployments = () => useCacheStore(selectHasActiveDeployments);

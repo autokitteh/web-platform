@@ -20,11 +20,6 @@ export interface SharedBetweenProjectsStore {
 	selectionPerProject: {
 		[projectId: string]: EditorSelection;
 	};
-	fullScreenEditor: { [projectId: string]: boolean };
-	setFullScreenEditor: (projectId: string, value: boolean) => void;
-	expandedProjectNavigation: { [projectId: string]: boolean };
-	projectSplitScreenWidth: { [projectId: string]: number };
-	setProjectSplitScreenWidth: (projectId: string, width: number) => void;
 	sessionsTableSplit: { [projectId: string]: number };
 	setSessionsTableWidth: (projectId: string, width: number) => void;
 	chatbotWidth: { [projectId: string]: number };
@@ -37,8 +32,6 @@ export interface SharedBetweenProjectsStore {
 	setProjectFilesWidth: (projectId: string, width: number) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
-	isChatbotFullScreen: { [projectId: string]: boolean };
-	setIsChatbotFullScreen: (projectId: string, value: boolean) => void;
 	isProjectFilesVisible: { [projectId: string]: boolean };
 	setIsProjectFilesVisible: (projectId: string, value: boolean) => void;
 	projectSettingsAccordionState: { [projectId: string]: { [accordionKey: string]: boolean } };
@@ -57,8 +50,6 @@ export interface SharedBetweenProjectsStore {
 	closeDrawer: (projectId: string, drawerName: DrawerName) => void;
 	isDrawerOpen: (projectId: string, drawerName: DrawerName) => boolean | undefined;
 	setDrawerAnimated: (projectId: string, drawerName: DrawerName, hasAnimated: boolean) => void;
-	lastVisitedUrl: { [projectId: string]: string };
-	setLastVisitedUrl: (projectId: string, url: string) => void;
 	lastSeenSession: { [projectId: string]: string };
 	setLastSeenSession: (projectId: string, sessionId: string) => void;
 	settingsPath: { [projectId: string]: string };

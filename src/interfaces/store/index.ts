@@ -8,15 +8,6 @@ export type {
 export type { BuildFilesStore, BuildFilesData } from "@interfaces/store/buildFilesStore.interface";
 export type { CacheStore, ProjectValidationLevel } from "@interfaces/store/cacheStore.interface";
 export type { ConnectionStore } from "@src/interfaces/store/connectionStore.interface";
-export type {
-	DashboardStore,
-	DashboardState,
-	DashboardActions,
-	SessionStatistics,
-	EventStatistics,
-	ConnectionStatistics,
-	ScopeKeyParams,
-} from "@interfaces/store/dashboardStore.interface";
 export type { EventsDrawerStore } from "@interfaces/store/eventsDrawerStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
 export type { LoggerStore, Log } from "@interfaces/store/loggerStore.interface";

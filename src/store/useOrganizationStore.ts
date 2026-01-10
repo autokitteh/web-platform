@@ -2,10 +2,9 @@ import dayjs from "dayjs";
 import { t } from "i18next";
 import { produce } from "immer";
 import { StateCreator, create } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
+import { MemberRole, MemberStatusType, UserStatusType } from "@enums";
 import { AuthService, BillingService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces, cookieRefreshInterval, featureFlags } from "@src/constants";
 import { defaultUsage } from "@src/mockups";
@@ -781,4 +780,4 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}));
 	},
 });
-export const useOrganizationStore = create(persist(immer<OrganizationStore>(store), { name: StoreName.organization }));
+export const useOrganizationStore = create(immer<OrganizationStore>(store));

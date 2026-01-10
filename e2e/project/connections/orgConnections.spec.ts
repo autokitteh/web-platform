@@ -24,7 +24,7 @@ test.describe("Org Connections Suite", () => {
 		await orgConnectionsPage.goto();
 		await orgConnectionsPage.clickAddConnection();
 		await connectionsConfig.selectIntegration(testIntegrationName);
-		await orgConnectionsPage.fillTwilioAccountSidAndAuthToken();
+		await orgConnectionsPage.fillTwilioAccountSidAndApiTokenAndApiSecret();
 		await page.getByRole("button", { name: "Save Connection" }).click();
 
 		const nameError = page.getByText("Name is required");

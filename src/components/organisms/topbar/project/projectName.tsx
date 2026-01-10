@@ -120,6 +120,7 @@ export const ProjectTopbarName = () => {
 					<EditIcon className="absolute -left-4 size-4 bg-gray-1250 fill-white p-0.5 opacity-0 transition group-hover:opacity-100" />
 					<span
 						className="max-w-240 truncate text-xl font-bold maxScreenWidth-1600:max-w-160"
+						data-testid="project-name"
 						title={project?.name}
 					>
 						{project?.name}

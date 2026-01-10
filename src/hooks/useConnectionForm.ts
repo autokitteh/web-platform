@@ -117,7 +117,6 @@ export const useConnectionForm = (
 		}
 
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
-
 		if (connectionAuthType) {
 			setConnectionType(connectionAuthType.value as ConnectionAuthType);
 		} else if (authOptions && authOptions.length > 0 && integrationName) {
@@ -125,6 +124,10 @@ export const useConnectionForm = (
 				const defaultOption = getDefaultAuthType(authOptions, integrationName as keyof typeof Integrations);
 				setConnectionType(defaultOption.value as ConnectionAuthType);
 			} catch {
+				LoggerService.warn(
+					namespaces.hooks.connectionForm,
+					`getConnectionAuthType: failed to set default auth type`
+				);
 				// If getDefaultAuthType fails (e.g., no valid options), leave connectionType unset
 				// This allows the form to maintain its current state
 			}
