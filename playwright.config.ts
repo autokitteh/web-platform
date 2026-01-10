@@ -26,7 +26,7 @@ export default defineConfig({
 
 	maxFailures: process.env.CI ? 1 : undefined,
 
-	workers: process.env.CI ? 1 : 2,
+	workers: process.env.CI ? 4 : 2,
 
 	/* Configure projects for major browsers */
 	projects: [
@@ -88,7 +88,7 @@ export default defineConfig({
 
 	timeout: 60 * 1000 * 6, // 6 minutes timeout for each test
 
-	retries: process.env.CI ? 2 : 0, // 2 retries for CI, 0 for local
+	retries: process.env.CI ? 1 : 0, // 1 retry for CI, 0 for local
 
 	/* Visual regression test settings */
 	expect: {
@@ -119,15 +119,15 @@ export default defineConfig({
 
 		viewport: { width: 1920, height: 1080 },
 
-		actionTimeout: 3000,
+		actionTimeout: 6000,
 	},
 
 	webServer: {
-		command: `npm run build && npm run preview`,
+		command: process.env.CI ? `npm run preview` : `npm run build && npm run preview`,
 		port: previewPort,
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",
-		timeout: 5 * 60 * 1000, // 300,000 ms = 5 minutes (CI builds can be slow)
+		timeout: process.env.CI ? 60 * 1000 : 5 * 60 * 1000,
 	},
 });
