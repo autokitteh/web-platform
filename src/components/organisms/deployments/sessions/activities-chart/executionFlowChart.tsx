@@ -121,6 +121,9 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						style: {
 							colors: "#fff",
 						},
+						align: "left",
+						minWidth: 50,
+						maxWidth: 100,
 					},
 				},
 				xaxis: {
