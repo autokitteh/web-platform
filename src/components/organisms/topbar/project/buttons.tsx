@@ -148,9 +148,9 @@ export const ProjectTopbarButtons = () => {
 				type: "success",
 			});
 
-			// setTimeout(() => {
-			// 	navigate("/", { replace: true });
-			// }, 100);
+			setTimeout(() => {
+				navigate("/", { replace: true });
+			}, 100);
 		} catch {
 			addToast({
 				message: t("errorDeletingProject"),
