@@ -22,7 +22,7 @@ export const LoadingOverlay = ({ isLoading, className, message }: LoadingOverlay
 
 	if (!isLoading) return null;
 
-	const overlayClassName = cn("fixed left-0 top-0 z-overlay flex size-full items-center justify-center", className);
+	const overlayClassName = cn("fixed left-0 top-0 z-max flex size-full items-center justify-center", className);
 	const loaderSize = getRelativeSize("loader");
 	const loaderClassName = cn("z-overlay", {
 		"-ml-4": loaderSize === "md",
