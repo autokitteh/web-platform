@@ -2,7 +2,13 @@ import type { Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { expect, test } from "../fixtures";
-import { cleanupCurrentProject, waitForToastToBeRemoved } from "../utils";
+import {
+	cleanupCurrentProject,
+	waitForToastToBeRemoved,
+	scrollToFindInVirtualizedList,
+	getProjectsTableScrollContainer,
+	getProjectRowLocator,
+} from "../utils";
 
 async function getProjectNameViaRenameInput(page: Page): Promise<string> {
 	const projectNameElement = page.getByTestId("project-name");
@@ -152,8 +158,10 @@ test.describe("Project Template and Export Suite", () => {
 
 		await page.goto("/");
 
-		await page.getByRole("cell", { name: importedProjectName }).waitFor({ state: "visible", timeout: 5000 });
-		await expect(page.getByRole("cell", { name: importedProjectName })).toBeVisible();
+		// Scroll to find the imported project in the projects table
+		const scrollContainer = getProjectsTableScrollContainer(page);
+		const projectRow = getProjectRowLocator(page, importedProjectName);
+		await scrollToFindInVirtualizedList(page, scrollContainer, projectRow);
 	});
 
 	test("Export and auto-import project with same name", async ({ page, projectPage }) => {
@@ -257,7 +265,6 @@ test.describe("Project Import Suite - All Import Locations", () => {
 	test("Import project from Dashboard topbar", async ({ page }) => {
 		await page.goto("/");
 
-		// aria-label and title are "Import" based on dashboard topbar implementation
 		const importButton = page.locator('button[aria-label="Import"]').first();
 		await importButton.waitFor({ state: "visible", timeout: 3000 });
 
@@ -277,10 +284,8 @@ test.describe("Project Import Suite - All Import Locations", () => {
 	test("Import project from Projects table header", async ({ page }) => {
 		await page.goto("/");
 
-		// Wait for the projects table to load
 		await page.waitForSelector('h2:has-text("Projects")', { state: "visible" });
 
-		// aria-label and title are "Import" based on projectsTable implementation
 		const importButton = page.locator('button[aria-label="Import"]').last();
 		await importButton.waitFor({ state: "visible", timeout: 3000 });
 

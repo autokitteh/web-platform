@@ -63,6 +63,7 @@ export class ProjectPage {
 
 		const deletedProjectLog = this.page.getByText(deletedProjectLogText);
 		await expect(deletedProjectLog).toBeVisible();
+		await this.page.locator('button[aria-label="System Log"]').click();
 	}
 
 	async stopDeployment() {

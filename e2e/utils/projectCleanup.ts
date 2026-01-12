@@ -51,6 +51,7 @@ export async function deleteProjectByName(page: Page, projectName: string, hasAc
 
 		const deletedProjectLog = page.getByText(deletedProjectLogText);
 		await deletedProjectLog.waitFor({ state: "visible", timeout: 3000 }).catch(() => {});
+		await page.locator('button[aria-label="System Log"]').click();
 	} catch (error) {
 		console.warn("deleteProjectByName cleanup error:", error);
 	}
