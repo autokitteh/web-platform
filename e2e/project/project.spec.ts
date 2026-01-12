@@ -201,3 +201,118 @@ test.describe("Project Template and Export Suite", () => {
 		expect(importedProjectName).toBe(projectName);
 	});
 });
+
+test.describe("Project Import Suite - All Import Locations", () => {
+	let projectName: string;
+	let exportedFilePath: string | null;
+
+	test.beforeEach(async ({ dashboardPage, page, projectPage }) => {
+		projectName = `test_${randomatic("Aa", 8)}`;
+		await dashboardPage.createProjectFromTemplate(projectName);
+
+		// Export the project for reuse in all import tests
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+
+		const downloadPromise = page.waitForEvent("download");
+
+		const additionalActionsButton = page.locator('button[aria-label="Project additional actions"]');
+		await additionalActionsButton.waitFor({ state: "visible", timeout: 3000 });
+		await additionalActionsButton.hover();
+
+		const exportButton = page.locator('button[aria-label="Export"]');
+		await exportButton.waitFor({ state: "visible", timeout: 3000 });
+		await exportButton.click();
+
+		const download = await downloadPromise;
+		exportedFilePath = await download.path();
+
+		await waitForToastToBeRemoved(page, "Project exported successfully");
+
+		// Delete the original project
+		await projectPage.deleteProject(projectName);
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
+	test("Import project from Welcome page", async ({ page }) => {
+		await page.goto("/welcome");
+		// Button text is "Import Project" based on welcomeCards constant
+		await expect(page.getByRole("button", { name: "Import Project" })).toBeVisible();
+
+		const fileInputLocator = page.locator('input[data-testid="import-project-file-input"]');
+		await expect(fileInputLocator).toBeAttached();
+
+		await fileInputLocator.setInputFiles(exportedFilePath!);
+
+		await waitForToastToBeRemoved(page, "Project created successfully");
+
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+
+		const importedProjectName = await getProjectNameViaRenameInput(page);
+		expect(importedProjectName).toBe(projectName);
+	});
+
+	test("Import project from Dashboard topbar", async ({ page }) => {
+		await page.goto("/");
+
+		// aria-label and title are "Import" based on dashboard topbar implementation
+		const importButton = page.locator('button[aria-label="Import"]').first();
+		await importButton.waitFor({ state: "visible", timeout: 3000 });
+
+		const fileInputLocator = page.locator('input[data-testid="import-project-file-input"]');
+		await expect(fileInputLocator).toBeAttached();
+
+		await fileInputLocator.setInputFiles(exportedFilePath!);
+
+		await waitForToastToBeRemoved(page, "Project created successfully");
+
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+
+		const importedProjectName = await getProjectNameViaRenameInput(page);
+		expect(importedProjectName).toBe(projectName);
+	});
+
+	test("Import project from Projects table header", async ({ page }) => {
+		await page.goto("/");
+
+		// Wait for the projects table to load
+		await page.waitForSelector('h2:has-text("Projects")', { state: "visible" });
+
+		// aria-label and title are "Import" based on projectsTable implementation
+		const importButton = page.locator('button[aria-label="Import"]').last();
+		await importButton.waitFor({ state: "visible", timeout: 3000 });
+
+		const fileInputLocator = page.locator('input[data-testid="import-project-file-input"]');
+		await expect(fileInputLocator).toBeAttached();
+
+		await fileInputLocator.setInputFiles(exportedFilePath!);
+
+		await waitForToastToBeRemoved(page, "Project created successfully");
+
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+
+		const importedProjectName = await getProjectNameViaRenameInput(page);
+		expect(importedProjectName).toBe(projectName);
+	});
+
+	test("Import project from AI landing page", async ({ page }) => {
+		await page.goto("/ai");
+
+		const importButton = page.locator('button[aria-label="Import project from archive"]');
+		await importButton.waitFor({ state: "visible", timeout: 3000 });
+
+		const fileInputLocator = page.locator('input[data-testid="import-project-file-input"]');
+		await expect(fileInputLocator).toBeAttached();
+
+		await fileInputLocator.setInputFiles(exportedFilePath!);
+
+		await waitForToastToBeRemoved(page, "Project created successfully");
+
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+
+		const importedProjectName = await getProjectNameViaRenameInput(page);
+		expect(importedProjectName).toBe(projectName);
+	});
+});
