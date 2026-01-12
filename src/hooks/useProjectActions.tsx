@@ -269,9 +269,8 @@ export const useProjectActions = () => {
 
 		setIsDeleting(true);
 		const { error, data: projectName } = await removeProject(projectId);
-		setTimeout(() => {
-			setIsDeleting(false);
-		}, 3000);
+		setIsDeleting(false);
+
 		if (error) {
 			return { error };
 		}
