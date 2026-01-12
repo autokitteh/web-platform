@@ -7,4 +7,4 @@ export type {
 	PushParams,
 } from "@type/hooks/useHubspot.type";
 export type { EventRegistry, EventData } from "@type/hooks/useEventListener.type";
-export type { ResizeDirection } from "@type/hooks/useRisize.type";
+export type { ResizeDirection } from "@src/types/hooks/useResize.type";

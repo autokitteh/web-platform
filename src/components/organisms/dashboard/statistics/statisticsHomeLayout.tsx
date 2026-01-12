@@ -26,7 +26,10 @@ export const StatisticsHomeLayout = ({
 		<div className={classes}>
 			<section aria-label="System overview">{totalCounters}</section>
 
-			<section aria-label="Projects" className="flex min-h-52 flex-1 flex-col overflow-hidden sm:min-h-48">
+			<section
+				aria-label="Projects"
+				className="z-overlay flex min-h-52 flex-1 flex-col overflow-hidden sm:min-h-48"
+			>
 				{projectsTable}
 			</section>
 

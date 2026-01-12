@@ -20,6 +20,7 @@ import {
 import { validateEntitiesName, UserTrackingUtils } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 import {
 	DeleteActiveDeploymentProjectModal,
@@ -33,6 +34,7 @@ import { CloneIcon, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icon
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors", "modals"]);
+	const { t: tLoadingOverlay } = useTranslation("dashboard", { keyPrefix: "loadingOverlay" });
 	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
@@ -49,6 +51,13 @@ export const ProjectTopbarButtons = () => {
 	const [isDuplicating, setIsDuplicating] = useState(false);
 	const [duplicateProjectName, setDuplicateProjectName] = useState("");
 	const [duplicateError, setDuplicateError] = useState<string>();
+
+	const isBusy = isDeleting || isExporting;
+	const busyMessage = isDeleting
+		? tLoadingOverlay("deletingProject")
+		: isExporting
+			? tLoadingOverlay("exportingProject")
+			: undefined;
 
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 
@@ -139,9 +148,9 @@ export const ProjectTopbarButtons = () => {
 				type: "success",
 			});
 
-			setTimeout(() => {
-				navigate("/", { replace: true });
-			}, 100);
+			// setTimeout(() => {
+			// 	navigate("/", { replace: true });
+			// }, 100);
 		} catch {
 			addToast({
 				message: t("errorDeletingProject"),
@@ -310,6 +319,7 @@ export const ProjectTopbarButtons = () => {
 
 	return (
 		<div className="flex items-center gap-3 pr-2 maxScreenWidth-1600:gap-1.5">
+			<LoadingOverlay isLoading={isBusy} message={busyMessage} />
 			<PopoverWrapper interactionType="hover" placement="top">
 				<PopoverTrigger>
 					<Button

@@ -45,7 +45,7 @@
 		"projectDeployFailed": "Project deployment failed",
 		"projectNotFound": "Project not found",
 		"rename": "Rename",
-		"ariaEditProjectTitle": "Edit project title",
+		"ariaEditProjectName": "Edit project name",
 		"success": "Success"
 	},
 	"outputLog": {

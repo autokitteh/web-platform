@@ -69,6 +69,7 @@ export const VariablesSectionList = ({
 						return (
 							<div
 								className="flex rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
+								data-testid={`variable-item-${name}`}
 								id={variableContainerId}
 								key={id}
 								onClick={() => actions.configure.onClick(id)}

@@ -8,13 +8,14 @@ import { useProjectActions } from "@src/hooks";
 import { useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Button, IconSvg, Tooltip, Typography } from "@components/atoms";
-import { ImportProjectModal } from "@components/organisms";
+import { LoadingOverlay } from "@components/molecules";
 
 import { PlusAccordionIcon, StartTemplateIcon } from "@assets/image/icons";
 import MagicAiIcon from "@assets/image/icons/ai";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
+	const { t: tLoadingOverlay } = useTranslation("dashboard", { keyPrefix: "loadingOverlay" });
 	const { loadingImportFile, triggerFileInput } = useProjectActions();
 	const { currentOrganization } = useOrganizationStore();
 	const { fullScreenDashboard, setFullScreenDashboard } = useSharedBetweenProjectsStore();
@@ -31,6 +32,7 @@ export const DashboardTopbar = () => {
 
 	return (
 		<div className="z-10 flex flex-wrap">
+			<LoadingOverlay isLoading={loadingImportFile} message={tLoadingOverlay("importingProject")} />
 			<div className="flex w-full flex-col items-center justify-between md:flex-row">
 				<Typography
 					className="w-full text-center font-averta text-2xl font-semibold md:mb-0 md:text-left"
@@ -43,7 +45,7 @@ export const DashboardTopbar = () => {
 					<Button
 						ariaLabel={t("buttons.newProject")}
 						className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-						onClick={() => navigate("/ai")}
+						onClick={() => navigate("/welcome")}
 						title={t("buttons.newProject")}
 						variant="light"
 					>
@@ -92,7 +94,6 @@ export const DashboardTopbar = () => {
 					</Tooltip>
 				) : null}
 			</div>
-			<ImportProjectModal />
 		</div>
 	);
 };

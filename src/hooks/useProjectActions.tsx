@@ -20,6 +20,7 @@ import { navigateToProject, unpackFileZip, UserTrackingUtils } from "@src/utilit
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
+import { ImportProjectModal, NewProjectModal } from "@components/organisms";
 // Shared ref across all hook instances - singleton pattern
 const fileInputRef = { current: null as HTMLInputElement | null };
 
@@ -268,8 +269,9 @@ export const useProjectActions = () => {
 
 		setIsDeleting(true);
 		const { error, data: projectName } = await removeProject(projectId);
-		setIsDeleting(false);
-
+		setTimeout(() => {
+			setIsDeleting(false);
+		}, 3000);
 		if (error) {
 			return { error };
 		}
@@ -368,5 +370,7 @@ export const useProjectActions = () => {
 		duplicateProject,
 		triggerFileInput,
 		FileInputElement, // Keep for global mounting
+		ImportProjectModal,
+		NewProjectModal,
 	};
 };

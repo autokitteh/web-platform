@@ -69,7 +69,7 @@ export async function cleanupCurrentProject(page: Page): Promise<void> {
 			.isEnabled()
 			.catch(() => false);
 
-		const projectNameElement = page.getByRole("button", { name: "Edit project title" });
+		const projectNameElement = page.getByTestId("project-name");
 		const projectName = await projectNameElement.textContent().catch(() => null);
 
 		if (projectName) {

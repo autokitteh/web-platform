@@ -11,9 +11,10 @@ export const Loader = ({
 	size = "md",
 }: LoaderProps) => {
 	const sizeClass = cn("loader-cycle-disks flex h-auto items-center", {
+		"w-3 before:h-3 before:w-3 after:h-3 after:w-3": size === "xs",
 		"w-4 before:h-2 before:w-2 after:h-2 after:w-2": size === "sm",
-		"w-6 before:h-6 before:w-6 after:h-6 after:w-6": size === "lg",
-		"w-8 before:h-4 before:w-4 after:h-4 after:w-4": size === "md",
+		"w-6 before:h-4 before:w-4 after:h-4 after:w-4": size === "md",
+		"w-7 before:h-6 before:w-6 after:h-6 after:w-6": size === "lg",
 		"w-16 before:h-8 before:w-8 after:h-8 after:w-8": size === "xl",
 		"w-32 before:h-16 before:w-16 after:h-16 after:w-16": size === "2xl",
 	});
