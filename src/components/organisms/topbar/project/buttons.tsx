@@ -33,7 +33,7 @@ import { BuildIcon, MoreIcon } from "@assets/image";
 import { CloneIcon, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
-	const { t } = useTranslation(["projects", "buttons", "errors", "modals"]);
+	const { t } = useTranslation(["projects", "buttons", "errors", "modals", "deployments"]);
 	const { t: tLoadingOverlay } = useTranslation("dashboard", { keyPrefix: "loadingOverlay" });
 	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
