@@ -1,3 +1,7 @@
+## 2.254.0 (2026-01-13)
+
+* feat: enhance file management and loading states (#1544) ([f715a1c](https://github.com/autokitteh/web-platform/commit/f715a1c)), closes [#1544](https://github.com/autokitteh/web-platform/issues/1544)
+
 ## <small>2.253.1 (2026-01-13)</small>
 
 * fix: fix import projects functionality and add loading overlays  (#1543) ([4575229](https://github.com/autokitteh/web-platform/commit/4575229)), closes [#1543](https://github.com/autokitteh/web-platform/issues/1543)
