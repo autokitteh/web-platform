@@ -164,6 +164,13 @@ test.describe("File Manager Suite", () => {
 			await fileInput.setInputFiles(testFilePath);
 
 			await waitForToastToBeRemoved(page, 'File "test-file.txt" imported successfully');
+
+			await page.mouse.click(0, 0);
+
+			await expect(page.getByRole("button", { name: "Open test-file.txt" })).toBeVisible();
+			await page.getByRole("button", { name: "Open test-file.txt" }).click();
+			await page.getByText("test-file.txt").click();
+			await expect(page.getByRole("tab", { name: "test-file.txt" })).toBeVisible();
 		});
 	});
 

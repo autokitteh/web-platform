@@ -10,9 +10,9 @@ import { ColumnVisibilityMenu } from "./columnVisibilityMenu";
 import { ProjectsTableBody, ProjectsTableHeader, ProjectsTableModals } from "./components";
 import { useProjectsStats, useProjectsTableColumns, useProjectsTableActions } from "./hooks";
 import { useProjectActions } from "@src/hooks";
+import { useProjectStore } from "@src/store";
 
 import { TableSkeleton, IconButton } from "@components/atoms";
-import { LoadingOverlay } from "@components/molecules";
 
 import { PlusIcon } from "@assets/image/icons";
 
@@ -20,9 +20,9 @@ const rowHeight = 38;
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const { t: tLoadingOverlay } = useTranslation("dashboard", { keyPrefix: "loadingOverlay" });
 	const tableContainerRef = useRef<HTMLDivElement>(null);
-	const { loadingImportFile, triggerFileInput } = useProjectActions();
+	const { triggerFileInput } = useProjectActions();
+	const { loadingImportFile } = useProjectStore();
 
 	const { projectsStats, isLoadingStats, failedProjects, updateProjectStatus, projectsWithStats } =
 		useProjectsStats();
@@ -78,17 +78,9 @@ export const DashboardProjectsTable = () => {
 
 	const visibleColumns = table.getVisibleLeafColumns();
 	const columnIds = visibleColumns.map((col) => col.id);
-	const overlayMessage = loadingImportFile
-		? tLoadingOverlay("importingProject")
-		: isDeleting
-			? tLoadingOverlay("deletingProject")
-			: "";
-
-	const isProjectActionInProgress = loadingImportFile || isDeleting;
 
 	return (
 		<div className="z-10 flex h-full select-none flex-col overflow-hidden">
-			<LoadingOverlay isLoading={isProjectActionInProgress} message={overlayMessage} />
 			<div className="sticky top-0 z-20 flex items-center justify-between bg-gray-1100 pb-2">
 				<div className="flex flex-1 items-center gap-x-2">
 					<h2 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500">

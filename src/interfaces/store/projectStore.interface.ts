@@ -17,6 +17,11 @@ export interface ProjectStore {
 	pendingFile?: File;
 	setPendingFile: (file?: File) => void;
 	isExporting: boolean;
+	setIsExporting: (value: boolean) => void;
+	isDeleting: boolean;
+	setIsDeleting: (value: boolean) => void;
+	loadingImportFile: boolean;
+	setLoadingImportFile: (value: boolean) => void;
 	actionInProcess: Record<ProjectActionType, boolean>;
 	setActionInProcess: (action: ProjectActionType, value: boolean) => void;
 }

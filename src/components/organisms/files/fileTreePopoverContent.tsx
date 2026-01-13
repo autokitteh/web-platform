@@ -31,6 +31,11 @@ export const FileTreePopoverContent = ({ handleFileSelect, isUploadingFiles }: F
 		popover.close();
 	};
 
+	const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		handleFileSelect(e);
+		popover.close();
+	};
+
 	return (
 		<PopoverContent className="flex min-w-44 flex-col gap-1 rounded-lg border-0.5 border-white bg-gray-1250 p-3">
 			<Button
@@ -49,24 +54,20 @@ export const FileTreePopoverContent = ({ handleFileSelect, isUploadingFiles }: F
 				<PlusIcon className="size-4 fill-white group-hover:fill-green-800" />
 				{t("createDirectory")}
 			</Button>
-			<Button
-				className="group py-2 text-sm text-white hover:text-green-800 hover:underline"
-				onClick={() => {
-					popover.close();
-				}}
+			<label
+				aria-label="Import files"
+				className="group flex w-full cursor-pointer items-center gap-2 rounded-lg py-2 text-sm text-white transition-colors hover:text-green-800 hover:underline"
 			>
-				<label aria-label="Import files" className="group flex w-full cursor-pointer items-center gap-2 !p-0">
-					<input
-						className="hidden"
-						disabled={isUploadingFiles}
-						multiple
-						onChange={handleFileSelect}
-						type="file"
-					/>
-					<UploadIcon className="size-4 stroke-white stroke-[4] transition-all group-hover:stroke-green-800" />
-					<span className="text-sm text-white hover:text-green-800">{t("import")}</span>
-				</label>
-			</Button>
+				<input
+					className="hidden"
+					disabled={isUploadingFiles}
+					multiple
+					onChange={handleFileInputChange}
+					type="file"
+				/>
+				<UploadIcon className="size-4 stroke-white stroke-[4] transition-all group-hover:stroke-green-800" />
+				<span className="text-sm text-white transition-colors group-hover:text-green-800">{t("import")}</span>
+			</label>
 		</PopoverContent>
 	);
 };

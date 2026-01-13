@@ -9,7 +9,14 @@ import { useHubspot } from "@src/hooks";
 import { mainRoutes } from "@src/routes";
 import { getPageTitleFromPath } from "@utilities";
 
-import { useCacheStore, useFileStore, useOrganizationStore } from "@store";
+import {
+	useCacheStore,
+	useConnectionStore,
+	useFileStore,
+	useOrganizationStore,
+	useProjectStore,
+	useTemplatesStore,
+} from "@store";
 
 import { PageTitle } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
@@ -17,6 +24,7 @@ import { LoadingOverlay } from "@components/molecules";
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const { t: tLoadingOverlay } = useTranslation("global", { keyPrefix: "loadingOverlay" });
+	const { t: tDashboardLoadingOverlay } = useTranslation("dashboard", { keyPrefix: "loadingOverlay" });
 	const location = useLocation();
 	const params = useParams<{
 		connectionId?: string;
@@ -28,6 +36,9 @@ export const App = () => {
 	}>();
 	const { user, currentOrganization: organization, isLoggingOut } = useOrganizationStore();
 	const { openFiles } = useFileStore();
+	const { isDeleting, isExporting, loadingImportFile } = useProjectStore();
+	const { isLoadingFromChatbot } = useConnectionStore();
+	const { isLoading: isLoadingTemplates } = useTemplatesStore();
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { setPathPageView } = useHubspot();
 
@@ -73,11 +84,36 @@ export const App = () => {
 
 	const mainElement = useRoutes(mainRoutes, location);
 
+	const isLoading =
+		isLoggingOut || loadingImportFile || isDeleting || isExporting || isLoadingFromChatbot || isLoadingTemplates;
+
+	const loadingMessageMap: Record<string, string | undefined> = {
+		isLoggingOut: tLoadingOverlay("loggingOut"),
+		loadingImportFile: tDashboardLoadingOverlay("importingProject"),
+		isDeleting: tDashboardLoadingOverlay("deletingProject"),
+		isExporting: tDashboardLoadingOverlay("exportingProject"),
+		isLoadingFromChatbot: undefined,
+		isLoadingTemplates: undefined,
+	};
+
+	const loadingStates = {
+		isLoggingOut,
+		loadingImportFile,
+		isDeleting,
+		isExporting,
+		isLoadingFromChatbot,
+		isLoadingTemplates,
+	};
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const activeLoadingState = Object.entries(loadingStates).find(([_, isActive]) => isActive);
+	const loadingMessage = activeLoadingState ? loadingMessageMap[activeLoadingState[0]] : undefined;
+
 	return (
 		<>
 			<PageTitle title={pageTitle} />
 			{mainElement}
-			<LoadingOverlay isLoading={isLoggingOut} message={tLoadingOverlay("loggingOut")} />
+			<LoadingOverlay isLoading={isLoading} message={loadingMessage} />
 		</>
 	);
 };

@@ -4,6 +4,7 @@
 	"actions": {
 		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
 		"errorCreatingProject": "Failed to create project",
+		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"errorDuplicatingProject": "Failed to duplicate project",
 		"errorDuplicatingProjectExtended": "Project duplication failed, error: {{error}}",
 		"errorExportingProject": "Failed to export project",
