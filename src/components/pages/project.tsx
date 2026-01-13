@@ -5,26 +5,31 @@ import { Outlet, useParams, useLocation } from "react-router-dom";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
-import { useManualRunStore, useProjectStore, useSharedBetweenProjectsStore, useTourStore } from "@src/store";
+import {
+	useConnectionStore,
+	useManualRunStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+	useTourStore,
+} from "@src/store";
 import { UserTrackingUtils, cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
-import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { EditorTabs } from "@components/organisms";
 
 export const Project = () => {
 	const fetchManualRunConfiguration = useManualRunStore((state) => state.fetchManualRunConfiguration);
 	const { projectId } = useParams();
 	const getProject = useProjectStore((state) => state.getProject);
-	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+	const { setIsLoadingFromChatbot } = useConnectionStore();
 	const { pathname } = useLocation();
 
 	const openConnectionFromChatbot = useCallback(() => {
-		setIsConnectionLoadingFromChatbot(true);
+		setIsLoadingFromChatbot(true);
 		setTimeout(() => {
-			setIsConnectionLoadingFromChatbot(false);
+			setIsLoadingFromChatbot(false);
 		}, 1800);
-	}, []);
+	}, [setIsLoadingFromChatbot]);
 
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
@@ -84,7 +89,6 @@ export const Project = () => {
 			<Outlet />
 			<div className={wrapperClassName} id="project-split-frame">
 				{isOnboardingTourActive ? <div id={tourStepsHTMLIds.projectCode} /> : null}
-				<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
 				<Frame className={frameClassName}>
 					<EditorTabs />
 				</Frame>

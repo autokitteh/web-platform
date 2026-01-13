@@ -12,7 +12,6 @@ import { useModalStore, useSharedBetweenProjectsStore, useTemplatesStore } from 
 import { cn } from "@src/utilities";
 
 import { Frame, IconButton, IconSvg, Loader, Typography } from "@components/atoms";
-import { LoadingOverlay } from "@components/molecules";
 import {
 	ProjectTemplateCard,
 	MultiplePopoverSelect,
@@ -52,7 +51,6 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 
 	return (
 		<Frame className={frameClass}>
-			<LoadingOverlay isLoading={isLoading} />
 			<Typography
 				className="mb-7 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
 				element="h2"

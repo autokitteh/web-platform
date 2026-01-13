@@ -17,6 +17,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 	connectionTimeouts: {},
 	avoidNextRerenderCleanup: true,
 	connectionInProgress: false,
+	isLoadingFromChatbot: false,
 	editingConnectionId: undefined,
 	fetchConnectionsCallback: () => {},
 	tourStepAdvanced: [],
@@ -222,6 +223,13 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 			if (state.connectionInProgress === value) return state;
 
 			state.connectionInProgress = value;
+
+			return state;
+		});
+	},
+	setIsLoadingFromChatbot: (value) => {
+		set((state) => {
+			state.isLoadingFromChatbot = value;
 
 			return state;
 		});

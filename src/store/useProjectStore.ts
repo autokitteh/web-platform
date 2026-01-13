@@ -24,6 +24,9 @@ const defaultState: Omit<
 	| "exportProject"
 	| "createProjectFromManifest"
 	| "setPendingFile"
+	| "setIsExporting"
+	| "setIsDeleting"
+	| "setLoadingImportFile"
 	| "setActionInProcess"
 	| "isProjectNameTaken"
 	| "actions"
@@ -33,6 +36,8 @@ const defaultState: Omit<
 	currentProjectId: undefined,
 	pendingFile: undefined,
 	isExporting: false,
+	isDeleting: false,
+	loadingImportFile: false,
 	actionInProcess: {
 		build: false,
 		deploy: false,
@@ -52,6 +57,27 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setPendingFile: (file) => {
 		set((state) => {
 			state.pendingFile = file;
+			return state;
+		});
+	},
+
+	setLoadingImportFile: (value) => {
+		set((state) => {
+			state.loadingImportFile = value;
+			return state;
+		});
+	},
+
+	setIsExporting: (value) => {
+		set((state) => {
+			state.isExporting = value;
+			return state;
+		});
+	},
+
+	setIsDeleting: (value) => {
+		set((state) => {
+			state.isDeleting = value;
 			return state;
 		});
 	},

@@ -34,8 +34,14 @@ export const useProjectActions = () => {
 		exportProject,
 		getProject,
 		getProjectsList,
+		isDeleting,
+		isExporting,
+		loadingImportFile,
 		pendingFile,
 		projectsList,
+		setIsDeleting,
+		setIsExporting,
+		setLoadingImportFile,
 		setPendingFile,
 	} = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
@@ -44,9 +50,6 @@ export const useProjectActions = () => {
 	const { closeModal, modals: modalsState, openModal } = useModalStore();
 
 	const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
-	const [loadingImportFile, setLoadingImportFile] = useState(false);
-	const [isExporting, setIsExporting] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
 	const [projectId, setProjectId] = useState<string>();
 	const { saveAllFiles } = fileOperations(projectId!);
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
@@ -179,7 +182,10 @@ export const useProjectActions = () => {
 		}
 	};
 
-	const handleImportFile = async (file: File, projectName: string) => {
+	const handleImportFile = async (eventOrFile: React.ChangeEvent<HTMLInputElement> | File, projectName?: string) => {
+		const file = eventOrFile instanceof File ? eventOrFile : eventOrFile.target.files?.[0];
+		if (!file) return;
+
 		setLoadingImportFile(true);
 		try {
 			const parsedData = await extractManifestFromFiles(file);
@@ -200,6 +206,8 @@ export const useProjectActions = () => {
 
 			const newProjectId = await createProjectWithManifest(manifest, structure);
 			if (newProjectId) setProjectId(newProjectId);
+		} catch (error) {
+			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
 		} finally {
 			setLoadingImportFile(false);
 			if (modalsState[ModalName.importProject]) {
@@ -347,7 +355,7 @@ export const useProjectActions = () => {
 			accept=".zip"
 			className="hidden"
 			data-testid="import-project-file-input"
-			onChange={(event) => handleImportFile(event.target.files![0], "")}
+			onChange={handleImportFile}
 			ref={fileInputRef}
 			type="file"
 		/>

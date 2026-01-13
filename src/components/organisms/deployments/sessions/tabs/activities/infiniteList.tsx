@@ -9,8 +9,7 @@ import { useVirtualizedList, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
-import { Frame } from "@components/atoms";
-import { LoadingOverlay } from "@components/molecules";
+import { Frame, Loader } from "@components/atoms";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
@@ -70,7 +69,7 @@ export const ActivityList = () => {
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
 
-			<LoadingOverlay isLoading={loadingActivities} />
+			{loadingActivities ? <Loader isCenter /> : null}
 
 			<AutoSizer className={autoSizerClass}>
 				{({ height, width }) => (

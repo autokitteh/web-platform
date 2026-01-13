@@ -12,6 +12,7 @@ import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsSto
 import { TreeNode, buildFileTree } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules";
 import { PopoverWrapper, PopoverTrigger } from "@components/molecules/popover";
 import { AddFileModal, AddDirectoryModal, DeleteFileModal } from "@components/organisms/files";
 
@@ -62,11 +63,13 @@ export const ProjectFiles = () => {
 			await fetchResources(projectId!, true);
 			setIsUploadingFiles(false);
 
+			const successMessage =
+				filesToUpload.length === 1
+					? `File "${filesToUpload[0].name}" imported successfully`
+					: `${filesToUpload.length} files imported successfully`;
+
 			addToast({
-				message:
-					filesToUpload.length === 1
-						? `File "${filesToUpload[0].name}" imported successfully`
-						: `${filesToUpload.length} files imported successfully`,
+				message: successMessage,
 				type: "success",
 			});
 		} catch (error) {
@@ -189,6 +192,7 @@ export const ProjectFiles = () => {
 
 	return (
 		<>
+			<LoadingOverlay isLoading={isUploadingFiles} message="Importing files..." />
 			<div className="flex size-full flex-col bg-gray-1100">
 				<div className="mb-4 flex w-full items-center justify-between">
 					<h2 className="text-base font-semibold text-white">Files</h2>
