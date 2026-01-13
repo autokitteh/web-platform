@@ -41,7 +41,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		fetchTemplates,
 	} = useTemplatesStore();
 	const { isRetrying, onRetryClick } = useRateLimitHandler();
-	const { FileInputElement } = useProjectActions();
+	const { FileInputElement, ImportProjectModal, NewProjectModal } = useProjectActions();
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
@@ -146,6 +146,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
 			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
 			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
+			<ImportProjectModal />
+			<NewProjectModal />
 		</>
 	);
 };

@@ -33,7 +33,6 @@
 			"email": "Email",
 			"name": "Name",
 			"message": "Message",
-
 			"placeholder": {
 				"email": "email@example.com",
 				"name": "Enter your name",
@@ -56,5 +55,8 @@
 			"display": "Display Project Settings",
 			"hide": "Hide Project Settings"
 		}
+	},
+	"loadingOverlay": {
+		"loggingOut": "Logging out..."
 	}
 }

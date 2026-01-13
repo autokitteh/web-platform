@@ -29,7 +29,8 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	isJson: true,
 
 	fetchManualRunConfiguration: async (projectId, preSelectRunValuesTourId) => {
-		const { deployments } = useCacheStore.getState();
+		const deployments = (await useCacheStore.getState().fetchDeployments(projectId, true)) || [];
+		if (!deployments || !deployments.length) return;
 		const activeDeployment = deployments?.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
 		if (!deployments?.length || !activeDeployment) {

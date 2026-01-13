@@ -10,13 +10,20 @@ export class ProjectPage {
 		this.page = page;
 	}
 
+	async getCurrentProjectName(): Promise<string> {
+		const projectNameElement = this.page.getByTestId("project-name");
+		await projectNameElement.waitFor({ state: "visible", timeout: 3000 });
+		return (await projectNameElement.textContent()) || "";
+	}
+
 	async deleteProject(projectName: string, withActiveDeployment: boolean = false) {
 		if (!projectName?.trim()?.length) {
 			throw new Error("Project name is required to delete a project");
 		}
 
-		if ((await this.page.getByRole("button", { name: "Edit project title" }).textContent()) !== projectName) {
-			throw new Error("Project name is not the same as the one in the page");
+		const currentProjectName = await this.getCurrentProjectName();
+		if (currentProjectName !== projectName) {
+			throw new Error(`Project name mismatch. Expected: ${projectName}, Got: ${currentProjectName}`);
 		}
 
 		const additionalActionsButton = this.page.locator('button[aria-label="Project additional actions"]');
@@ -56,6 +63,7 @@ export class ProjectPage {
 
 		const deletedProjectLog = this.page.getByText(deletedProjectLogText);
 		await expect(deletedProjectLog).toBeVisible();
+		await this.page.locator('button[aria-label="System Log"]').click();
 	}
 
 	async stopDeployment() {

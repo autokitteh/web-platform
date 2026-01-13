@@ -131,6 +131,11 @@
 		"createFromScratchDesc": "Build a new automation project from the ground up",
 		"createFromScratchButton": "Create New"
 	},
+	"loadingOverlay": {
+		"importingProject": "Importing project...",
+		"exportingProject": "Exporting project...",
+		"deletingProject": "Deleting project..."
+	},
 	"ai": {
 		"title": "Build with AI",
 		"welcomeTitle": "Welcome to AutoKitteh",

@@ -13,7 +13,6 @@ import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@sr
 import { cn, navigateToProject } from "@src/utilities";
 
 import { AiTextArea, Button, Loader, Typography } from "@components/atoms";
-import { ImportProjectModal, NewProjectModal } from "@components/organisms";
 import { AiChatModal } from "@components/organisms/modals";
 
 export const AiLandingPage = () => {
@@ -264,8 +263,6 @@ export const AiLandingPage = () => {
 						</div>
 					</div>
 				</main>
-				<NewProjectModal />
-				<ImportProjectModal />
 				<AiChatModal isOpen={isModalOpen} onClose={handleCloseModal} onConnect={handleIframeConnect} />
 			</div>
 		</div>

@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Editor directories and extensions files
 .vscode/launch.json
 !.vscode/extensions.json
 .idea
@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .vscode/mcp.json
+.vscode/globalSaveState.json
 
 .env
 /test-results/
@@ -69,4 +70,7 @@ node_modules/
 
 # Task files
 # tasks.json
-# tasks/ 
+# tasks/
+
+.vscodeignore
+.vscode/globalSaveState.json

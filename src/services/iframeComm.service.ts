@@ -138,7 +138,8 @@ class IframeCommService {
 						if (!document.contains(this.iframeRef)) {
 							LoggerService.warn(
 								namespaces.iframeCommService,
-								t("errors.iframeComm.iframeRemovedFromDOM", { ns: "services" })
+								t("errors.iframeComm.iframeRemovedFromDOM", { ns: "services" }),
+								true
 							);
 							this.reset();
 							this.iframeRef = null;
@@ -677,7 +678,8 @@ class IframeCommService {
 			if (!isValidAkbotMessage(event.data)) {
 				LoggerService.error(
 					namespaces.iframeCommService,
-					t("errors.iframeComm.invalidMessageFormat", { ns: "services" })
+					t("errors.iframeComm.invalidMessageFormat", { ns: "services" }),
+					true
 				);
 				return;
 			}

@@ -3,15 +3,13 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ImportProjectModal, NewProjectModal } from "./modals";
 import { welcomeCards } from "@src/constants";
 import { ModalName, TourId } from "@src/enums";
 import { useCreateProjectFromTemplate, useProjectActions } from "@src/hooks";
-import { useModalStore, useTemplatesStore, useToastStore, useTourStore } from "@src/store";
+import { useModalStore, useToastStore, useTourStore } from "@src/store";
 
 import { Button, Typography } from "@components/atoms";
 import { WelcomeCard } from "@components/molecules";
-import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
 export const WelcomePage = () => {
@@ -20,7 +18,6 @@ export const WelcomePage = () => {
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openModal } = useModalStore();
-	const { isLoading } = useTemplatesStore();
 	const { isCreating } = useCreateProjectFromTemplate();
 	const { triggerFileInput } = useProjectActions();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
@@ -74,8 +71,6 @@ export const WelcomePage = () => {
 
 	return (
 		<div className="size-full overflow-hidden rounded-none md:mt-2 md:rounded-2xl">
-			<LoadingOverlay isLoading={isLoading} />
-
 			<div className="flex min-h-screen flex-col overflow-y-auto bg-gradient-to-b from-gray-1250 to-gray-1100">
 				<header className="flex items-center justify-between border-b border-gray-900 p-6">
 					<div className="flex items-center">
@@ -108,8 +103,6 @@ export const WelcomePage = () => {
 					</div>
 				</main>
 				<WelcomeVideoModal />
-				<NewProjectModal />
-				<ImportProjectModal />
 			</div>
 		</div>
 	);

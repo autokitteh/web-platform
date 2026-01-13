@@ -20,6 +20,7 @@ import { navigateToProject, unpackFileZip, UserTrackingUtils } from "@src/utilit
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
+import { ImportProjectModal, NewProjectModal } from "@components/organisms";
 // Shared ref across all hook instances - singleton pattern
 const fileInputRef = { current: null as HTMLInputElement | null };
 
@@ -368,5 +369,7 @@ export const useProjectActions = () => {
 		duplicateProject,
 		triggerFileInput,
 		FileInputElement, // Keep for global mounting
+		ImportProjectModal,
+		NewProjectModal,
 	};
 };

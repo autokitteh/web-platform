@@ -11,10 +11,12 @@ import { getPageTitleFromPath } from "@utilities";
 
 import { useCacheStore, useFileStore, useOrganizationStore } from "@store";
 
-import { Loader, PageTitle } from "@components/atoms";
+import { PageTitle } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules";
 
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
+	const { t: tLoadingOverlay } = useTranslation("global", { keyPrefix: "loadingOverlay" });
 	const location = useLocation();
 	const params = useParams<{
 		connectionId?: string;
@@ -75,11 +77,7 @@ export const App = () => {
 		<>
 			<PageTitle title={pageTitle} />
 			{mainElement}
-			{isLoggingOut ? (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-					<Loader size="xl" />
-				</div>
-			) : null}
+			<LoadingOverlay isLoading={isLoggingOut} message={tLoadingOverlay("loggingOut")} />
 		</>
 	);
 };

@@ -78,6 +78,7 @@ export const TriggersSectionList = ({
 						return (
 							<div
 								className="relative flex cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
+								data-testid={`trigger-item-${name}`}
 								id={triggerContainerId}
 								key={id}
 								onClick={() => actions.configure.onClick(id)}

@@ -48,6 +48,8 @@ module.exports = {
 			fontSize: {
 				10: "10px",
 				"1.5xl": "22px",
+				"2.5xl": "28px",
+				"3.5xl": "32px",
 			},
 			flex: {
 				5: "5 5 0%",

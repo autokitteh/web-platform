@@ -110,8 +110,9 @@ export const ProjectTopbarName = () => {
 				/>
 			) : (
 				<div
-					aria-label={t("topbar.ariaEditProjectTitle")}
+					aria-label={`${t("topbar.ariaEditProjectName")} ${project?.name}`}
 					className="group relative flex cursor-pointer items-center"
+					data-testid="project-name"
 					onClick={() => setIsEditing(true)}
 					onKeyDown={() => setIsEditing(true)}
 					role="button"
