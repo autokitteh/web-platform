@@ -169,8 +169,9 @@ test.describe("File Manager Suite", () => {
 
 			await expect(page.getByRole("button", { name: "Open test-file.txt" })).toBeVisible();
 			await page.getByRole("button", { name: "Open test-file.txt" }).click();
-			await page.getByText("test-file.txt").click();
-			await expect(page.getByRole("tab", { name: "test-file.txt" })).toBeVisible();
+			const fileTab = page.getByRole("tab", { name: /^test-file\.txt/ });
+			await expect(fileTab).toBeVisible();
+			await fileTab.click();
 		});
 	});
 
