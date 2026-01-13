@@ -1,3 +1,7 @@
+## <small>2.253.1 (2026-01-13)</small>
+
+* fix: fix import projects functionality and add loading overlays  (#1543) ([4575229](https://github.com/autokitteh/web-platform/commit/4575229)), closes [#1543](https://github.com/autokitteh/web-platform/issues/1543)
+
 ## 2.253.0 (2026-01-09)
 
 * feat: align import UI and functionality (#1542) ([84ab0c5](https://github.com/autokitteh/web-platform/commit/84ab0c5)), closes [#1542](https://github.com/autokitteh/web-platform/issues/1542)
