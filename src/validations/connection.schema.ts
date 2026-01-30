@@ -151,6 +151,11 @@ export const anthropicIntegrationSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
+export const pydanticgwIntegrationSchema = z.object({
+	api_key: z.string().min(1, "API Key is required"),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
+});
+
 export const linearPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client secret is required"),

@@ -25,6 +25,7 @@ import {
 	RedditIntegrationEditForm,
 	PipedriveIntegrationEditForm,
 	NotionIntegrationEditForm,
+	PydanticGatewayIntegrationEditForm,
 } from "@components/organisms/configuration/connections/integrations";
 import { MicrosoftTeamsIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/microsoft/teams";
 
@@ -57,4 +58,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.reddit]: RedditIntegrationEditForm,
 	[Integrations.pipedrive]: PipedriveIntegrationEditForm,
 	[Integrations.notion]: NotionIntegrationEditForm,
+	[Integrations.pydanticgw]: PydanticGatewayIntegrationEditForm,
 };
