@@ -201,6 +201,14 @@
 			"devPlatform": "Anthropic developer platform"
 		}
 	},
+	"pydanticgw": {
+		"placeholders": {
+			"apiKey": "API Key"
+		},
+		"information": {
+			"documentation": "Pydantic Gateway documentation"
+		}
+	},
 	"gemini": {
 		"placeholders": {
 			"key": "Secret API Key"

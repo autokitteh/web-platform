@@ -19,6 +19,7 @@ export {
 	googleFormsIntegrationSchema,
 	asanaIntegrationSchema,
 	anthropicIntegrationSchema,
+	pydanticgwIntegrationSchema,
 	auth0IntegrationSchema,
 	githubPrivateAuthIntegrationSchema,
 	linearPrivateAuthIntegrationSchema,

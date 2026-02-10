@@ -25,6 +25,7 @@ import {
 	RedditIntegrationAddForm,
 	PipedriveIntegrationAddForm,
 	NotionIntegrationAddForm,
+	PydanticGatewayIntegrationAddForm,
 } from "@components/organisms/configuration/connections/integrations";
 import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/microsoft/teams";
 
@@ -57,4 +58,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	reddit: RedditIntegrationAddForm,
 	pipedrive: PipedriveIntegrationAddForm,
 	notion: NotionIntegrationAddForm,
+	pydanticgw: PydanticGatewayIntegrationAddForm,
 };

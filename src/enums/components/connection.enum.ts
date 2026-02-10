@@ -69,6 +69,7 @@ export enum Integrations {
 	reddit = "reddit",
 	pipedrive = "pipedrive",
 	notion = "notion",
+	pydanticgw = "pydanticgw",
 }
 
 export const defaultGoogleConnectionName = "google";
@@ -253,6 +254,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: NotionIcon,
 		label: "Notion",
 		value: Integrations.notion,
+	},
+	pydanticgw: {
+		icon: HttpIcon,
+		label: "Pydantic Gateway",
+		value: Integrations.pydanticgw,
 	},
 };
 

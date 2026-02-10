@@ -71,3 +71,7 @@ export {
 	NotionIntegrationAddForm,
 	NotionIntegrationEditForm,
 } from "@components/organisms/configuration/connections/integrations/notion";
+export {
+	PydanticGatewayIntegrationAddForm,
+	PydanticGatewayIntegrationEditForm,
+} from "@components/organisms/configuration/connections/integrations/pydanticgw";
