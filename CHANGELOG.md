@@ -1,3 +1,7 @@
+## 2.255.0 (2026-02-10)
+
+* feat: pydantic gw (#1545) ([5466c55](https://github.com/autokitteh/web-platform/commit/5466c55)), closes [#1545](https://github.com/autokitteh/web-platform/issues/1545)
+
 ## 2.254.0 (2026-01-13)
 
 * feat: enhance file management and loading states (#1544) ([f715a1c](https://github.com/autokitteh/web-platform/commit/f715a1c)), closes [#1544](https://github.com/autokitteh/web-platform/issues/1544)
