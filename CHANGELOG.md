@@ -1,3 +1,7 @@
+## <small>2.255.1 (2026-02-12)</small>
+
+* fix: exec log now properly renders return values (#1546) ([490ef9e](https://github.com/autokitteh/web-platform/commit/490ef9e)), closes [#1546](https://github.com/autokitteh/web-platform/issues/1546)
+
 ## 2.255.0 (2026-02-10)
 
 * feat: pydantic gw (#1545) ([5466c55](https://github.com/autokitteh/web-platform/commit/5466c55)), closes [#1545](https://github.com/autokitteh/web-platform/issues/1545)
