@@ -4,8 +4,8 @@
 		"skipLibCheck": true,
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"strict": true
 	},
-	"include": ["vite.config.ts",
-	"fixReactVirtualized.ts"]
+	"include": ["vite.config.ts","fixReactVirtualized.ts","mkcert.util.ts"]
 }

@@ -9,6 +9,7 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
 import { reactVirtualized } from "./fixReactVirtualized";
+import { securedDomainConfigured, mkcertConfig } from "./mkcert.util";
 
 dotenv.config();
 
@@ -83,8 +84,8 @@ export default defineConfig({
 		include: ["tailwind-config", "apexcharts"],
 	},
 	plugins: [
-		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
 		react(),
+		...(securedDomainConfigured ? [mkcert(mkcertConfig)] : []),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
 		})),
@@ -175,7 +176,7 @@ export default defineConfig({
 		},
 	},
 	server: {
-		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
+		host: process.env.VITE_APP_DOMAIN ? "0.0.0.0" : true,
 		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
 		strictPort: true,
 	},

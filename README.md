@@ -62,6 +62,12 @@ Create a `.env` file in the root of the project directory and add the necessary 
 - Description: Used for running E2E tests when authentication is enabled on the backend. This JWT token allows the test runner to authenticate and access the application during testing.
 - Example: TESTS_JWT_AUTH_TOKEN=your_jwt_auth_token_for_e2e_tests
 
+`VITE_DISABLE_MKCERT_SSL`
+
+- Default: None (SSL certificates are enabled by default)
+- Description: When set to "true", disables automatic SSL certificate generation via mkcert. This forces the development server to use HTTP instead of HTTPS and restricts SSL certificates to localhost only.
+- Example: VITE_DISABLE_MKCERT_SSL=true
+
 **Note:** These environment variables are optional. The application will use default values or fall back to certain behaviors if these variables are not set. However, setting them allows for greater customization and functionality, especially in different deployment environments or when running tests.
 
 ### Running the Project 🏃
