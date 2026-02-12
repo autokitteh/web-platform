@@ -7,7 +7,7 @@ import { triggerEvent } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 
 import { Button } from "@components/atoms";
-import { JsonViewer, ValueRenderer } from "@components/molecules";
+import { JsonViewer } from "@components/molecules";
 
 import { ArrowLeft, Close } from "@assets/image/icons";
 
@@ -66,7 +66,12 @@ export const SingleActivityInfo = ({
 					)}
 
 					<div className="mb-4 mt-8 font-bold">{t("returnValues")}</div>
-					<ValueRenderer value={activity.returnValue?.value} />
+
+					{activity.returnValue?.value && Object.keys(activity.returnValue.value).length ? (
+						<JsonViewer isCollapsed={true} value={activity.returnValue.value} />
+					) : (
+						<div>{t("noReturnValuesFound")}</div>
+					)}
 				</div>
 			</div>
 		</div>

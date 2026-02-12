@@ -84,9 +84,19 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 
 			if (callAttemptComplete.result?.value) {
 				try {
-					const parsedValue = safeParseSingleProtoValue(callAttemptComplete.result.value);
-					currentActivity.returnValue =
-						parsedValue || ({ type: "object", value: {} } as DeepProtoValueResult);
+					let parsedValue = safeParseSingleProtoValue(callAttemptComplete.result.value);
+
+					if (typeof parsedValue === "string") {
+						try {
+							parsedValue = JSON.parse(parsedValue);
+						} catch {
+							parsedValue = { value: parsedValue };
+						}
+					}
+
+					currentActivity.returnValue = parsedValue
+						? { type: "object", value: parsedValue }
+						: { type: "object", value: {} };
 				} catch {
 					currentActivity.returnValue = { type: "object", value: {} } as DeepProtoValueResult;
 				}
