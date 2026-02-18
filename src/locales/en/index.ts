@@ -33,6 +33,7 @@ import toasts from "@locales/en/toasts/translation.json";
 import tour from "@locales/en/tour/translation.json";
 import utilities from "@locales/en/utilities/translation.json";
 import validations from "@locales/en/validations/translation.json";
+import workflowBuilder from "@locales/en/workflowBuilder/translation.json";
 
 export default {
 	authentication,
@@ -72,4 +73,5 @@ export default {
 	templates,
 	shared,
 	billing,
+	workflowBuilder,
 };

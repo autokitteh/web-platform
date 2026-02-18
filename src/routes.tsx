@@ -13,6 +13,7 @@ import {
 	ProtectedRoute,
 	SessionsTable,
 	OrgConnectionsTable,
+	WorkflowBuilder,
 } from "@components/organisms";
 import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
@@ -150,6 +151,19 @@ export const mainRoutes = [
 						children: sessionRouteConfig,
 					},
 					{ path: "*", element: <Navigate replace to="/404" /> },
+				],
+			},
+		],
+	},
+	{
+		path: "projects/:projectId/canvas",
+		element: <AppLayout />,
+		children: [
+			{
+				element: <ProjectWrapper />,
+				children: [
+					{ index: true, element: <WorkflowBuilder /> },
+					{ path: "settings/*", element: <WorkflowBuilder /> },
 				],
 			},
 		],

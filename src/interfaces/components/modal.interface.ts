@@ -1,6 +1,7 @@
 import { TemplateMetadata } from "@interfaces/store";
 import { SelectOption } from "@src/interfaces/components";
 import { EnrichedEvent, EnrichedOrganization, Variable } from "@src/types/models";
+import { ColorSchemes } from "@type";
 
 export interface ModalProps {
 	"data-testid"?: string;
@@ -15,6 +16,7 @@ export interface ModalProps {
 	forceOpen?: boolean;
 	onCloseCallbackOverride?: () => void;
 	clickOverlayToClose?: boolean;
+	variant?: ColorSchemes;
 }
 export interface DeleteModalProps {
 	onDelete: () => void;
