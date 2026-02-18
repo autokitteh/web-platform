@@ -95,14 +95,14 @@ export const ManualRunSettingsDrawer = () => {
 		}
 
 		addToast({
-			message: (
-				<ManualRunSuccessToastMessage
-					deploymentId={activeDeployment?.deploymentId}
-					projectId={projectId}
-					sessionId={sessionId}
-				/>
-			),
+			message: <ManualRunSuccessToastMessage projectId={projectId} sessionId={sessionId} />,
 			type: "success",
+			position: "top-right",
+			offset: 50,
+			hiddenCloseButton: true,
+			className: "rounded-2xl p-0 border-2",
+			customTitle: " ",
+			closeOnClick: true,
 		});
 		if (projectId) {
 			closeDrawer(projectId, DrawerName.projectManualRunSettings);
