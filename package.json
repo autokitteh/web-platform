@@ -192,7 +192,7 @@
 		"terser": "^5.37.0",
 		"tsx": "^4.21.0",
 		"typescript": "^5.7.2",
-		"vite": "^6.3.5",
+		"vite": "^6.3.6",
 		"vite-plugin-mkcert": "^1.17.6",
 		"vite-plugin-static-copy": "^2.2.0",
 		"vite-plugin-svgr": "^4.3.0",
